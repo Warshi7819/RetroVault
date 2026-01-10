@@ -13,9 +13,19 @@ namespace RetroVault
         public event EventHandler CardClicked;
         private string id = "";
 
-        public VaultItemCard()
+        private string lineOne = "";
+        private string lineTwo = "";
+        private string lineThree = "";
+        private string lineFour = "";
+
+        public VaultItemCard(VaultItem item)
         {
             InitializeComponent();
+            lineOne = "Name: " + item.Name;
+            lineTwo = "System: " + item.System;
+            lineThree = "Category: " + item.Category;
+            lineFour = "Year: " + item.year.ToString();
+            id = item.vaultID.ToString();
 
             // Disable automatic sizing to allow manual control
             this.AutoSize = false;
@@ -24,19 +34,14 @@ namespace RetroVault
             WireAllControls(this);
         }
 
+        public string getId()
+        {
+            return id;
+        }
+
         protected virtual void OnCardClicked(EventArgs e)
         {
             CardClicked?.Invoke(this, e);
-        }
-
-        public void setId(string id)
-        {
-            this.id = "VaultItemCard_" + id.ToString();
-        }
-
-        public string getId()
-        {
-            return this.id;
         }
 
         private void WireAllControls(Control parent) { 
@@ -63,17 +68,20 @@ namespace RetroVault
                 WrapContents = false
             };
 
-            textPanel.Controls.Add(new Label { Text = "Line 1", AutoSize = true });
-            textPanel.Controls.Add(new Label { Text = "Line 2", AutoSize = true });
-            textPanel.Controls.Add(new Label { Text = "Line 3", AutoSize = true });
-            textPanel.Controls.Add(new Label { Text = "Line 4", AutoSize = true });
+            // Make the first label's text bold
+            textPanel.Controls.Add(new Label { Text = lineOne, AutoSize = true, Font = new Font(this.Font, FontStyle.Bold) });
+            textPanel.Controls.Add(new Label { Text = lineTwo, AutoSize = true });
+            textPanel.Controls.Add(new Label { Text = lineThree, AutoSize = true });
+            textPanel.Controls.Add(new Label { Text = lineFour, AutoSize = true });
 
             var imageBox = new PictureBox
             {
                 Dock = DockStyle.Fill,
                 SizeMode = PictureBoxSizeMode.Zoom,
-                BackColor = Color.DimGray // just to see it
+                BackColor = Color.LightGray // just to see it
             };
+
+            imageBox.Image = Image.FromFile("thumbnails/c64.png");
 
             layout.Controls.Add(textPanel, 0, 0);
             layout.Controls.Add(imageBox, 1, 0);

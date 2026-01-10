@@ -55,6 +55,7 @@
             systemComboBox.Name = "systemComboBox";
             systemComboBox.Size = new Size(306, 40);
             systemComboBox.TabIndex = 1;
+            systemComboBox.SelectedIndexChanged += systemComboBox_SelectedIndexChanged;
             // 
             // label2
             // 
@@ -71,7 +72,8 @@
             catComboBox.Location = new Point(1038, 17);
             catComboBox.Name = "catComboBox";
             catComboBox.Size = new Size(328, 40);
-            catComboBox.TabIndex = 3;
+            catComboBox.TabIndex = 2;
+            catComboBox.SelectedIndexChanged += catComboBox_SelectedIndexChanged;
             // 
             // label3
             // 
@@ -87,7 +89,8 @@
             searchBox.Location = new Point(125, 20);
             searchBox.Name = "searchBox";
             searchBox.Size = new Size(302, 39);
-            searchBox.TabIndex = 5;
+            searchBox.TabIndex = 0;
+            searchBox.TextChanged += searchBox_TextChanged;
             // 
             // searchButton
             // 
@@ -97,6 +100,7 @@
             searchButton.TabIndex = 6;
             searchButton.Text = "Search";
             searchButton.UseVisualStyleBackColor = true;
+            searchButton.Click += searchButton_Click;
             // 
             // newButton
             // 
@@ -106,6 +110,7 @@
             newButton.TabIndex = 7;
             newButton.Text = "New Item";
             newButton.UseVisualStyleBackColor = true;
+            newButton.Click += newButton_Click;
             // 
             // vaultPanel
             // 
