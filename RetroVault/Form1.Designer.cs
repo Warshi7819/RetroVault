@@ -37,6 +37,7 @@
             searchButton = new Button();
             newButton = new Button();
             vaultPanel = new FlowLayoutPanel();
+            configButton = new Button();
             SuspendLayout();
             // 
             // label1
@@ -104,7 +105,8 @@
             // 
             // newButton
             // 
-            newButton.Location = new Point(1216, 99);
+            newButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            newButton.Location = new Point(1067, 99);
             newButton.Name = "newButton";
             newButton.Size = new Size(150, 46);
             newButton.TabIndex = 7;
@@ -114,6 +116,7 @@
             // 
             // vaultPanel
             // 
+            vaultPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             vaultPanel.AutoScroll = true;
             vaultPanel.FlowDirection = FlowDirection.TopDown;
             vaultPanel.Location = new Point(34, 170);
@@ -121,11 +124,23 @@
             vaultPanel.Size = new Size(1339, 989);
             vaultPanel.TabIndex = 8;
             // 
+            // configButton
+            // 
+            configButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            configButton.Location = new Point(1223, 99);
+            configButton.Name = "configButton";
+            configButton.Size = new Size(150, 46);
+            configButton.TabIndex = 9;
+            configButton.Text = "Config";
+            configButton.UseVisualStyleBackColor = true;
+            configButton.Click += configButton_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1419, 1187);
+            Controls.Add(configButton);
             Controls.Add(vaultPanel);
             Controls.Add(newButton);
             Controls.Add(searchButton);
@@ -152,5 +167,6 @@
         private Button searchButton;
         private Button newButton;
         private FlowLayoutPanel vaultPanel;
+        private Button configButton;
     }
 }

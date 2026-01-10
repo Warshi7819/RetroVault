@@ -8,6 +8,13 @@
     "Description": "The Nintendo Entertainment System (NES)",
     "Price": 1000,
     "Currency": "NOK",
-    "Thumbnail": "nes.png"
+    "Thumbnail": "nes.png",
+    "Developer": "",
+    "Publisher": "",
+    "PhysicalLocation": "",
+    "ThumbnailImage": "",
+    "ImageFolder": "",
+    "VideoFolder": "",
+    "DocumentationFolder": ""
   }
 }

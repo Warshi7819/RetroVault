@@ -8,5 +8,6 @@ namespace RetroVault
     {
         public List<string> Categories { get; set; }
         public List<string> Systems { get; set; }
+        public string VaultPath { get; set; }
     }
 }

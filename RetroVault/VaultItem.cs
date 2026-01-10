@@ -14,13 +14,15 @@ namespace RetroVault
             Description = "";
             Developer = "";
             Publisher = "";
-            year = -1;
-            vaultID = -1;
-            physicalLocation = "";
-            thumbnailImage = "";
-            imageFolder = "";
-            videoFolder = "";
-            documentationFolder = "";
+            Year = -1;
+            VaultID = -1;
+            PhysicalLocation = "";
+            Thumbnail = "";
+            ImageFolder = "";
+            VideoFolder = "";
+            DocumentationFolder = "";
+            Price = "";
+            Currencty = "";
         }
 
         public string Name { get; set; }
@@ -29,12 +31,15 @@ namespace RetroVault
         public string Description { get; set; }
         public string Developer { get; set; }
         public string Publisher { get; set; }
-        public int year { get; set; }
-        public int vaultID { get; set; }
-        public string physicalLocation { get; set; }
-        public string thumbnailImage { get; set; }
-        public string imageFolder { get; set; }
-        public string videoFolder { get; set; }
-        public string documentationFolder { get; set; }
+        public int Year { get; set; }
+        public int VaultID { get; set; }
+        public string PhysicalLocation { get; set; }
+        public string Thumbnail { get; set; }
+        public string ImageFolder { get; set; }
+        public string VideoFolder { get; set; }
+        public string DocumentationFolder { get; set; }
+        public string Price { get; set; }   
+        public string Currencty { get; set; }
+
     }
 }

@@ -24,8 +24,8 @@ namespace RetroVault
             lineOne = "Name: " + item.Name;
             lineTwo = "System: " + item.System;
             lineThree = "Category: " + item.Category;
-            lineFour = "Year: " + item.year.ToString();
-            id = item.vaultID.ToString();
+            lineFour = "Year: " + item.Year.ToString();
+            id = item.VaultID.ToString();
 
             // Disable automatic sizing to allow manual control
             this.AutoSize = false;

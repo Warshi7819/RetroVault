@@ -8,18 +8,40 @@ namespace RetroVault
         string searchTerm = "";
         string selectedSystem = "All";
         string selectedCategory = "All";
-
-
+        string vaultPath = "";
+        VaultSettingsConfig vaultSettingsConfig;
 
         public Form1()
         {
             InitializeComponent();
+            LoadConfig();
+
+            // Center form horizontally (x), but not vertically (y)
+            this.StartPosition = FormStartPosition.Manual;
+            Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
+            int centerX = (workingArea.Width - this.Width) / 2;
+            int customY = 100;
+            this.Location = new Point(centerX, customY);
+
             // Load icon
             string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon", "RetroVault.ico");
             this.Icon = new Icon(iconPath);
 
             InitializeVaultPanel();
             LoadVaultItems();
+        }
+
+        private void LoadConfig()
+        {
+            // Load configuration from appsettings.json
+            var config = new ConfigurationBuilder()
+                        .SetBasePath(Directory.GetCurrentDirectory()) // Set the base path
+                        .AddJsonFile("config.json", optional: false, reloadOnChange: true) // Add the JSON file provider
+                        .Build(); // Build the configuration
+            vaultSettingsConfig = new VaultSettingsConfig();
+            config.GetSection("VaultSettings").Bind(vaultSettingsConfig);
+            // Set vault path from config
+            vaultPath = vaultSettingsConfig.VaultPath;
         }
 
         private void InitializeVaultPanel()
@@ -30,18 +52,12 @@ namespace RetroVault
             vaultPanel.SizeChanged += vaultPanel_SizeChanged;
             Controls.Add(vaultPanel);
 
-            var config = new ConfigurationBuilder()
-                        .SetBasePath(Directory.GetCurrentDirectory()) // Set the base path
-                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) // Add the JSON file provider
-                        .Build(); // Build the configuration
-            var vaultSettings = new VaultSettingsConfig();
-            config.GetSection("VaultSettings").Bind(vaultSettings);
-
-            foreach(string system in vaultSettings.Systems)
+         
+            foreach (string system in vaultSettingsConfig.Systems)
             {
                 systemComboBox.Items.Add(system);
             }
-            foreach (string category in vaultSettings.Categories)
+            foreach (string category in vaultSettingsConfig.Categories)
             {
                 catComboBox.Items.Add(category);
             }
@@ -52,15 +68,21 @@ namespace RetroVault
             // Clear existing items
             vaultPanel.Controls.Clear();
 
+
+            // See if we already have items cached
+            // if not, we traverse the vault directory and load items
+
+
+
             // Load new items - Dummy data for demonstration right now
             List<VaultItem> vaultItems = new List<VaultItem>();
             VaultItem vaultItem = new VaultItem();
             vaultItem.Name = "C64 - Breadbin";
             vaultItem.System = "Commodore 64";
             vaultItem.Category = "Hardware";
-            vaultItem.year = 1983;
-            vaultItem.vaultID = 1;
-            vaultItem.thumbnailImage = "thumbnails/c64.png";
+            vaultItem.Year = 1983;
+            vaultItem.VaultID = 1;
+            vaultItem.Thumbnail = "thumbnails/c64.png";
             vaultItems.Add(vaultItem);
 
             foreach (VaultItem item in vaultItems)
@@ -107,11 +129,9 @@ namespace RetroVault
             selectedSystem = systemComboBox.SelectedItem.ToString() ?? "All";
         }
 
-        private void catComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void catComboBox_SelectedIndexChanged(object sender, EventArgs e) =>
             // Implement category filtering logic here
             selectedCategory = catComboBox.SelectedItem.ToString() ?? "All";
-        }
 
         private void searchButton_Click(object sender, EventArgs e)
         {
@@ -121,6 +141,14 @@ namespace RetroVault
         private void newButton_Click(object sender, EventArgs e)
         {
             // New item logic here
+        }
+
+        private void configButton_Click(object sender, EventArgs e)
+        {
+            // Open configuration/settings logic here
+            ConfigForm configForm = new ConfigForm();
+            configForm.ShowDialog();
+
         }
     }
 }
