@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Configuration;
+using System.IO;
+
 namespace RetroVault
 {
     public partial class Form1 : Form
@@ -5,6 +8,8 @@ namespace RetroVault
         string searchTerm = "";
         string selectedSystem = "All";
         string selectedCategory = "All";
+
+
 
         public Form1()
         {
@@ -25,9 +30,21 @@ namespace RetroVault
             vaultPanel.SizeChanged += vaultPanel_SizeChanged;
             Controls.Add(vaultPanel);
 
-            // Populate combo boxes - systems and categories
-            LoadSystems();
-            LoadCategories();
+            var config = new ConfigurationBuilder()
+                        .SetBasePath(Directory.GetCurrentDirectory()) // Set the base path
+                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) // Add the JSON file provider
+                        .Build(); // Build the configuration
+            var vaultSettings = new VaultSettingsConfig();
+            config.GetSection("VaultSettings").Bind(vaultSettings);
+
+            foreach(string system in vaultSettings.Systems)
+            {
+                systemComboBox.Items.Add(system);
+            }
+            foreach (string category in vaultSettings.Categories)
+            {
+                catComboBox.Items.Add(category);
+            }
         }
 
         private void LoadVaultItems()
@@ -35,9 +52,8 @@ namespace RetroVault
             // Clear existing items
             vaultPanel.Controls.Clear();
 
-            // Load new items 
+            // Load new items - Dummy data for demonstration right now
             List<VaultItem> vaultItems = new List<VaultItem>();
-
             VaultItem vaultItem = new VaultItem();
             vaultItem.Name = "C64 - Breadbin";
             vaultItem.System = "Commodore 64";
@@ -61,29 +77,6 @@ namespace RetroVault
                 card.Width = vaultPanel.ClientSize.Width - card.Margin.Horizontal;
                 vaultPanel.Controls.Add(card);
             }
-        }
-
-        private void LoadCategories()
-        {
-            catComboBox.Items.Clear();
-            catComboBox.Items.Add("All");
-            catComboBox.Items.Add("Hardware");
-            catComboBox.Items.Add("Peripherals");
-            catComboBox.Items.Add("Games");
-            catComboBox.Items.Add("Software");
-            catComboBox.SelectedIndex = 0;
-        }
-
-        private void LoadSystems()
-        {
-            systemComboBox.Items.Clear();
-            systemComboBox.Items.Add("All");
-            systemComboBox.Items.Add("Commodore 64");
-            systemComboBox.Items.Add("Commodore Amiga");
-            systemComboBox.Items.Add("MSX");
-            systemComboBox.Items.Add("Playstation 2");
-            systemComboBox.Items.Add("Playstation 3");
-            systemComboBox.SelectedIndex = 0;
         }
 
         private void vaultPanel_SizeChanged(object sender, EventArgs e)
