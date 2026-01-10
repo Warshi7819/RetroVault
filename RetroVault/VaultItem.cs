@@ -20,6 +20,7 @@ namespace RetroVault
             thumbnailImage = "";
             imageFolder = "";
             videoFolder = "";
+            documentationFolder = "";
         }
 
         public string Name { get; set; }
@@ -34,5 +35,6 @@ namespace RetroVault
         public string thumbnailImage { get; set; }
         public string imageFolder { get; set; }
         public string videoFolder { get; set; }
+        public string documentationFolder { get; set; }
     }
 }

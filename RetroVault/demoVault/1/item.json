@@ -1,0 +1,13 @@
+{
+  "Item": {
+    "Id": 1,
+    "Name": "C64 - Breadbin",
+    "Category": "Hardware",
+    "System": "Commodore 64",
+    "Year": 1982,
+    "Description": "The Commodore 64 - This speciment I found the local marketplace",
+    "Price": 1000,
+    "Currency": "NOK",
+    "Thumbnail": "c64.png"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "Item": {
+    "Id": 3,
+    "Name": "Playstation 2 - FAT",
+    "Category": "Hardware",
+    "System": "Playstation 2",
+    "Year": 2000,
+    "Description": "The Fatty",
+    "Price": 1000,
+    "Currency": "NOK",
+    "Thumbnail": "ps2.png"
+  }
+}

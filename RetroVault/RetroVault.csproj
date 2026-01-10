@@ -10,6 +10,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="demoVault\1\" />
+    <Folder Include="demoVault\1\Documentation\" />
+    <Folder Include="demoVault\1\Media\" />
+    <Folder Include="demoVault\1\Videos\" />
+    <Folder Include="demoVault\2\" />
+    <Folder Include="demoVault\2\Documentation\" />
+    <Folder Include="demoVault\2\Images\" />
+    <Folder Include="demoVault\2\Media\" />
+    <Folder Include="demoVault\2\Videos\" />
+    <Folder Include="demoVault\3\Documentation\" />
+    <Folder Include="demoVault\3\Media\" />
+    <Folder Include="demoVault\3\Videos\" />
     <Folder Include="images\" />
     <Folder Include="thumbnails\" />
   </ItemGroup>
