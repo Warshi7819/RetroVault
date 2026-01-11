@@ -10,9 +10,15 @@ namespace RetroVault
 {
     public partial class ItemOverviewForm : Form
     {
-        public ItemOverviewForm()
+        internal VaultItemCard item;
+        public ItemOverviewForm(VaultItemCard card)
         {
             InitializeComponent();
+            item = card;
+
+            // Load icon
+            string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon", "RetroVault.ico");
+            this.Icon = new Icon(iconPath);
         }
     }
 }

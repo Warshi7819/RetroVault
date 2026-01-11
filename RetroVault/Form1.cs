@@ -61,6 +61,9 @@ namespace RetroVault
             {
                 catComboBox.Items.Add(category);
             }
+
+            systemComboBox.SelectedIndex = 0; // Select "All" by default
+            catComboBox.SelectedIndex = 0; // Select "All" by default
         }
 
         private void LoadVaultItems()
@@ -113,7 +116,8 @@ namespace RetroVault
         {
             if (sender is VaultItemCard card)
             {
-                MessageBox.Show($"Card clicked: {card.getId()}");
+                ItemOverviewForm f = new ItemOverviewForm(card);
+                f.ShowDialog();
             }
         }
 
@@ -141,6 +145,8 @@ namespace RetroVault
         private void newButton_Click(object sender, EventArgs e)
         {
             // New item logic here
+            NewEditItemForm newItemForm = new NewEditItemForm(null);
+            newItemForm.ShowDialog();
         }
 
         private void configButton_Click(object sender, EventArgs e)

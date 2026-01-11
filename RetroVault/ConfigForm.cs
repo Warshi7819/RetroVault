@@ -13,6 +13,10 @@ namespace RetroVault
         public ConfigForm()
         {
             InitializeComponent();
+
+            // Load icon
+            string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon", "RetroVault.ico");
+            this.Icon = new Icon(iconPath);
         }
 
         private void selectVaultbutton_Click(object sender, EventArgs e)

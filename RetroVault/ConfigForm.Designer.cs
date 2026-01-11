@@ -103,7 +103,7 @@
             Controls.Add(selectVaultbutton);
             Controls.Add(label1);
             Name = "ConfigForm";
-            Text = "ConfigForm";
+            Text = "App Config";
             ResumeLayout(false);
             PerformLayout();
         }
