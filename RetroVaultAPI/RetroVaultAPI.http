@@ -1,0 +1,27 @@
+@rootURL = http://localhost:5149
+
+GET {{rootURL}}/api/VaultItem/
+Accept: application/json
+###
+GET {{rootURL}}/api/VaultItem/1
+Accept: application/json
+###
+POST {{rootURL}}/api/VaultItem/
+Content-Type: application/json
+{
+  "name": "New Vault Item",
+  "description": "This is a new item added to the vault.",
+  "price": "10"
+}
+###
+PUT {{rootURL}}/api/VaultItem/1
+Content-Type: application/json
+{
+  "name": "Updated Vault Item",
+  "price": "15"
+}
+###
+DELETE {{rootURL}}/api/VaultItem/1
+Accept: application/json
+
+###

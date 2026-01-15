@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="RetroVault/RetroVault.csproj" />
+  <Project Path="RetroVaultAPI/RetroVaultAPI.csproj" Id="dfba3541-5d66-4432-9725-d56fe2f7c655" />
 </Solution>
