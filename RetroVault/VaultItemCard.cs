@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using RetroVaultAPI.Models; 
 
 namespace RetroVault
 {
@@ -25,7 +26,7 @@ namespace RetroVault
             lineTwo = "System: " + item.System;
             lineThree = "Category: " + item.Category;
             lineFour = "Year: " + item.Year.ToString();
-            id = item.VaultID.ToString();
+            id = item.Id.ToString();
 
             // Disable automatic sizing to allow manual control
             this.AutoSize = false;

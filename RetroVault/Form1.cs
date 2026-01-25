@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
+using RetroVaultAPI.Models;
+
 namespace RetroVault
 {
     public partial class Form1 : Form
@@ -84,7 +86,7 @@ namespace RetroVault
             vaultItem.System = "Commodore 64";
             vaultItem.Category = "Hardware";
             vaultItem.Year = 1983;
-            vaultItem.VaultID = 1;
+            vaultItem.Id = 1;
             vaultItem.Thumbnail = "thumbnails/c64.png";
             vaultItems.Add(vaultItem);
 
