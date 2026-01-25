@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RetroVaultAPI.Data;
 using RetroVaultAPI.Models;
 
 
@@ -9,27 +11,28 @@ namespace RetroVaultAPI.Controllers
     [ApiController]
     public class VaultItemController : ControllerBase
     {
-        private static List<VaultItem> vaultItems = new List<VaultItem>
-        {
-            new VaultItem { Id = 1, Name = "Super Mario Bros", Category = "Game", System = "NES", Year = 1985 },
-            new VaultItem { Id = 2, Name = "The Legend of Zelda", Category = "Game", System = "NES", Year = 1986 }
-        };
+        //private static List<VaultItem> vaultItems = new List<VaultItem>
+        //{
+        //    new VaultItem { Id = 1, Name = "Super Mario Bros", Category = "Game", System = "NES", Year = 1985 },
+        //    new VaultItem { Id = 2, Name = "The Legend of Zelda", Category = "Game", System = "NES", Year = 1986 }
+        //};
 
+        private readonly RetroVaultContext _context;
+        public VaultItemController(RetroVaultContext context)
+        {
+            _context = context;
+        }
 
         [HttpGet]
-        public ActionResult<List<VaultItem>> GetVaultItems()
+        public async Task<ActionResult<List<VaultItem>>> GetVaultItems()
         {
-            if (vaultItems == null || !vaultItems.Any())
-            {
-                return NotFound("No vault items found.");
-            }
-            return Ok(vaultItems);
+            return Ok(await _context.VaultItems.ToListAsync());
         }
 
         [HttpGet("{id}")]
-        public ActionResult<VaultItem> GetVaultItem(int id)
+        public async Task<ActionResult<VaultItem>> GetVaultItem(int id)
         {
-            var item = vaultItems.FirstOrDefault(v => v.Id == id);
+            var item = await _context.VaultItems.FindAsync(id);
             if (item == null)
             {
                 return NotFound($"Vault item with ID {id} not found.");
@@ -38,21 +41,22 @@ namespace RetroVaultAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<VaultItem> CreateVaultItem([FromBody] VaultItem newItem)
+        public async Task<ActionResult<VaultItem>> CreateVaultItem([FromBody] VaultItem newItem)
         {
             if (newItem == null)
             {
                 return BadRequest("Invalid vault item data.");
             }
-            newItem.Id = vaultItems.Max(v => v.Id) + 1;
-            vaultItems.Add(newItem);
+            
+            _context.VaultItems.Add(newItem);
+            await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetVaultItem), new { id = newItem.Id }, newItem);
         }
 
         [HttpPut("{id}")]
-        public ActionResult<VaultItem> UpdateVaultItem(int id, [FromBody] VaultItem updatedItem)
+        public async Task<ActionResult<VaultItem>> UpdateVaultItem(int id, [FromBody] VaultItem updatedItem)
         {
-            var existingItem = vaultItems.FirstOrDefault(v => v.Id == id);
+            var existingItem = await _context.VaultItems.FindAsync(id);
             if (existingItem == null)
             {
                 return NotFound($"Vault item with ID {id} not found.");
@@ -76,18 +80,22 @@ namespace RetroVaultAPI.Controllers
             existingItem.DocumentationFolder = updatedItem.DocumentationFolder;
             existingItem.Price = updatedItem.Price;
             existingItem.Currencty = updatedItem.Currencty;
+            
+            await _context.SaveChangesAsync();
             return Ok(existingItem);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteVaultItem(int id)
+        public async Task<ActionResult> DeleteVaultItem(int id)
         {
-            var item = vaultItems.FirstOrDefault(v => v.Id == id);
+            var item = await _context.VaultItems.FindAsync(id);
             if (item == null)
             {
                 return NotFound($"Vault item with ID {id} not found.");
             }
-            vaultItems.Remove(item);
+
+            _context.VaultItems.Remove(item);
+            await _context.SaveChangesAsync();
             return NoContent();
         }
     }

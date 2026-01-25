@@ -3,13 +3,13 @@
 GET {{rootURL}}/api/VaultItem/
 Accept: application/json
 ###
-GET {{rootURL}}/api/VaultItem/1
+GET {{rootURL}}/api/VaultItem/-1
 Accept: application/json
 ###
 POST {{rootURL}}/api/VaultItem/
 Content-Type: application/json
 {
-  "name": "New Vault Item",
+  "name": "New Vault Item 3",
   "description": "This is a new item added to the vault.",
   "price": "10"
 }
@@ -21,7 +21,7 @@ Content-Type: application/json
   "price": "15"
 }
 ###
-DELETE {{rootURL}}/api/VaultItem/1
+DELETE {{rootURL}}/api/VaultItem/-1
 Accept: application/json
 
 ###

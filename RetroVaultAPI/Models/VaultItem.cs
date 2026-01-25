@@ -2,7 +2,7 @@
 {
     public class VaultItem
     {
-        public int Id { get; set; } = -1;
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
