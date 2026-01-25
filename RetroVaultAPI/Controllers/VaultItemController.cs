@@ -11,12 +11,6 @@ namespace RetroVaultAPI.Controllers
     [ApiController]
     public class VaultItemController : ControllerBase
     {
-        //private static List<VaultItem> vaultItems = new List<VaultItem>
-        //{
-        //    new VaultItem { Id = 1, Name = "Super Mario Bros", Category = "Game", System = "NES", Year = 1985 },
-        //    new VaultItem { Id = 2, Name = "The Legend of Zelda", Category = "Game", System = "NES", Year = 1986 }
-        //};
-
         private readonly RetroVaultContext _context;
         public VaultItemController(RetroVaultContext context)
         {
@@ -39,6 +33,40 @@ namespace RetroVaultAPI.Controllers
             }
             return Ok(item);
         }
+
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<VaultItem>>> SearchVaultItems(
+        [FromQuery] string? name,
+        [FromQuery] string? system,
+        [FromQuery] string? category)
+        {
+            IQueryable<VaultItem> query = _context.VaultItems;
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(v => EF.Functions.Like(v.Name, $"%{name}%"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(system))
+            {
+                query = query.Where(v => v.System == system);
+            }
+
+            if (!string.IsNullOrWhiteSpace(category))
+            {
+                query = query.Where(v => v.Category == category);
+            }
+
+            var results = await query.ToListAsync();
+
+            if (results.Count == 0)
+            {
+                return NotFound("No vault items matched the search criteria.");
+            }
+
+            return Ok(results);
+        }
+
 
         [HttpPost]
         public async Task<ActionResult<VaultItem>> CreateVaultItem([FromBody] VaultItem newItem)

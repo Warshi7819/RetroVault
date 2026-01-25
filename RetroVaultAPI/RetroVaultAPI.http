@@ -25,3 +25,6 @@ DELETE {{rootURL}}/api/VaultItem/-1
 Accept: application/json
 
 ###
+GET {{rootURL}}/api/VaultItem/search?name=upDated
+Accept: application/json
+###
