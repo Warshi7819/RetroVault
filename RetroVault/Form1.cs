@@ -12,6 +12,7 @@ namespace RetroVault
         string selectedCategory = "All";
         string vaultPath = "";
         VaultSettingsConfig vaultSettingsConfig;
+        VaultApiClient api;
 
         public Form1()
         {
@@ -30,7 +31,11 @@ namespace RetroVault
             this.Icon = new Icon(iconPath);
 
             InitializeVaultPanel();
-            LoadVaultItems();
+
+            this.api = new VaultApiClient(new HttpClient
+            {
+                BaseAddress = new Uri("https://your-api-url/api/")
+            });
         }
 
         private void LoadConfig()
@@ -72,10 +77,6 @@ namespace RetroVault
         {
             // Clear existing items
             vaultPanel.Controls.Clear();
-
-
-            // See if we already have items cached
-            // if not, we traverse the vault directory and load items
 
 
 
@@ -139,9 +140,39 @@ namespace RetroVault
             // Implement category filtering logic here
             selectedCategory = catComboBox.SelectedItem.ToString() ?? "All";
 
-        private void searchButton_Click(object sender, EventArgs e)
+        private async void searchButton_ClickAsync(object sender, EventArgs e)
         {
+            await DoSearchAsync();
+        }
+
+        private async Task DoSearchAsync()
+        { 
             // Execute search and filtering based on searchTerm, selectedSystem, and selectedCategory
+            // Clear existing items
+            vaultPanel.Controls.Clear();
+
+            VaultApiClient api = new VaultApiClient(new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:7251/api/")
+            });
+            
+            // Search
+            var results = await api.SearchVaultItemsAsync(name: "c64");
+
+            foreach (VaultItem item in results)
+            {
+                var card = new VaultItemCard(item)
+                {
+                    Margin = new Padding(0, 0, 0, 10),
+                    Height = 200
+                };
+
+                // Add event handler for CardClicked event
+                card.CardClicked += Card_Clicked;
+                // initial width
+                card.Width = vaultPanel.ClientSize.Width - card.Margin.Horizontal;
+                vaultPanel.Controls.Add(card);
+            }
         }
 
         private void newButton_Click(object sender, EventArgs e)

@@ -1,0 +1,105 @@
+﻿using RetroVault;
+using RetroVaultAPI.Models;
+using System;
+using System.Collections.Generic;
+using System.Net.Http.Json;
+using System.Text;
+
+namespace RetroVault
+{
+    internal class VaultApiClient
+    {
+        private readonly HttpClient _http;
+
+        public VaultApiClient(HttpClient http)
+        {
+            _http = http;
+        }
+
+        // GET by ID
+        public async Task<VaultItem?> GetVaultItemAsync(int id)
+        {
+            var response = await _http.GetAsync($"VaultItem/{id}");
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            return await response.Content.ReadFromJsonAsync<VaultItem>();
+        }
+
+        // SEARCH (name, system, category)
+        public async Task<List<VaultItem>> SearchVaultItemsAsync(
+            string? name = null,
+            string? system = null,
+            string? category = null)
+        {
+            var query = new List<string>();
+
+            if (!string.IsNullOrWhiteSpace(name))
+                query.Add($"name={Uri.EscapeDataString(name)}");
+
+            if (!string.IsNullOrWhiteSpace(system))
+                query.Add($"system={Uri.EscapeDataString(system)}");
+
+            if (!string.IsNullOrWhiteSpace(category))
+                query.Add($"category={Uri.EscapeDataString(category)}");
+
+            string url = "VaultItem/search";
+            if (query.Count > 0)
+                url += "?" + string.Join("&", query);
+
+            return await _http.GetFromJsonAsync<List<VaultItem>>(url)
+                   ?? new List<VaultItem>();
+        }
+
+        // CREATE
+        public async Task<VaultItem?> CreateVaultItemAsync(VaultItem item)
+        {
+            var response = await _http.PostAsJsonAsync("VaultItem", item);
+            return await response.Content.ReadFromJsonAsync<VaultItem>();
+        }
+
+        // UPDATE
+        public async Task<bool> UpdateVaultItemAsync(int id, VaultItem item)
+        {
+            var response = await _http.PutAsJsonAsync($"VaultItem/{id}", item);
+            return response.IsSuccessStatusCode;
+        }
+
+        // DELETE
+        public async Task<bool> DeleteVaultItemAsync(int id)
+        {
+            var response = await _http.DeleteAsync($"VaultItem/{id}");
+            return response.IsSuccessStatusCode;
+        }
+    }
+}
+
+
+
+
+// EXAMPLE USAGE
+//var api = new VaultApiClient(new HttpClient
+//{
+//    BaseAddress = new Uri("https://your-api-url/api/")
+//});
+
+//// Get by ID
+//var item = await api.GetVaultItemAsync(5);
+
+//// Search
+//var results = await api.SearchVaultItemsAsync(name: "admin", system: "Windows");
+
+//// Create
+//var created = await api.CreateVaultItemAsync(new VaultItem
+//{
+//    Name = "New Item",
+//    System = "Linux",
+//    Category = "Secrets",
+//    Secret = "12345"
+//});
+
+//// Update
+//await api.UpdateVaultItemAsync(created.Id, created);
+
+//// Delete
+//await api.DeleteVaultItemAsync(created.Id);

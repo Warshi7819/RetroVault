@@ -101,7 +101,7 @@
             searchButton.TabIndex = 6;
             searchButton.Text = "Search";
             searchButton.UseVisualStyleBackColor = true;
-            searchButton.Click += searchButton_Click;
+            searchButton.Click += searchButton_ClickAsync;
             // 
             // newButton
             // 

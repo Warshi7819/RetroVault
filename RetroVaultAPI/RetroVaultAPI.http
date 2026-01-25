@@ -9,9 +9,10 @@ Accept: application/json
 POST {{rootURL}}/api/VaultItem/
 Content-Type: application/json
 {
-  "name": "New Vault Item 3",
-  "description": "This is a new item added to the vault.",
-  "price": "10"
+  "name": "C64 - Breadbin",
+  "category": "Hardware",
+  "system": "Commodore 64",
+  "year": "1983"
 }
 ###
 PUT {{rootURL}}/api/VaultItem/1
@@ -21,7 +22,7 @@ Content-Type: application/json
   "price": "15"
 }
 ###
-DELETE {{rootURL}}/api/VaultItem/-1
+DELETE {{rootURL}}/api/VaultItem/2
 Accept: application/json
 
 ###
