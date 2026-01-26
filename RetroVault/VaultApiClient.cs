@@ -37,18 +37,25 @@ namespace RetroVault
             if (!string.IsNullOrWhiteSpace(name))
                 query.Add($"name={Uri.EscapeDataString(name)}");
 
-            if (!string.IsNullOrWhiteSpace(system))
+            if (!string.IsNullOrWhiteSpace(system) && system != "All")
                 query.Add($"system={Uri.EscapeDataString(system)}");
 
-            if (!string.IsNullOrWhiteSpace(category))
+            if (!string.IsNullOrWhiteSpace(category) && category != "All")
                 query.Add($"category={Uri.EscapeDataString(category)}");
 
             string url = "VaultItem/search";
             if (query.Count > 0)
                 url += "?" + string.Join("&", query);
 
-            return await _http.GetFromJsonAsync<List<VaultItem>>(url)
-                   ?? new List<VaultItem>();
+            using var response = await _http.GetAsync(url);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return new List<VaultItem>();
+            }
+
+            response.EnsureSuccessStatusCode(); // Throws for other errors (500, 401, etc.)
+            return await response.Content.ReadFromJsonAsync<List<VaultItem>>() ?? new List<VaultItem>();
         }
 
         // CREATE

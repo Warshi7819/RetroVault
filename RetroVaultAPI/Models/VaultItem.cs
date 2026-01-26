@@ -7,15 +7,16 @@
         public string Description { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
         public string System { get; set; } = string.Empty;
+        public string Region { get; set; } = string.Empty;
         public string Developer { get; set; } = string.Empty;
         public string Publisher { get; set; } = string.Empty;
         public int Year { get; set; } = -1;
-        public string PhysicalLocation { get; set; } = string.Empty;
+        public string AcquiredDate { get; set; } = string.Empty;
+        public string Completeness { get; set; } = string.Empty;
+        public string AcquiredFrom { get; set; } = string.Empty;
+        public string StorageLocation { get; set; } = string.Empty;
+        public int PurchasePrice { get; set; } = 0;
+        public string Currency { get; set; } = string.Empty;
         public string Thumbnail { get; set; } = string.Empty;
-        public string ImageFolder { get; set; } = string.Empty;
-        public string VideoFolder { get; set; } = string.Empty;
-        public string DocumentationFolder { get; set; } = string.Empty;
-        public string Price { get; set; } = string.Empty;
-        public string Currencty { get; set; } = string.Empty;
     }
 }

@@ -34,7 +34,7 @@ namespace RetroVault
 
             this.api = new VaultApiClient(new HttpClient
             {
-                BaseAddress = new Uri("https://your-api-url/api/")
+                BaseAddress = new Uri("https://localhost:7251/api/")
             });
         }
 
@@ -59,7 +59,7 @@ namespace RetroVault
             vaultPanel.SizeChanged += vaultPanel_SizeChanged;
             Controls.Add(vaultPanel);
 
-         
+
             foreach (string system in vaultSettingsConfig.Systems)
             {
                 systemComboBox.Items.Add(system);
@@ -146,18 +146,15 @@ namespace RetroVault
         }
 
         private async Task DoSearchAsync()
-        { 
+        {
             // Execute search and filtering based on searchTerm, selectedSystem, and selectedCategory
             // Clear existing items
             vaultPanel.Controls.Clear();
 
-            VaultApiClient api = new VaultApiClient(new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:7251/api/")
-            });
-            
             // Search
-            var results = await api.SearchVaultItemsAsync(name: "c64");
+            var results = await api.SearchVaultItemsAsync(name: searchBox.Text,
+                                                          category: this.selectedCategory,
+                                                          system: this.selectedSystem);
 
             foreach (VaultItem item in results)
             {
@@ -188,6 +185,20 @@ namespace RetroVault
             ConfigForm configForm = new ConfigForm();
             configForm.ShowDialog();
 
+        }
+
+        private void searchBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            ;
+        }
+
+        private void searchBox_KeyDown_1(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true; // optional: prevents ding sound }
+                searchButton_ClickAsync(sender, e);
+            }
         }
     }
 }

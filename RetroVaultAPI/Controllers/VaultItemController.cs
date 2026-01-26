@@ -98,17 +98,18 @@ namespace RetroVaultAPI.Controllers
             existingItem.Description = updatedItem.Description;
             existingItem.Category = updatedItem.Category;
             existingItem.System = updatedItem.System;
+            existingItem.Region = updatedItem.Region;
             existingItem.Developer = updatedItem.Developer;
             existingItem.Publisher = updatedItem.Publisher;
             existingItem.Year = updatedItem.Year;
-            existingItem.PhysicalLocation = updatedItem.PhysicalLocation;
-            existingItem.Thumbnail = updatedItem.Thumbnail;
-            existingItem.ImageFolder = updatedItem.ImageFolder;
-            existingItem.VideoFolder = updatedItem.VideoFolder;
-            existingItem.DocumentationFolder = updatedItem.DocumentationFolder;
-            existingItem.Price = updatedItem.Price;
-            existingItem.Currencty = updatedItem.Currencty;
-            
+            existingItem.AcquiredDate = updatedItem.AcquiredDate;
+            existingItem.Completeness = updatedItem.Completeness;   
+            existingItem.AcquiredFrom = updatedItem.AcquiredFrom;
+            existingItem.StorageLocation = updatedItem.StorageLocation;
+            existingItem.PurchasePrice = updatedItem.PurchasePrice;
+            existingItem.Currency = updatedItem.Currency;
+
+
             await _context.SaveChangesAsync();
             return Ok(existingItem);
         }

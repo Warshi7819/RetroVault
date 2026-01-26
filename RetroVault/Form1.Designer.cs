@@ -92,6 +92,7 @@
             searchBox.Size = new Size(302, 39);
             searchBox.TabIndex = 0;
             searchBox.TextChanged += searchBox_TextChanged;
+            searchBox.KeyDown += searchBox_KeyDown_1;
             // 
             // searchButton
             // 
