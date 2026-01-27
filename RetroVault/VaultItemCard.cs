@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Tracing;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using RetroVaultAPI.Models; 
 
 namespace RetroVault
@@ -18,10 +20,12 @@ namespace RetroVault
         private string lineTwo = "";
         private string lineThree = "";
         private string lineFour = "";
+        private VaultItem vaultItem;
 
         public VaultItemCard(VaultItem item)
         {
             InitializeComponent();
+            this.vaultItem = item;
             lineOne = "Name: " + item.Name;
             lineTwo = "System: " + item.System;
             lineThree = "Category: " + item.Category;
@@ -92,5 +96,9 @@ namespace RetroVault
             Controls.Add(layout);
         }
 
+        public VaultItem GetVaultItem()
+        {
+            return vaultItem;
+        }
     }
 }

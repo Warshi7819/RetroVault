@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 
 using RetroVaultAPI.Models;
+using System.Threading.Tasks;
 
 namespace RetroVault
 {
@@ -78,8 +79,6 @@ namespace RetroVault
             // Clear existing items
             vaultPanel.Controls.Clear();
 
-
-
             // Load new items - Dummy data for demonstration right now
             List<VaultItem> vaultItems = new List<VaultItem>();
             VaultItem vaultItem = new VaultItem();
@@ -119,8 +118,8 @@ namespace RetroVault
         {
             if (sender is VaultItemCard card)
             {
-                ItemOverviewForm f = new ItemOverviewForm(card);
-                f.ShowDialog();
+                NewEditItemForm editForm = new NewEditItemForm(card.GetVaultItem(), vaultSettingsConfig);
+                editForm.ShowDialog();
             }
         }
 
@@ -130,16 +129,19 @@ namespace RetroVault
             searchTerm = searchBox.Text;
         }
 
-        private void systemComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private async void systemComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Implement system filtering logic here
             selectedSystem = systemComboBox.SelectedItem.ToString() ?? "All";
+            //await DoSearchAsync();
         }
 
-        private void catComboBox_SelectedIndexChanged(object sender, EventArgs e) =>
+        private async void catComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        { 
             // Implement category filtering logic here
             selectedCategory = catComboBox.SelectedItem.ToString() ?? "All";
-
+            //await DoSearchAsync();
+        }
         private async void searchButton_ClickAsync(object sender, EventArgs e)
         {
             await DoSearchAsync();
@@ -175,7 +177,7 @@ namespace RetroVault
         private void newButton_Click(object sender, EventArgs e)
         {
             // New item logic here
-            NewEditItemForm newItemForm = new NewEditItemForm(null);
+            NewEditItemForm newItemForm = new NewEditItemForm(null, vaultSettingsConfig);
             newItemForm.ShowDialog();
         }
 
@@ -185,11 +187,6 @@ namespace RetroVault
             ConfigForm configForm = new ConfigForm();
             configForm.ShowDialog();
 
-        }
-
-        private void searchBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            ;
         }
 
         private void searchBox_KeyDown_1(object sender, KeyEventArgs e)

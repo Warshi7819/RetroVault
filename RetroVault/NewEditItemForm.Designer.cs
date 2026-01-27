@@ -40,33 +40,31 @@
             yearTextBox = new TextBox();
             publisherLabel = new Label();
             developerLabel = new Label();
-            infoLabel = new Label();
-            infoLabel2 = new Label();
-            imageInfoLabel = new Label();
             systemComboBox = new ComboBox();
             publisherTextBox = new TextBox();
             devTextBox = new TextBox();
             priceLabel = new Label();
-            textBox1 = new TextBox();
+            priceTextBox = new TextBox();
             currencyComboBox = new ComboBox();
             storageLabel = new Label();
             storageTextBox = new TextBox();
             regionLabel = new Label();
-            textBox2 = new TextBox();
+            regionTextBox = new TextBox();
             completeLabel = new Label();
-            textBox3 = new TextBox();
+            completeTextBox = new TextBox();
             acquiredFromLabel = new Label();
             acquiredFromTextBox = new TextBox();
             acquiredDateLabel = new Label();
             acquiredDateTextBox = new TextBox();
+            button1 = new Button();
             SuspendLayout();
             // 
             // saveButton
             // 
-            saveButton.Location = new Point(820, 973);
+            saveButton.Location = new Point(812, 971);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(150, 46);
-            saveButton.TabIndex = 0;
+            saveButton.TabIndex = 15;
             saveButton.Text = "Save";
             saveButton.UseVisualStyleBackColor = true;
             // 
@@ -84,7 +82,7 @@
             nameTextBox.Location = new Point(135, 10);
             nameTextBox.Name = "nameTextBox";
             nameTextBox.Size = new Size(790, 39);
-            nameTextBox.TabIndex = 2;
+            nameTextBox.TabIndex = 1;
             // 
             // categoryComboBox
             // 
@@ -127,7 +125,7 @@
             descTextBox.Multiline = true;
             descTextBox.Name = "descTextBox";
             descTextBox.Size = new Size(790, 281);
-            descTextBox.TabIndex = 8;
+            descTextBox.TabIndex = 11;
             // 
             // yearLabel
             // 
@@ -143,7 +141,7 @@
             yearTextBox.Location = new Point(558, 79);
             yearTextBox.Name = "yearTextBox";
             yearTextBox.Size = new Size(200, 39);
-            yearTextBox.TabIndex = 10;
+            yearTextBox.TabIndex = 3;
             // 
             // publisherLabel
             // 
@@ -163,55 +161,27 @@
             developerLabel.TabIndex = 12;
             developerLabel.Text = "Developer:";
             // 
-            // infoLabel
-            // 
-            infoLabel.AutoSize = true;
-            infoLabel.Location = new Point(14, 898);
-            infoLabel.Name = "infoLabel";
-            infoLabel.Size = new Size(717, 32);
-            infoLabel.TabIndex = 13;
-            infoLabel.Text = "Any images are added to the data folder associated with the item.";
-            // 
-            // infoLabel2
-            // 
-            infoLabel2.AutoSize = true;
-            infoLabel2.Location = new Point(14, 930);
-            infoLabel2.Name = "infoLabel2";
-            infoLabel2.Size = new Size(433, 32);
-            infoLabel2.TabIndex = 14;
-            infoLabel2.Text = "Accessed from the item overview page.";
-            // 
-            // imageInfoLabel
-            // 
-            imageInfoLabel.AutoSize = true;
-            imageInfoLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            imageInfoLabel.Location = new Point(14, 856);
-            imageInfoLabel.Name = "imageInfoLabel";
-            imageInfoLabel.Size = new Size(96, 32);
-            imageInfoLabel.TabIndex = 15;
-            imageInfoLabel.Text = "Images";
-            // 
             // systemComboBox
             // 
             systemComboBox.FormattingEnabled = true;
             systemComboBox.Location = new Point(135, 79);
             systemComboBox.Name = "systemComboBox";
             systemComboBox.Size = new Size(312, 40);
-            systemComboBox.TabIndex = 16;
+            systemComboBox.TabIndex = 2;
             // 
             // publisherTextBox
             // 
             publisherTextBox.Location = new Point(156, 656);
             publisherTextBox.Name = "publisherTextBox";
             publisherTextBox.Size = new Size(769, 39);
-            publisherTextBox.TabIndex = 17;
+            publisherTextBox.TabIndex = 12;
             // 
             // devTextBox
             // 
             devTextBox.Location = new Point(156, 709);
             devTextBox.Name = "devTextBox";
             devTextBox.Size = new Size(769, 39);
-            devTextBox.TabIndex = 18;
+            devTextBox.TabIndex = 13;
             // 
             // priceLabel
             // 
@@ -222,12 +192,12 @@
             priceLabel.TabIndex = 19;
             priceLabel.Text = "Price:";
             // 
-            // textBox1
+            // priceTextBox
             // 
-            textBox1.Location = new Point(558, 143);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(200, 39);
-            textBox1.TabIndex = 20;
+            priceTextBox.Location = new Point(558, 143);
+            priceTextBox.Name = "priceTextBox";
+            priceTextBox.Size = new Size(200, 39);
+            priceTextBox.TabIndex = 5;
             // 
             // currencyComboBox
             // 
@@ -235,7 +205,7 @@
             currencyComboBox.Location = new Point(785, 143);
             currencyComboBox.Name = "currencyComboBox";
             currencyComboBox.Size = new Size(140, 40);
-            currencyComboBox.TabIndex = 21;
+            currencyComboBox.TabIndex = 6;
             // 
             // storageLabel
             // 
@@ -251,7 +221,7 @@
             storageTextBox.Location = new Point(156, 792);
             storageTextBox.Name = "storageTextBox";
             storageTextBox.Size = new Size(769, 39);
-            storageTextBox.TabIndex = 23;
+            storageTextBox.TabIndex = 14;
             // 
             // regionLabel
             // 
@@ -262,12 +232,12 @@
             regionLabel.TabIndex = 24;
             regionLabel.Text = "Region:";
             // 
-            // textBox2
+            // regionTextBox
             // 
-            textBox2.Location = new Point(135, 215);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(208, 39);
-            textBox2.TabIndex = 25;
+            regionTextBox.Location = new Point(135, 215);
+            regionTextBox.Name = "regionTextBox";
+            regionTextBox.Size = new Size(208, 39);
+            regionTextBox.TabIndex = 7;
             // 
             // completeLabel
             // 
@@ -278,12 +248,12 @@
             completeLabel.TabIndex = 26;
             completeLabel.Text = "Complete:";
             // 
-            // textBox3
+            // completeTextBox
             // 
-            textBox3.Location = new Point(143, 276);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(200, 39);
-            textBox3.TabIndex = 27;
+            completeTextBox.Location = new Point(143, 276);
+            completeTextBox.Name = "completeTextBox";
+            completeTextBox.Size = new Size(200, 39);
+            completeTextBox.TabIndex = 9;
             // 
             // acquiredFromLabel
             // 
@@ -299,7 +269,7 @@
             acquiredFromTextBox.Location = new Point(558, 215);
             acquiredFromTextBox.Name = "acquiredFromTextBox";
             acquiredFromTextBox.Size = new Size(367, 39);
-            acquiredFromTextBox.TabIndex = 29;
+            acquiredFromTextBox.TabIndex = 8;
             // 
             // acquiredDateLabel
             // 
@@ -315,32 +285,40 @@
             acquiredDateTextBox.Location = new Point(558, 279);
             acquiredDateTextBox.Name = "acquiredDateTextBox";
             acquiredDateTextBox.Size = new Size(367, 39);
-            acquiredDateTextBox.TabIndex = 31;
+            acquiredDateTextBox.TabIndex = 10;
+            // 
+            // button1
+            // 
+            button1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button1.Location = new Point(14, 935);
+            button1.Name = "button1";
+            button1.Size = new Size(212, 82);
+            button1.TabIndex = 31;
+            button1.Text = "Media Folder";
+            button1.UseVisualStyleBackColor = true;
             // 
             // NewEditItemForm
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(982, 1031);
+            ClientSize = new Size(974, 1029);
+            Controls.Add(button1);
             Controls.Add(acquiredDateTextBox);
             Controls.Add(acquiredDateLabel);
             Controls.Add(acquiredFromTextBox);
             Controls.Add(acquiredFromLabel);
-            Controls.Add(textBox3);
+            Controls.Add(completeTextBox);
             Controls.Add(completeLabel);
-            Controls.Add(textBox2);
+            Controls.Add(regionTextBox);
             Controls.Add(regionLabel);
             Controls.Add(storageTextBox);
             Controls.Add(storageLabel);
             Controls.Add(currencyComboBox);
-            Controls.Add(textBox1);
+            Controls.Add(priceTextBox);
             Controls.Add(priceLabel);
             Controls.Add(devTextBox);
             Controls.Add(publisherTextBox);
             Controls.Add(systemComboBox);
-            Controls.Add(imageInfoLabel);
-            Controls.Add(infoLabel2);
-            Controls.Add(infoLabel);
             Controls.Add(developerLabel);
             Controls.Add(publisherLabel);
             Controls.Add(yearTextBox);
@@ -374,23 +352,21 @@
         private TextBox yearTextBox;
         private Label publisherLabel;
         private Label developerLabel;
-        private Label infoLabel;
-        private Label infoLabel2;
-        private Label imageInfoLabel;
         private TextBox publisherTextBox;
         private TextBox devTextBox;
         private Label priceLabel;
-        private TextBox textBox1;
+        private TextBox priceTextBox;
         private ComboBox currencyComboBox;
         private Label storageLabel;
         private TextBox storageTextBox;
         private Label regionLabel;
-        private TextBox textBox2;
+        private TextBox regionTextBox;
         private Label completeLabel;
-        private TextBox textBox3;
+        private TextBox completeTextBox;
         private Label acquiredFromLabel;
         private TextBox acquiredFromTextBox;
         private Label acquiredDateLabel;
         private TextBox acquiredDateTextBox;
+        private Button button1;
     }
 }

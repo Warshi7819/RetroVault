@@ -24,6 +24,11 @@
       "Super Famicom",
       "Nintendo 64",
       "GameCube"
+    ],
+    "Currencies": [
+      "NOK",
+      "USD",
+      "EUR"
     ]
   }
 }
