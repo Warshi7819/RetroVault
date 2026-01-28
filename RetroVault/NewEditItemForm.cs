@@ -112,7 +112,7 @@ namespace RetroVault
             // Display the message box
             DialogResult result = MessageBox.Show(
                 "Are you sure you want to delete this item?",
-                "Delete item?",
+                "Delete Request",
                 MessageBoxButtons.OKCancel,
                 MessageBoxIcon.Warning
             );
@@ -128,7 +128,7 @@ namespace RetroVault
             else if (result == DialogResult.Cancel)
             {
                 // User canceled the deletion
-                MessageBox.Show("Operation Cancelled!", "Ok", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Operation Cancelled!", "Delete Request", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
