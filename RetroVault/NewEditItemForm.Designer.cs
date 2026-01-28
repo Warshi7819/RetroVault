@@ -57,6 +57,8 @@
             acquiredDateLabel = new Label();
             acquiredDateTextBox = new TextBox();
             button1 = new Button();
+            deleteButton = new Button();
+            cancelButton = new Button();
             SuspendLayout();
             // 
             // saveButton
@@ -67,6 +69,7 @@
             saveButton.TabIndex = 15;
             saveButton.Text = "Save";
             saveButton.UseVisualStyleBackColor = true;
+            saveButton.Click += saveButton_Click;
             // 
             // nameLabel
             // 
@@ -297,11 +300,33 @@
             button1.Text = "Media Folder";
             button1.UseVisualStyleBackColor = true;
             // 
+            // deleteButton
+            // 
+            deleteButton.Location = new Point(389, 971);
+            deleteButton.Name = "deleteButton";
+            deleteButton.Size = new Size(150, 46);
+            deleteButton.TabIndex = 32;
+            deleteButton.Text = "Delete Item";
+            deleteButton.UseVisualStyleBackColor = true;
+            deleteButton.Click += deleteButton_Click;
+            // 
+            // cancelButton
+            // 
+            cancelButton.Location = new Point(656, 971);
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new Size(150, 46);
+            cancelButton.TabIndex = 33;
+            cancelButton.Text = "Cancel";
+            cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.Click += cancelButton_Click;
+            // 
             // NewEditItemForm
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(974, 1029);
+            Controls.Add(cancelButton);
+            Controls.Add(deleteButton);
             Controls.Add(button1);
             Controls.Add(acquiredDateTextBox);
             Controls.Add(acquiredDateLabel);
@@ -368,5 +393,7 @@
         private Label acquiredDateLabel;
         private TextBox acquiredDateTextBox;
         private Button button1;
+        private Button deleteButton;
+        private Button cancelButton;
     }
 }

@@ -1,31 +1,32 @@
 @rootURL = http://localhost:5149
 
+### GET ALL
 GET {{rootURL}}/api/VaultItem/
 Accept: application/json
-###
+### GET BY ID
 GET {{rootURL}}/api/VaultItem/-1
 Accept: application/json
-###
+### CREATE NEW
 POST {{rootURL}}/api/VaultItem/
 Content-Type: application/json
 {
-  "name": "C64 - Breadbin",
+  "name": "C64 - Breadbin2",
   "category": "Hardware",
   "system": "Commodore 64",
   "year": "1983"
 }
-###
+### UPDATE EXISTING
 PUT {{rootURL}}/api/VaultItem/1
 Content-Type: application/json
 {
   "name": "Updated Vault Item",
   "price": "15"
 }
-###
+### DELETE
 DELETE {{rootURL}}/api/VaultItem/2
 Accept: application/json
 
-###
+### SEARCH
 GET {{rootURL}}/api/VaultItem/search?name=upDated
 Accept: application/json
 ###

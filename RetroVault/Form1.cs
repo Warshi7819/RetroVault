@@ -1,7 +1,7 @@
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Configuration;
-using System.IO;
-
 using RetroVaultAPI.Models;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace RetroVault
@@ -114,14 +114,59 @@ namespace RetroVault
             }
         }
 
-        private void Card_Clicked(object? sender, EventArgs e)
+        private async void Card_Clicked(object? sender, EventArgs e)
         {
             if (sender is VaultItemCard card)
             {
                 NewEditItemForm editForm = new NewEditItemForm(card.GetVaultItem(), vaultSettingsConfig);
                 editForm.ShowDialog();
+
+                if (editForm.DialogResult == DialogResult.OK)
+                {
+                    if (editForm.isDeleteRequested())
+                    { 
+                        await api.DeleteVaultItemAsync(editForm.getVaultItem().Id);
+                    }
+                    else
+                    {
+                        // Update existing vault item using the api
+                        await updateVaultItem(editForm.getVaultItem());
+                    }
+                   
+                    // Refresh current search results
+                    await DoSearchAsync();
+                }
+
             }
         }
+
+        private async void newButton_Click(object sender, EventArgs e)
+        {
+            // New item logic here
+            NewEditItemForm newItemForm = new NewEditItemForm(null, vaultSettingsConfig);
+            newItemForm.ShowDialog();
+
+
+            if (newItemForm.DialogResult == DialogResult.OK)
+            {
+                // Update existing vault item using the api
+                await createVaultItem(newItemForm.getVaultItem());
+
+                // Refresh current search results
+                await DoSearchAsync();
+            }
+        }
+
+        private async Task updateVaultItem(VaultItem vaultItem)
+        {
+            var result = await api.UpdateVaultItemAsync(vaultItem.Id, vaultItem);
+        }
+
+        private async Task createVaultItem(VaultItem vaultItem)
+        {   
+            var result = await api.CreateVaultItemAsync(vaultItem);
+        }
+
 
         private void searchBox_TextChanged(object sender, EventArgs e)
         {
@@ -172,13 +217,6 @@ namespace RetroVault
                 card.Width = vaultPanel.ClientSize.Width - card.Margin.Horizontal;
                 vaultPanel.Controls.Add(card);
             }
-        }
-
-        private void newButton_Click(object sender, EventArgs e)
-        {
-            // New item logic here
-            NewEditItemForm newItemForm = new NewEditItemForm(null, vaultSettingsConfig);
-            newItemForm.ShowDialog();
         }
 
         private void configButton_Click(object sender, EventArgs e)
