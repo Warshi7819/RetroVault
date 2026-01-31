@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
 using RetroVaultAPI.Models; 
 
 namespace RetroVault
@@ -86,7 +87,14 @@ namespace RetroVault
                 BackColor = Color.LightGray // just to see it
             };
 
-            imageBox.Image = Image.FromFile("thumbnails/c64.png");
+
+            var thumbPath = "thumbnails/" +"item_"+ vaultItem.Id.ToString() + ".png";
+            if(!System.IO.File.Exists(thumbPath))
+            {
+                thumbPath = "thumbnails/missing.png";
+            }
+
+            imageBox.Image = LoadImageUnlocked(thumbPath);
 
             layout.Controls.Add(textPanel, 0, 0);
             layout.Controls.Add(imageBox, 1, 0);
@@ -95,6 +103,20 @@ namespace RetroVault
             this.BorderStyle = BorderStyle.FixedSingle;
             Controls.Add(layout);
         }
+
+
+        // Load image without locking the file
+        // This prevents file locks that can causes issues when trying to overwrite
+        // or delete the image file later when e.g. deleting the item or updating the thumbnail
+        public static Image LoadImageUnlocked(string path)
+        {
+            byte[] bytes = File.ReadAllBytes(path);
+            using (var ms = new MemoryStream(bytes))
+            {
+                return Image.FromStream(ms);
+            }
+        }
+
 
         public VaultItem GetVaultItem()
         {

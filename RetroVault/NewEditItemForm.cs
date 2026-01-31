@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Text;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -136,6 +138,64 @@ namespace RetroVault
         {
             DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        private void setThumbnailButton_Click(object sender, EventArgs e)
+        {
+            // Open file dialog to select an image of type PNG, JPG, BMP, GIF, TIFF
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.bmp;*.gif;*.tiff";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string selectedImagePath = openFileDialog.FileName;
+                string thumbnailsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "thumbnails");
+                if (!Directory.Exists(thumbnailsDir))
+                {
+                    Directory.CreateDirectory(thumbnailsDir);
+                }
+                string thumbnailPath = Path.Combine(thumbnailsDir, "item_" + vaultItem.Id.ToString() + ".png");
+                // Create thumbnail
+                createThumbnail(selectedImagePath, thumbnailPath, 300);
+                
+                MessageBox.Show("Thumbnail set successfully!", "Thumbnail", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+
+        // Create a thumbnail image with a target height while maintaining aspect ratio
+        // input image can be of type PNG, JPG, BMP, GIF, TIFF as supported by Image.FromFile.
+        // Saves the thumbnail as a PNG file
+        public static void createThumbnail(string inputPath, string outputPath, int targetHeight = 300)
+        {
+            using (Image original = Image.FromFile(inputPath))
+            {
+                // Maintain aspect ratio
+                double scale = (double)targetHeight / original.Height;
+                int targetWidth = (int)(original.Width * scale);
+
+                using (Bitmap resized = new Bitmap(targetWidth, targetHeight))
+                {
+                    resized.SetResolution(original.HorizontalResolution, original.VerticalResolution);
+
+                    using (Graphics g = Graphics.FromImage(resized))
+                    {
+                        g.CompositingQuality = CompositingQuality.HighQuality;
+                        g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                        g.SmoothingMode = SmoothingMode.HighQuality;
+                        g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                        g.DrawImage(original, 0, 0, targetWidth, targetHeight);
+
+                        
+                    }
+                    if(File.Exists(outputPath))
+                    {
+                        File.Delete(outputPath);
+                    }
+
+                    resized.Save(outputPath, ImageFormat.Png);
+                }
+            }
         }
     }
 }

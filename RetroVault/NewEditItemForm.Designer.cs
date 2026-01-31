@@ -59,6 +59,7 @@
             button1 = new Button();
             deleteButton = new Button();
             cancelButton = new Button();
+            setThumbnailButton = new Button();
             SuspendLayout();
             // 
             // saveButton
@@ -320,11 +321,22 @@
             cancelButton.UseVisualStyleBackColor = true;
             cancelButton.Click += cancelButton_Click;
             // 
+            // setThumbnailButton
+            // 
+            setThumbnailButton.Location = new Point(14, 872);
+            setThumbnailButton.Name = "setThumbnailButton";
+            setThumbnailButton.Size = new Size(212, 46);
+            setThumbnailButton.TabIndex = 34;
+            setThumbnailButton.Text = "Set Thumbnail";
+            setThumbnailButton.UseVisualStyleBackColor = true;
+            setThumbnailButton.Click += setThumbnailButton_Click;
+            // 
             // NewEditItemForm
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(974, 1029);
+            Controls.Add(setThumbnailButton);
             Controls.Add(cancelButton);
             Controls.Add(deleteButton);
             Controls.Add(button1);
@@ -395,5 +407,6 @@
         private Button button1;
         private Button deleteButton;
         private Button cancelButton;
+        private Button setThumbnailButton;
     }
 }

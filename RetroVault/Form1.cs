@@ -125,6 +125,13 @@ namespace RetroVault
                 {
                     if (editForm.isDeleteRequested())
                     { 
+                        // see if we should remove thumbnail image
+                        var thumbPath = "thumbnails/" + "item_" + editForm.getVaultItem().Id.ToString() + ".png";
+                        if(System.IO.File.Exists(thumbPath))        
+                        {
+                            System.IO.File.Delete(thumbPath);
+                        }
+                        
                         await api.DeleteVaultItemAsync(editForm.getVaultItem().Id);
                     }
                     else
