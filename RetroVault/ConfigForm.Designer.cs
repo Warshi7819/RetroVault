@@ -29,31 +29,29 @@
         private void InitializeComponent()
         {
             label1 = new Label();
-            selectVaultbutton = new Button();
+            selectMediaLibraryButton = new Button();
             saveButton = new Button();
             cancelButton = new Button();
-            label2 = new Label();
-            textBox1 = new TextBox();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(295, 17);
+            label1.Location = new Point(20, 59);
             label1.Name = "label1";
             label1.Size = new Size(183, 32);
             label1.TabIndex = 0;
             label1.Text = "None selected...";
             // 
-            // selectVaultbutton
+            // selectMediaLibraryButton
             // 
-            selectVaultbutton.Location = new Point(20, 10);
-            selectVaultbutton.Name = "selectVaultbutton";
-            selectVaultbutton.Size = new Size(252, 46);
-            selectVaultbutton.TabIndex = 1;
-            selectVaultbutton.Text = "Select Vault Folder";
-            selectVaultbutton.UseVisualStyleBackColor = true;
-            selectVaultbutton.Click += selectVaultbutton_Click;
+            selectMediaLibraryButton.Location = new Point(20, 10);
+            selectMediaLibraryButton.Name = "selectMediaLibraryButton";
+            selectMediaLibraryButton.Size = new Size(252, 46);
+            selectMediaLibraryButton.TabIndex = 1;
+            selectMediaLibraryButton.Text = "Media Library Folder";
+            selectMediaLibraryButton.UseVisualStyleBackColor = true;
+            selectMediaLibraryButton.Click += selectMediaLibraryButton_Click;
             // 
             // saveButton
             // 
@@ -74,33 +72,14 @@
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
             // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(25, 80);
-            label2.Name = "label2";
-            label2.Size = new Size(114, 32);
-            label2.TabIndex = 4;
-            label2.Text = "Currency:";
-            // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(145, 77);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(200, 39);
-            textBox1.TabIndex = 5;
-            textBox1.Text = "NOK";
-            // 
             // ConfigForm
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(933, 590);
-            Controls.Add(textBox1);
-            Controls.Add(label2);
             Controls.Add(cancelButton);
             Controls.Add(saveButton);
-            Controls.Add(selectVaultbutton);
+            Controls.Add(selectMediaLibraryButton);
             Controls.Add(label1);
             Name = "ConfigForm";
             Text = "App Config";
@@ -111,10 +90,8 @@
         #endregion
 
         private Label label1;
-        private Button selectVaultbutton;
+        private Button selectMediaLibraryButton;
         private Button saveButton;
         private Button cancelButton;
-        private Label label2;
-        private TextBox textBox1;
     }
 }

@@ -19,16 +19,6 @@ namespace RetroVault
         // Null => original size, otherwise use specified size (preserve aspect when one dim is 0)
         private Size? bgSize = null;
 
-        // P/Invoke to start a window drag from a client-area mouse down
-        [DllImport("user32.dll")]
-        private static extern bool ReleaseCapture();
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
-
-        private const int WM_NCLBUTTONDOWN = 0x00A1;
-        private const int HTCAPTION = 0x02;
-
         public Splash()
         {
             InitializeComponent();
@@ -55,10 +45,6 @@ namespace RetroVault
 
             // Apply shape during Load (occurs before first show) instead of Shown to avoid the rectangular flash.
             this.Load += RetroVault_Load;
-
-            // Allow dragging by holding left mouse button anywhere on the form client area
-            // (controls will still receive their own mouse events and won't trigger this).
-            this.MouseDown += RetroVault_MouseDown;
         }
 
         /// <summary>
@@ -143,19 +129,6 @@ namespace RetroVault
             bgScaled?.Dispose();
             bgScaled = scaled;
             bgSize = new Size(targetW, targetH);
-        }
-
-        // <summary>
-        // Allow dragging the window by holding left mouse button anywhere on the form client area.
-        // (controls will still receive their own mouse events and won't trigger this).
-        // </summary>
-        private void RetroVault_MouseDown(object? sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                ReleaseCapture();
-                SendMessage(this.Handle, WM_NCLBUTTONDOWN, (IntPtr)HTCAPTION, IntPtr.Zero);
-            }
         }
 
         // <summary>

@@ -35,7 +35,7 @@ namespace RetroVault
             return config;
         }
 
-        private void selectVaultbutton_Click(object sender, EventArgs e)
+        private void selectMediaLibraryButton_Click(object sender, EventArgs e)
         {
             // Select folder to store data
             using (var fbd = new FolderBrowserDialog())

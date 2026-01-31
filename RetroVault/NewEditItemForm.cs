@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -209,7 +211,50 @@ namespace RetroVault
             // <MediaLibraryPath>\<ID>\Software\
             string mediaLibraryPath = config.MediaLibraryPath;
 
+            if(mediaLibraryPath == null || mediaLibraryPath.Trim() == "")
+            {
+                MessageBox.Show("Media Library Path is not configured. Please set it in the Settings.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if(Directory.Exists(mediaLibraryPath) == false)
+            {
+                MessageBox.Show("Media Library Path does not exist. Please check the path in the Settings.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
+            if(Directory.Exists(Path.Combine(mediaLibraryPath, vaultItem.Id.ToString())) == false)
+            {
+                // Create directories when item directory is initialized. 
+                // If user deletes some of these later on then be it, they won't be automatically recreated unless
+                // the entire item directory is missing.
+                Directory.CreateDirectory(Path.Combine(mediaLibraryPath, vaultItem.Id.ToString()));
+                Directory.CreateDirectory(Path.Combine(mediaLibraryPath, vaultItem.Id.ToString(), "Images"));
+                Directory.CreateDirectory(Path.Combine(mediaLibraryPath, vaultItem.Id.ToString(), "Videos"));
+                Directory.CreateDirectory(Path.Combine(mediaLibraryPath, vaultItem.Id.ToString(), "Documents"));
+                Directory.CreateDirectory(Path.Combine(mediaLibraryPath, vaultItem.Id.ToString(), "Audio"));
+                Directory.CreateDirectory(Path.Combine(mediaLibraryPath, vaultItem.Id.ToString(), "Software"));
+            }
+
+            OpenFolder(Path.Combine(mediaLibraryPath, vaultItem.Id.ToString()));
+        }
+
+        
+
+        // Try to keep it as non-windows as possible I guess...
+        public static void OpenFolder(string path)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Process.Start(new ProcessStartInfo("explorer.exe", path) { UseShellExecute = true });
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                Process.Start("open", path);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Process.Start("xdg-open", path);
+            }
         }
     }
 }
