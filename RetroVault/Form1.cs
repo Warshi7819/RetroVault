@@ -14,6 +14,7 @@ namespace RetroVault
         string vaultPath = "";
         VaultSettingsConfig vaultSettingsConfig;
         VaultApiClient api;
+        bool initializedForm = false;
 
         public Form1()
         {
@@ -37,6 +38,9 @@ namespace RetroVault
             {
                 BaseAddress = new Uri("https://localhost:7251/api/")
             });
+
+            // set initialized to true after loading config
+            initializedForm = true;
         }
 
         private void LoadConfig()
@@ -185,14 +189,21 @@ namespace RetroVault
         {
             // Implement system filtering logic here
             selectedSystem = systemComboBox.SelectedItem.ToString() ?? "All";
-            //await DoSearchAsync();
+
+            if (initializedForm)
+            {
+                await DoSearchAsync();
+            }
         }
 
         private async void catComboBox_SelectedIndexChanged(object sender, EventArgs e)
         { 
             // Implement category filtering logic here
             selectedCategory = catComboBox.SelectedItem.ToString() ?? "All";
-            //await DoSearchAsync();
+            if (initializedForm)
+            {
+                await DoSearchAsync();
+            }
         }
         private async void searchButton_ClickAsync(object sender, EventArgs e)
         {
