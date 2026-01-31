@@ -156,7 +156,7 @@ namespace RetroVault
                 string thumbnailPath = Path.Combine(thumbnailsDir, "item_" + vaultItem.Id.ToString() + ".png");
                 // Create thumbnail
                 createThumbnail(selectedImagePath, thumbnailPath, 300);
-                
+
                 MessageBox.Show("Thumbnail set successfully!", "Thumbnail", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -186,9 +186,9 @@ namespace RetroVault
 
                         g.DrawImage(original, 0, 0, targetWidth, targetHeight);
 
-                        
+
                     }
-                    if(File.Exists(outputPath))
+                    if (File.Exists(outputPath))
                     {
                         File.Delete(outputPath);
                     }
@@ -196,6 +196,20 @@ namespace RetroVault
                     resized.Save(outputPath, ImageFormat.Png);
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // Based on configured path to media library
+            // Create a folder structure like:
+            // <MediaLibraryPath>\<ID>\Images\
+            // <MediaLibraryPath>\<ID>\Videos\
+            // <MediaLibraryPath>\<ID>\Documents\
+            // <MediaLibraryPath>\<ID>\Audio\
+            // <MediaLibraryPath>\<ID>\Software\
+            string mediaLibraryPath = config.MediaLibraryPath;
+
+
         }
     }
 }

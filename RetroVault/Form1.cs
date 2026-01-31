@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Configuration;
 using RetroVaultAPI.Models;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace RetroVault
@@ -51,7 +52,8 @@ namespace RetroVault
                         .AddJsonFile("config.json", optional: false, reloadOnChange: true) // Add the JSON file provider
                         .Build(); // Build the configuration
             vaultSettingsConfig = new VaultSettingsConfig();
-            config.GetSection("VaultSettings").Bind(vaultSettingsConfig);
+            config.Bind(vaultSettingsConfig);
+
             // Set vault path from config
             vaultPath = vaultSettingsConfig.VaultPath;
         }
@@ -109,6 +111,21 @@ namespace RetroVault
                 vaultPanel.Controls.Add(card);
             }
         }
+
+        public void SaveConfig(VaultSettingsConfig config)
+        {
+            var configFileName = "config.json";
+            var confPath = Path.Combine(Directory.GetCurrentDirectory(), configFileName);
+
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+
+            string json = JsonSerializer.Serialize(config, options);
+            File.WriteAllText(configFileName, json);
+        }
+
 
         private void vaultPanel_SizeChanged(object sender, EventArgs e)
         {
@@ -240,9 +257,14 @@ namespace RetroVault
         private void configButton_Click(object sender, EventArgs e)
         {
             // Open configuration/settings logic here
-            ConfigForm configForm = new ConfigForm();
+            ConfigForm configForm = new ConfigForm(vaultSettingsConfig);
             configForm.ShowDialog();
 
+            if(configForm.DialogResult == DialogResult.OK)
+            {
+                // Reload config
+                SaveConfig(configForm.getVaultSettingsConfig());
+            }
         }
 
         private void searchBox_KeyDown_1(object sender, KeyEventArgs e)

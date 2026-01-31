@@ -10,13 +10,29 @@ namespace RetroVault
 {
     public partial class ConfigForm : Form
     {
-        public ConfigForm()
+        VaultSettingsConfig config;
+
+        public ConfigForm(VaultSettingsConfig conf)
         {
             InitializeComponent();
+            config = conf;
 
+            if (string.IsNullOrWhiteSpace(config.MediaLibraryPath))
+            {
+                label1.Text = "No path selected...";
+            }
+            else
+            {
+                label1.Text = config.MediaLibraryPath;
+            }
             // Load icon
             string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon", "RetroVault.ico");
             this.Icon = new Icon(iconPath);
+        }
+
+        public VaultSettingsConfig getVaultSettingsConfig()
+        {
+            return config;
         }
 
         private void selectVaultbutton_Click(object sender, EventArgs e)
@@ -34,7 +50,22 @@ namespace RetroVault
 
         private void saveButton_Click(object sender, EventArgs e)
         {
+            // Update config
+            var mediaPath = label1.Text;
+            if(string.IsNullOrWhiteSpace(mediaPath))
+            {
+                MessageBox.Show("Please select a valid media library path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if(!System.IO.Directory.Exists(mediaPath))
+            {
+                MessageBox.Show("The selected media library path does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            config.MediaLibraryPath = label1.Text;
 
+            DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

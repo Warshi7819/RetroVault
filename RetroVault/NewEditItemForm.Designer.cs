@@ -300,6 +300,7 @@
             button1.TabIndex = 31;
             button1.Text = "Media Folder";
             button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // deleteButton
             // 

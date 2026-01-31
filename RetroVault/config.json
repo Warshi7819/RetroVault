@@ -1,6 +1,6 @@
 {
-  "VaultSettings": {
     "VaultPath": "",
+    "MediaLibraryPath": "",
     "Categories": [
       "All",
       "Hardware",
@@ -30,5 +30,4 @@
       "USD",
       "EUR"
     ]
-  }
 }
