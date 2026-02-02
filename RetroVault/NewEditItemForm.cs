@@ -29,6 +29,8 @@ namespace RetroVault
             {
                 this.Text = "Add New Item";
                 this.deleteButton.Enabled = false;
+                this.openMediaFolderButton.Enabled = false;
+                this.setThumbnailButton.Enabled = false;
             }
             else
             {
@@ -146,6 +148,10 @@ namespace RetroVault
         {
             // Open file dialog to select an image of type PNG, JPG, BMP, GIF, TIFF
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            if(config.MediaLibraryPath != null && config.MediaLibraryPath.Trim() != "")
+            {
+                openFileDialog.InitialDirectory = Path.Combine(config.MediaLibraryPath, vaultItem.Id.ToString());
+            }   
             openFileDialog.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.bmp;*.gif;*.tiff";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {

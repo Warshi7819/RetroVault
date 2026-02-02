@@ -56,7 +56,7 @@
             acquiredFromTextBox = new TextBox();
             acquiredDateLabel = new Label();
             acquiredDateTextBox = new TextBox();
-            button1 = new Button();
+            openMediaFolderButton = new Button();
             deleteButton = new Button();
             cancelButton = new Button();
             setThumbnailButton = new Button();
@@ -291,16 +291,16 @@
             acquiredDateTextBox.Size = new Size(367, 39);
             acquiredDateTextBox.TabIndex = 10;
             // 
-            // button1
+            // openMediaFolderButton
             // 
-            button1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button1.Location = new Point(14, 935);
-            button1.Name = "button1";
-            button1.Size = new Size(212, 82);
-            button1.TabIndex = 31;
-            button1.Text = "Media Folder";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            openMediaFolderButton.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            openMediaFolderButton.Location = new Point(14, 935);
+            openMediaFolderButton.Name = "openMediaFolderButton";
+            openMediaFolderButton.Size = new Size(212, 82);
+            openMediaFolderButton.TabIndex = 31;
+            openMediaFolderButton.Text = "Media Folder";
+            openMediaFolderButton.UseVisualStyleBackColor = true;
+            openMediaFolderButton.Click += button1_Click;
             // 
             // deleteButton
             // 
@@ -340,7 +340,7 @@
             Controls.Add(setThumbnailButton);
             Controls.Add(cancelButton);
             Controls.Add(deleteButton);
-            Controls.Add(button1);
+            Controls.Add(openMediaFolderButton);
             Controls.Add(acquiredDateTextBox);
             Controls.Add(acquiredDateLabel);
             Controls.Add(acquiredFromTextBox);
@@ -405,7 +405,7 @@
         private TextBox acquiredFromTextBox;
         private Label acquiredDateLabel;
         private TextBox acquiredDateTextBox;
-        private Button button1;
+        private Button openMediaFolderButton;
         private Button deleteButton;
         private Button cancelButton;
         private Button setThumbnailButton;
