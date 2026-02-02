@@ -11,5 +11,8 @@ namespace RetroVault
         public string VaultPath { get; set; }
         public List<string> Currencies { get; set; }
         public string MediaLibraryPath { get; set; }
+        public List<string> Regions { get; set; }
+        public List<string> Complete { get; set; }
+        public string RESTAPI { get; set; }
     }
 }

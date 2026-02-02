@@ -9,12 +9,19 @@ namespace RetroVault
 {
     public partial class Form1 : Form
     {
+        // Initial search values
         string searchTerm = "";
         string selectedSystem = "All";
         string selectedCategory = "All";
         string vaultPath = "";
+
+        // Configuration
         VaultSettingsConfig vaultSettingsConfig;
+
+        // REST API
         VaultApiClient api;
+
+        // If the form has been initialized
         bool initializedForm = false;
 
         public Form1()
@@ -37,7 +44,7 @@ namespace RetroVault
 
             this.api = new VaultApiClient(new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:7251/api/")
+                BaseAddress = new Uri(this.vaultSettingsConfig.RESTAPI)
             });
 
             // set initialized to true after loading config
