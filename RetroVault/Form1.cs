@@ -177,10 +177,8 @@ namespace RetroVault
 
         private async void newButton_Click(object sender, EventArgs e)
         {
-            // New item logic here
             NewEditItemForm newItemForm = new NewEditItemForm(null, vaultSettingsConfig);
             newItemForm.ShowDialog();
-
 
             if (newItemForm.DialogResult == DialogResult.OK)
             {
@@ -205,7 +203,7 @@ namespace RetroVault
 
         private void searchBox_TextChanged(object sender, EventArgs e)
         {
-            // Implement search filtering logic here
+            // update search term
             searchTerm = searchBox.Text;
         }
 
