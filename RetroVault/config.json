@@ -1,5 +1,5 @@
 {
-  "RESTAPI": "https://localhost:7251/api/",
+  "RESTAPI": "http://localhost:5149/api/",
   "VaultPath": "",
   "MediaLibraryPath": "",
   "Categories": [
