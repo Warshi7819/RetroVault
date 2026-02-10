@@ -91,7 +91,7 @@ namespace RetroVault
             var thumbPath = "thumbnails/" +"item_"+ vaultItem.Id.ToString() + ".png";
             if(!System.IO.File.Exists(thumbPath))
             {
-                thumbPath = "thumbnails/missing.png";
+                thumbPath = "thumbnails/detective.png";
             }
 
             imageBox.Image = LoadImageUnlocked(thumbPath);
