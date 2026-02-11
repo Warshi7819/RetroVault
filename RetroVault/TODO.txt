@@ -1,1 +1,1 @@
-﻿1) Thumbnails saved on server now but need to be fetched from server when displaying the item in search results as well
+﻿
