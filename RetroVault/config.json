@@ -15,6 +15,7 @@
     "Commodore Amiga",
     "Atari 2600",
     "Atari 800XL",
+    "Atari 7800",
     "MSX",
     "Playstation 1",
     "Playstation 2",
@@ -24,7 +25,8 @@
     "SNES",
     "Super Famicom",
     "Nintendo 64",
-    "GameCube"
+    "GameCube",
+    "Tandy/Radio Shack"
   ],
   "Currencies": [
     "NOK",

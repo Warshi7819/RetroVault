@@ -20,6 +20,7 @@ namespace RetroVault
         internal VaultItem vaultItem;
         internal VaultSettingsConfig config;
         internal Boolean deleteItem = false;
+        internal Boolean thumbnailUpdated = false;
         public NewEditItemForm(VaultItem item, VaultSettingsConfig conf)
         {
             InitializeComponent();
@@ -165,6 +166,9 @@ namespace RetroVault
                 // Create thumbnail
                 createThumbnail(selectedImagePath, thumbnailPath, 300);
 
+                // Set update flag
+                thumbnailUpdated = true;
+
                 MessageBox.Show("Thumbnail set successfully!", "Thumbnail", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -261,6 +265,11 @@ namespace RetroVault
             {
                 Process.Start("xdg-open", path);
             }
+        }
+
+        internal bool isThumbnailUpdated()
+        {
+            return thumbnailUpdated;
         }
     }
 }

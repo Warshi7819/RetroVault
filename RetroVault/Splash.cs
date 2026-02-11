@@ -63,7 +63,7 @@ namespace RetroVault
             string path = Path.Combine(baseDir, relativePath);
 
             if (!File.Exists(path))
-                path = Path.Combine(Directory.GetCurrentDirectory(), relativePath);
+                path = Path.Combine(AppContext.BaseDirectory, relativePath);
 
             if (!File.Exists(path))
                 return;

@@ -55,7 +55,7 @@ namespace RetroVault
         {
             // Load configuration from appsettings.json
             var config = new ConfigurationBuilder()
-                        .SetBasePath(Directory.GetCurrentDirectory()) // Set the base path
+                        .SetBasePath(AppContext.BaseDirectory) // Set the base path
                         .AddJsonFile("config.json", optional: false, reloadOnChange: true) // Add the JSON file provider
                         .Build(); // Build the configuration
             vaultSettingsConfig = new VaultSettingsConfig();
@@ -87,42 +87,11 @@ namespace RetroVault
             catComboBox.SelectedIndex = 0; // Select "All" by default
         }
 
-        private void LoadVaultItems()
-        {
-            // Clear existing items
-            vaultPanel.Controls.Clear();
-
-            // Load new items - Dummy data for demonstration right now
-            List<VaultItem> vaultItems = new List<VaultItem>();
-            VaultItem vaultItem = new VaultItem();
-            vaultItem.Name = "C64 - Breadbin";
-            vaultItem.System = "Commodore 64";
-            vaultItem.Category = "Hardware";
-            vaultItem.Year = 1983;
-            vaultItem.Id = 1;
-            vaultItem.Thumbnail = "thumbnails/c64.png";
-            vaultItems.Add(vaultItem);
-
-            foreach (VaultItem item in vaultItems)
-            {
-                var card = new VaultItemCard(item)
-                {
-                    Margin = new Padding(0, 0, 0, 10),
-                    Height = 200
-                };
-
-                // Add event handler for CardClicked event
-                card.CardClicked += Card_Clicked;
-                // initial width
-                card.Width = vaultPanel.ClientSize.Width - card.Margin.Horizontal;
-                vaultPanel.Controls.Add(card);
-            }
-        }
 
         public void SaveConfig(VaultSettingsConfig config)
         {
             var configFileName = "config.json";
-            var confPath = Path.Combine(Directory.GetCurrentDirectory(), configFileName);
+            var confPath = Path.Combine(AppContext.BaseDirectory, configFileName);
 
             var options = new JsonSerializerOptions
             {
@@ -166,6 +135,12 @@ namespace RetroVault
                     {
                         // Update existing vault item using the api
                         await updateVaultItem(editForm.getVaultItem());
+                        // Check if thumbnail is updated, if so upload
+                        if (editForm.isThumbnailUpdated())
+                        {
+                            var thumbPath = "thumbnails/" + "item_" + editForm.getVaultItem().Id.ToString() + ".png";
+                            await api.UploadThumbnail(editForm.getVaultItem().Id, thumbPath);
+                        }
                     }
                    
                     // Refresh current search results

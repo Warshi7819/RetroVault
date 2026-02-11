@@ -123,9 +123,51 @@ namespace RetroVaultAPI.Controllers
                 return NotFound($"Vault item with ID {id} not found.");
             }
 
+            // If thumbnail uploaded, delete that as well
+            var thumbnailsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Thumbnails", item.Thumbnail);
+            if (System.IO.File.Exists(thumbnailsPath))
+            { 
+                System.IO.File.Delete(thumbnailsPath);
+            }
+
+            // Delete item from DB
             _context.VaultItems.Remove(item);
             await _context.SaveChangesAsync();
+
             return NoContent();
+        }
+
+        [HttpPost("{id}/thumbnail")]
+        public async Task<IActionResult> UploadThumbnail(int id, IFormFile file)
+        {
+            var item = await _context.VaultItems.FindAsync(id);
+            if (item == null)
+                return NotFound($"Vault item with ID {id} not found.");
+
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            // Ensure folder exists
+            var thumbnailsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Thumbnails");
+            if (!Directory.Exists(thumbnailsPath))
+                Directory.CreateDirectory(thumbnailsPath);
+
+            // Create unique filename
+            var extension = Path.GetExtension(file.FileName);
+            var fileName = $"{id}{extension}";
+            var filePath = Path.Combine(thumbnailsPath, fileName);
+
+            // Save file
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            //Store the filename in the DB
+            item.Thumbnail = fileName;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Thumbnail uploaded successfully.", fileName });
         }
     }
 }

@@ -78,6 +78,17 @@ namespace RetroVault
             var response = await _http.DeleteAsync($"VaultItem/{id}");
             return response.IsSuccessStatusCode;
         }
+
+        // UPLOAD THUMBNAIL
+        public async Task<bool> UploadThumbnail(int id, string path)
+        {
+            var filename = Path.GetFileName(path);
+            var form = new MultipartFormDataContent();
+            form.Add(new StreamContent(File.OpenRead(path)), "file", filename);
+            
+            var response = await _http.PostAsync($"VaultItem/{id}/thumbnail", form);
+            return response.IsSuccessStatusCode;
+        }
     }
 }
 

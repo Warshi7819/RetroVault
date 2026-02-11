@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using RetroVaultAPI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +21,21 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+// Check if Thumbnail dir exists, if not create
+var thumbDir = Path.Combine(AppContext.BaseDirectory, "Thumbnails");
+if (!System.IO.Directory.Exists(thumbDir))
+{ 
+    Directory.CreateDirectory(thumbDir);
+}
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(thumbDir),
+    RequestPath = "/thumbnails"
+});
+
+
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
