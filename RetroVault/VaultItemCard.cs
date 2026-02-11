@@ -86,22 +86,41 @@ namespace RetroVault
                 SizeMode = PictureBoxSizeMode.Zoom,
                 BackColor = Color.LightGray // just to see it
             };
-
-
-            var thumbPath = "thumbnails/" +"item_"+ vaultItem.Id.ToString() + ".png";
-            if(!System.IO.File.Exists(thumbPath))
-            {
-                thumbPath = "thumbnails/detective.png";
-            }
-
-            imageBox.Image = LoadImageUnlocked(thumbPath);
-
+        
             layout.Controls.Add(textPanel, 0, 0);
             layout.Controls.Add(imageBox, 1, 0);
 
             this.Padding = new Padding(10);
             this.BorderStyle = BorderStyle.FixedSingle;
             Controls.Add(layout);
+
+            // Load thumbnail async - fire and forget
+            _ = LoadThumbnailAsync(imageBox, vaultItem.Id);
+        }
+
+
+
+
+        private async Task LoadThumbnailAsync(PictureBox box, int id)
+        {
+            string url = $"http://localhost:5149/thumbnails/{id}.png";
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var bytes = await client.GetByteArrayAsync(url);
+                    using (var ms = new MemoryStream(bytes))
+                    {
+                        box.Image = Image.FromStream(ms);
+                    }
+                }
+            }
+            catch
+            {
+                // fallback
+                box.Image = LoadImageUnlocked("thumbnails/detective.png");
+            }
         }
 
 
