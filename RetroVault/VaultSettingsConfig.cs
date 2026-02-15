@@ -14,5 +14,7 @@ namespace RetroVault
         public List<string> Regions { get; set; }
         public List<string> Complete { get; set; }
         public string RESTAPI { get; set; }
+
+        public string ThumbnailURL { get; set; }
     }
 }

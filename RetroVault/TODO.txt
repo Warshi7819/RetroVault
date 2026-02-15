@@ -1,1 +1,3 @@
-﻿
+﻿4) Pagination of search results - number of results per page, and ability to navigate between pages and total results
+  - fetch 5 or 10 by default. Configurable in the config page
+3) Caching of thumbnails on client

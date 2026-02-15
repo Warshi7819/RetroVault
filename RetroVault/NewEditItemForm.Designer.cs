@@ -64,6 +64,7 @@
             // 
             // saveButton
             // 
+            saveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             saveButton.Location = new Point(812, 971);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(150, 46);
@@ -83,6 +84,7 @@
             // 
             // nameTextBox
             // 
+            nameTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             nameTextBox.Location = new Point(135, 10);
             nameTextBox.Name = "nameTextBox";
             nameTextBox.Size = new Size(790, 39);
@@ -90,6 +92,7 @@
             // 
             // categoryComboBox
             // 
+            categoryComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             categoryComboBox.FormattingEnabled = true;
             categoryComboBox.Location = new Point(135, 146);
             categoryComboBox.Name = "categoryComboBox";
@@ -125,6 +128,7 @@
             // 
             // descTextBox
             // 
+            descTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             descTextBox.Location = new Point(135, 348);
             descTextBox.Multiline = true;
             descTextBox.Name = "descTextBox";
@@ -133,6 +137,7 @@
             // 
             // yearLabel
             // 
+            yearLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             yearLabel.AutoSize = true;
             yearLabel.Location = new Point(481, 83);
             yearLabel.Name = "yearLabel";
@@ -142,6 +147,7 @@
             // 
             // yearTextBox
             // 
+            yearTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             yearTextBox.Location = new Point(558, 79);
             yearTextBox.Name = "yearTextBox";
             yearTextBox.Size = new Size(200, 39);
@@ -149,6 +155,7 @@
             // 
             // publisherLabel
             // 
+            publisherLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             publisherLabel.AutoSize = true;
             publisherLabel.Location = new Point(12, 656);
             publisherLabel.Name = "publisherLabel";
@@ -158,6 +165,7 @@
             // 
             // developerLabel
             // 
+            developerLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             developerLabel.AutoSize = true;
             developerLabel.Location = new Point(14, 712);
             developerLabel.Name = "developerLabel";
@@ -167,6 +175,7 @@
             // 
             // systemComboBox
             // 
+            systemComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             systemComboBox.FormattingEnabled = true;
             systemComboBox.Location = new Point(135, 79);
             systemComboBox.Name = "systemComboBox";
@@ -175,6 +184,7 @@
             // 
             // publisherTextBox
             // 
+            publisherTextBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             publisherTextBox.Location = new Point(156, 656);
             publisherTextBox.Name = "publisherTextBox";
             publisherTextBox.Size = new Size(769, 39);
@@ -182,6 +192,7 @@
             // 
             // devTextBox
             // 
+            devTextBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             devTextBox.Location = new Point(156, 709);
             devTextBox.Name = "devTextBox";
             devTextBox.Size = new Size(769, 39);
@@ -189,6 +200,7 @@
             // 
             // priceLabel
             // 
+            priceLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             priceLabel.AutoSize = true;
             priceLabel.Location = new Point(481, 149);
             priceLabel.Name = "priceLabel";
@@ -198,6 +210,7 @@
             // 
             // priceTextBox
             // 
+            priceTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             priceTextBox.Location = new Point(558, 143);
             priceTextBox.Name = "priceTextBox";
             priceTextBox.Size = new Size(200, 39);
@@ -205,6 +218,7 @@
             // 
             // currencyComboBox
             // 
+            currencyComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             currencyComboBox.FormattingEnabled = true;
             currencyComboBox.Location = new Point(785, 143);
             currencyComboBox.Name = "currencyComboBox";
@@ -213,6 +227,7 @@
             // 
             // storageLabel
             // 
+            storageLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             storageLabel.AutoSize = true;
             storageLabel.Location = new Point(14, 793);
             storageLabel.Name = "storageLabel";
@@ -222,6 +237,7 @@
             // 
             // storageTextBox
             // 
+            storageTextBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             storageTextBox.Location = new Point(156, 792);
             storageTextBox.Name = "storageTextBox";
             storageTextBox.Size = new Size(769, 39);
@@ -270,6 +286,7 @@
             // 
             // acquiredFromTextBox
             // 
+            acquiredFromTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             acquiredFromTextBox.Location = new Point(558, 215);
             acquiredFromTextBox.Name = "acquiredFromTextBox";
             acquiredFromTextBox.Size = new Size(367, 39);
@@ -286,6 +303,7 @@
             // 
             // acquiredDateTextBox
             // 
+            acquiredDateTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             acquiredDateTextBox.Location = new Point(558, 279);
             acquiredDateTextBox.Name = "acquiredDateTextBox";
             acquiredDateTextBox.Size = new Size(367, 39);
@@ -293,6 +311,7 @@
             // 
             // openMediaFolderButton
             // 
+            openMediaFolderButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             openMediaFolderButton.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             openMediaFolderButton.Location = new Point(14, 935);
             openMediaFolderButton.Name = "openMediaFolderButton";
@@ -304,6 +323,7 @@
             // 
             // deleteButton
             // 
+            deleteButton.Anchor = AnchorStyles.Bottom;
             deleteButton.Location = new Point(389, 971);
             deleteButton.Name = "deleteButton";
             deleteButton.Size = new Size(150, 46);
@@ -314,6 +334,7 @@
             // 
             // cancelButton
             // 
+            cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             cancelButton.Location = new Point(656, 971);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(150, 46);
@@ -324,6 +345,7 @@
             // 
             // setThumbnailButton
             // 
+            setThumbnailButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             setThumbnailButton.Location = new Point(14, 872);
             setThumbnailButton.Name = "setThumbnailButton";
             setThumbnailButton.Size = new Size(212, 46);

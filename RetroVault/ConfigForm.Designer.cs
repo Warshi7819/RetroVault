@@ -55,6 +55,7 @@
             // 
             // saveButton
             // 
+            saveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             saveButton.Location = new Point(615, 532);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(150, 46);
@@ -65,12 +66,14 @@
             // 
             // cancelButton
             // 
+            cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             cancelButton.Location = new Point(771, 532);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(150, 46);
             cancelButton.TabIndex = 3;
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.Click += cancelButton_Click;
             // 
             // ConfigForm
             // 

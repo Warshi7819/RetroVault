@@ -67,5 +67,11 @@ namespace RetroVault
             DialogResult = DialogResult.OK;
             this.Close();
         }
+
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
     }
 }

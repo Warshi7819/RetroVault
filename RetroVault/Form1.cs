@@ -220,7 +220,7 @@ namespace RetroVault
 
             foreach (VaultItem item in results)
             {
-                var card = new VaultItemCard(item)
+                var card = new VaultItemCard(item, this.vaultSettingsConfig.ThumbnailURL)
                 {
                     Margin = new Padding(0, 0, 0, 10),
                     Height = 200

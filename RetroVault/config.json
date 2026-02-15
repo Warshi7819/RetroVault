@@ -1,5 +1,6 @@
 {
   "RESTAPI": "http://localhost:5149/api/",
+  "ThumbnailURL": "localhost:5149",
   "VaultPath": "",
   "MediaLibraryPath": "",
   "Categories": [
@@ -20,6 +21,7 @@
     "Playstation 1",
     "Playstation 2",
     "Playstation 3",
+    "Playstation Portable (PSP)",
     "NES",
     "Famicom",
     "SNES",

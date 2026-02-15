@@ -21,9 +21,10 @@ namespace RetroVault
         private string lineTwo = "";
         private string lineThree = "";
         private string lineFour = "";
+        private string thumbnailURL = string.Empty;
         private VaultItem vaultItem;
 
-        public VaultItemCard(VaultItem item)
+        public VaultItemCard(VaultItem item, string thumbUrl)
         {
             InitializeComponent();
             this.vaultItem = item;
@@ -32,6 +33,8 @@ namespace RetroVault
             lineThree = "Category: " + item.Category;
             lineFour = "Year: " + item.Year.ToString();
             id = item.Id.ToString();
+
+            thumbnailURL = thumbUrl;
 
             // Disable automatic sizing to allow manual control
             this.AutoSize = false;
@@ -103,7 +106,7 @@ namespace RetroVault
 
         private async Task LoadThumbnailAsync(PictureBox box, int id)
         {
-            string url = $"http://localhost:5149/thumbnails/{id}.png";
+            string url = $"{thumbnailURL}/thumbnails/{id}.png";
 
             try
             {
