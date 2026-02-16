@@ -1,3 +1,9 @@
-﻿4) Pagination of search results - number of results per page, and ability to navigate between pages and total results
+﻿1) Pagination of search results - number of results per page, and ability to navigate between pages and total results
   - fetch 5 or 10 by default. Configurable in the config page
-3) Caching of thumbnails on client
+2) Caching of thumbnails on client
+3) Create report of all items in the database - export to CSV or Excel. 
+  - Include all metadata fields?
+  - Price report?
+4) For sale, sold and sale price fields.
+5) Backup rutine for production database, media folder and thumbnails.
+

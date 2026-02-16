@@ -1,6 +1,6 @@
 {
   "RESTAPI": "http://localhost:5149/api/",
-  "ThumbnailURL": "localhost:5149",
+  "ThumbnailURL": "http://localhost:5149",
   "VaultPath": "",
   "MediaLibraryPath": "",
   "Categories": [

@@ -1,0 +1,27 @@
+﻿@page
+@model LoginModel
+
+<h2 class="mb-4">Login</h2>
+
+<form method="post">
+    <div class="mb-3 row">
+        <label for="Username" class="col-sm-3 col-form-label">Username</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="Username" name="Username" />
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="Password" class="col-sm-3 col-form-label">Password</label>
+        <div class="col-sm-6">
+            <input type="password" class="form-control" id="Password" name="Password" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger mt-3">@Model.ErrorMessage</div>
+    }
+</form>
