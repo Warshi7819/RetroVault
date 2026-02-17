@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RetroVaultAPI.Client;
-using RetroVaultAPI.Models;
+using RetroVault.Shared;
+using RetroVault.Shared.Models;
 
 namespace RetroVaultWebApp.Pages
 {

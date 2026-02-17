@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="RetroVault.Shared/RetroVault.Shared.csproj" Id="11c857d1-3860-486e-ace1-3b633b1ce50e" />
   <Project Path="RetroVault/RetroVault.csproj" />
   <Project Path="RetroVaultAPI/RetroVaultAPI.csproj" Id="dfba3541-5d66-4432-9725-d56fe2f7c655" />
   <Project Path="RetroVaultWebApp/RetroVaultWebApp.csproj" Id="8d3901d4-0efa-4bc0-8230-07b09a27ec96" />

@@ -6,9 +6,7 @@ using System.Diagnostics.Tracing;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using Microsoft.EntityFrameworkCore.Metadata;
-using RetroVaultAPI.Models; 
+using RetroVault.Shared.Models;
 
 namespace RetroVault
 {

@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetroVaultAPI.Data;
-using RetroVaultAPI.Models;
+using RetroVault.Shared;
+using RetroVault.Shared.Models;
 
 
 namespace RetroVaultAPI.Controllers

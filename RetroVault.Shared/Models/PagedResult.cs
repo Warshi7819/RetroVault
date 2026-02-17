@@ -1,4 +1,4 @@
-﻿namespace RetroVaultAPI.Models
+﻿namespace RetroVault.Shared.Models
 {
     public class PagedResult<T>
     {

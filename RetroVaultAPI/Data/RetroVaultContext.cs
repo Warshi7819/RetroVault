@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RetroVaultAPI.Models;
+using RetroVault.Shared.Models;
 
 namespace RetroVaultAPI.Data
 {

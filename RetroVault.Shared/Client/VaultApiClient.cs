@@ -1,10 +1,10 @@
-﻿using RetroVaultAPI.Models;
+﻿using RetroVault.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Text;
 
-namespace RetroVaultAPI.Client
+namespace RetroVault.Shared
 {
     public class VaultApiClient
     {

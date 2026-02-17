@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RetroVaultAPI\RetroVaultAPI.csproj" />
+    <ProjectReference Include="..\RetroVault.Shared\RetroVault.Shared.csproj" />
   </ItemGroup>
 
 </Project>
