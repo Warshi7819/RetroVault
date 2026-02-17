@@ -1,0 +1,30 @@
+﻿@page
+@model RetroVaultWebApp.Pages.DetailsModel
+
+<h2>@Model.Item?.Name</h2>
+
+@if (Model.Item == null)
+{
+    <p>Item not found.</p>
+}
+else
+{
+    <dl class="row">
+        <dt class="col-sm-3">System</dt>
+        <dd class="col-sm-9">@Model.Item.System</dd>
+
+        <dt class="col-sm-3">Category</dt>
+        <dd class="col-sm-9">@Model.Item.Category</dd>
+
+    </dl>
+
+    <a asp-page="Index"
+       asp-route-name="@Model.Name"
+       asp-route-system="@Model.System"
+       asp-route-category="@Model.Category"
+       asp-route-pageNumber="@Model.PageNumber"
+       asp-route-search="true"
+       class="btn btn-secondary">
+        Back to Search
+    </a>
+}

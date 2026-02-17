@@ -1,3 +1,7 @@
+using RetroVaultAPI.Client;
+using RetroVaultWebApp.Config;
+using RetroVaultWebApp.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,6 +13,23 @@ builder.Services.AddAuthentication("MyCookieAuth")
     { 
         options.LoginPath = "/Login"; 
     });
+
+builder.Services.Configure<VaultOptions>(
+    builder.Configuration.GetSection("VaultOptions"));
+
+var vaultOptions = builder.Configuration
+    .GetSection("VaultOptions")
+    .Get<VaultOptions>();
+
+builder.Services.AddHttpClient<VaultApiClient>(client =>
+{
+    client.BaseAddress = new Uri($"{vaultOptions.BaseServerUrl}api/");
+});
+
+builder.Services.AddHttpClient<ThumbnailService>(client =>
+{
+    client.BaseAddress = new Uri(vaultOptions.BaseServerUrl);
+});
 
 var app = builder.Build();
 

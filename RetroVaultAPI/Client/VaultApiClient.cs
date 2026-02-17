@@ -29,7 +29,9 @@ namespace RetroVaultAPI.Client
         public async Task<PagedResult<VaultItem>> SearchVaultItemsAsync(
             string? name = null,
             string? system = null,
-            string? category = null)
+            string? category = null,
+            int page = 1,
+            int pageSize = 10)
         {
             var query = new List<string>();
 
@@ -41,6 +43,9 @@ namespace RetroVaultAPI.Client
 
             if (!string.IsNullOrWhiteSpace(category) && category != "All")
                 query.Add($"category={Uri.EscapeDataString(category)}");
+
+            query.Add($"page={page}");
+            query.Add($"pageSize={pageSize}");
 
             string url = "VaultItem/search";
             if (query.Count > 0)
@@ -90,33 +95,3 @@ namespace RetroVaultAPI.Client
         }
     }
 }
-
-
-
-
-// EXAMPLE USAGE
-//var api = new VaultApiClient(new HttpClient
-//{
-//    BaseAddress = new Uri("https://your-api-url/api/")
-//});
-
-//// Get by ID
-//var item = await api.GetVaultItemAsync(5);
-
-//// Search
-//var results = await api.SearchVaultItemsAsync(name: "admin", system: "Windows");
-
-//// Create
-//var created = await api.CreateVaultItemAsync(new VaultItem
-//{
-//    Name = "New Item",
-//    System = "Linux",
-//    Category = "Secrets",
-//    Secret = "12345"
-//});
-
-//// Update
-//await api.UpdateVaultItemAsync(created.Id, created);
-
-//// Delete
-//await api.DeleteVaultItemAsync(created.Id);

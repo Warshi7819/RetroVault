@@ -4,10 +4,123 @@
     ViewData["Title"] = "The Vault";
 }
 
-<div class="container">
-    <div class="row">
-        <div class="col-4 mx-auto">
-            <img src="images/Splash.png" class="img-fluid" alt="The Vault" />
+<form method="get">
+    <div class="row mb-3">
+
+        <div class="col">
+            <input class="form-control" name="Name" value="@Model.Name" placeholder="Name" />
+        </div>
+
+        <div class="col">
+            <select class="form-select" name="System">
+                @foreach (var sys in Model.Systems)
+                {
+                    <option value="@sys" selected="@(sys == Model.System)">
+                        @sys
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="col">
+            <select class="form-select" name="Category">
+                @foreach (var cat in Model.Categories)
+                {
+                    <option value="@cat" selected="@(cat == Model.Category)">
+                        @cat
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="col">
+            <button class="btn btn-primary" type="submit" name="Search" value="true">Search</button>
+        </div>
+
+    </div>
+</form>
+
+
+@if (!Model.Search)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-4 mx-auto">
+                <img src="images/Splash.png" class="img-fluid" alt="The Vault" />
+            </div>
         </div>
     </div>
-</div>
+}
+else if (Model.Results == null || !Model.Results.Items.Any())
+{
+    <p>No results found.</p>
+}
+else
+{
+    <ul class="list-group mb-3">
+        @foreach (var item in Model.Results.Items)
+        {
+            <div class="row align-items-center mb-3 p-2 border rounded"
+                 style="cursor: pointer;"
+                 onclick="window.location='@Url.Page("Details", new 
+                 {
+                    id = item.Id,
+                    name = Model.Name,
+                    system = Model.System,
+                    category = Model.Category,
+                    pageNumber = Model.PageNumber,
+                    search = true
+                 })'">
+
+                <!-- LEFT COLUMN: text info -->
+                <div class="col-8">
+                    <div class="fw-bold fs-5">@item.Name</div>
+                    <div><strong>System:</strong> @item.System</div>
+                    <div><strong>Category:</strong> @item.Category</div>
+                    <div><strong>Year:</strong> @item.Year</div>
+                </div>
+
+                <!-- RIGHT COLUMN: thumbnail -->
+                <div class="col-4 text-end">
+                    <img src="images/thumbnails/@(item.Id).png"
+                         alt="@item.Name thumbnail"
+                         class="img-fluid rounded"
+                         style="max-height: 120px; object-fit: contain;"
+                         onerror="this.src='/images/detective.png';" />
+                </div>
+            </div>
+        }
+    </ul>
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination">
+
+            @if (Model.PageNumber > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?Name=@Model.Name&System=@Model.System&Category=@Model.Category&PageNumber=@(Model.PageNumber - 1)&search=true">
+                        Previous
+                    </a>
+                </li>
+            }
+
+            <li class="page-item disabled">
+                <span class="page-link">
+                    Page @Model.PageNumber of @Model.Results.TotalPages
+                </span>
+            </li>
+
+            @if (Model.PageNumber < Model.Results.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?Name=@Model.Name&System=@Model.System&Category=@Model.Category&PageNumber=@(Model.PageNumber + 1)&search=true">
+                        Next
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
