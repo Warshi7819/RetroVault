@@ -34,9 +34,8 @@
         </div>
 
         <div class="col">
-            <button class="btn btn-primary" type="submit" name="Search" value="true">Search</button>
+            <button class="btn btn-primary" type="submit" name="Search" value="true" onclick="sessionStorage.removeItem('retroVaultScroll')">Search</button>
         </div>
-
     </div>
 </form>
 
@@ -72,7 +71,7 @@ else
                     search = true
                  })'">
 
-                <!-- LEFT COLUMN: text info -->
+                <!-- LEFT COLUMN: Text info -->
                 <div class="col-8">
                     <div class="fw-bold fs-5">@item.Name</div>
                     <div><strong>System:</strong> @item.System</div>
@@ -80,7 +79,7 @@ else
                     <div><strong>Year:</strong> @item.Year</div>
                 </div>
 
-                <!-- RIGHT COLUMN: thumbnail -->
+                <!-- RIGHT COLUMN: Thumbnail -->
                 <div class="col-4 text-end">
                     <img src="images/thumbnails/@(item.Id).png"
                          alt="@item.Name thumbnail"
@@ -124,3 +123,21 @@ else
         </ul>
     </nav>
 }
+
+<!-- I hate JavaScript, the following is therefore produced by AI -->
+<script>
+    const scrollKey = "retroVaultScroll";
+
+    // Restore scroll position on load
+    document.addEventListener("DOMContentLoaded", () => {
+        const saved = sessionStorage.getItem(scrollKey);
+        if (saved) {
+            window.scrollTo(0, parseInt(saved));
+        }
+    });
+
+    // Save scroll position before navigating away
+    window.addEventListener("beforeunload", () => {
+        sessionStorage.setItem(scrollKey, window.scrollY.toString());
+    });
+</script>
