@@ -1,13 +1,12 @@
-﻿using RetroVault;
-using RetroVaultAPI.Models;
+﻿using RetroVaultAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Text;
 
-namespace RetroVault
+namespace RetroVaultAPI.Client
 {
-    internal class VaultApiClient
+    public class VaultApiClient
     {
         private readonly HttpClient _http;
 
@@ -27,7 +26,7 @@ namespace RetroVault
         }
 
         // SEARCH (name, system, category)
-        public async Task<List<VaultItem>> SearchVaultItemsAsync(
+        public async Task<PagedResult<VaultItem>> SearchVaultItemsAsync(
             string? name = null,
             string? system = null,
             string? category = null)
@@ -51,11 +50,11 @@ namespace RetroVault
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                return new List<VaultItem>();
+                return new PagedResult<VaultItem>();
             }
 
             response.EnsureSuccessStatusCode(); // Throws for other errors (500, 401, etc.)
-            return await response.Content.ReadFromJsonAsync<List<VaultItem>>() ?? new List<VaultItem>();
+            return await response.Content.ReadFromJsonAsync<PagedResult<VaultItem>>() ?? new PagedResult<VaultItem>();
         }
 
         // CREATE

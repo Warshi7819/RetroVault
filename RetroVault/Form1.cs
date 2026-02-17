@@ -4,6 +4,7 @@ using RetroVaultAPI.Models;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using RetroVaultAPI.Client;
 
 namespace RetroVault
 {
@@ -218,7 +219,7 @@ namespace RetroVault
                                                           category: this.selectedCategory,
                                                           system: this.selectedSystem);
 
-            foreach (VaultItem item in results)
+            foreach (VaultItem item in results.Items)
             {
                 var card = new VaultItemCard(item, this.vaultSettingsConfig.ThumbnailURL)
                 {

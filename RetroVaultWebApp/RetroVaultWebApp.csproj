@@ -16,4 +16,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RetroVaultAPI\RetroVaultAPI.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -35,36 +35,44 @@ namespace RetroVaultAPI.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<ActionResult<IEnumerable<VaultItem>>> SearchVaultItems(
+        public async Task<ActionResult<PagedResult<VaultItem>>> SearchVaultItems(
         [FromQuery] string? name,
         [FromQuery] string? system,
-        [FromQuery] string? category)
+        [FromQuery] string? category,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
         {
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 10;
+
             IQueryable<VaultItem> query = _context.VaultItems;
 
             if (!string.IsNullOrWhiteSpace(name))
-            {
                 query = query.Where(v => EF.Functions.Like(v.Name, $"%{name}%"));
-            }
 
             if (!string.IsNullOrWhiteSpace(system))
-            {
                 query = query.Where(v => v.System == system);
-            }
 
             if (!string.IsNullOrWhiteSpace(category))
-            {
                 query = query.Where(v => v.Category == category);
-            }
 
-            var results = await query.ToListAsync();
+            var totalCount = await query.CountAsync();
 
-            if (results.Count == 0)
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var result = new PagedResult<VaultItem>
             {
-                return NotFound("No vault items matched the search criteria.");
-            }
+                Items = items,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
+            };
 
-            return Ok(results);
+            return Ok(result);
         }
 
 
