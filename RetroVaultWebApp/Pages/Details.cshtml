@@ -1,6 +1,8 @@
 ﻿@page
 @model RetroVaultWebApp.Pages.DetailsModel
-
+@{
+    ViewData["Title"] = "Details";
+}
 <h2>@Model.Item?.Name</h2>
 
 @if (Model.Item == null)
