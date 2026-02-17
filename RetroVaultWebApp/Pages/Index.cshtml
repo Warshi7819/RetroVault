@@ -42,6 +42,7 @@
 
 @if (!Model.Search)
 {
+    <br/>
     <div class="container">
         <div class="row">
             <div class="col-4 mx-auto">
@@ -99,7 +100,8 @@ else
             {
                 <li class="page-item">
                     <a class="page-link"
-                       href="?Name=@Model.Name&System=@Model.System&Category=@Model.Category&PageNumber=@(Model.PageNumber - 1)&search=true">
+                       href="?Name=@Model.Name&System=@Model.System&Category=@Model.Category&PageNumber=@(Model.PageNumber - 1)&search=true" 
+                       onclick="return resetScrollAndSkipSave()">
                         Previous
                     </a>
                 </li>
@@ -115,7 +117,8 @@ else
             {
                 <li class="page-item">
                     <a class="page-link"
-                       href="?Name=@Model.Name&System=@Model.System&Category=@Model.Category&PageNumber=@(Model.PageNumber + 1)&search=true">
+                       href="?Name=@Model.Name&System=@Model.System&Category=@Model.Category&PageNumber=@(Model.PageNumber + 1)&search=true" 
+                       onclick="return resetScrollAndSkipSave()">
                         Next
                     </a>
                 </li>
@@ -127,6 +130,13 @@ else
 <!-- I hate JavaScript, the following is therefore produced by AI -->
 <script>
     const scrollKey = "retroVaultScroll";
+    const skipKey = "retroVaultSkipScrollSave";
+
+    function resetScrollAndSkipSave() {
+        sessionStorage.setItem(skipKey, "true");      // tell beforeunload to do nothing
+        sessionStorage.removeItem(scrollKey);         // clear stored scroll
+        return true;                                  // allow normal navigation
+    }
 
     // Restore scroll position on load
     document.addEventListener("DOMContentLoaded", () => {
@@ -134,10 +144,14 @@ else
         if (saved) {
             window.scrollTo(0, parseInt(saved));
         }
+        // reset the skip flag on each load
+        sessionStorage.removeItem(skipKey);
     });
 
     // Save scroll position before navigating away
     window.addEventListener("beforeunload", () => {
+        const skip = sessionStorage.getItem(skipKey);
+        if (skip === "true") return;                  // don't save on Next/Previous
         sessionStorage.setItem(scrollKey, window.scrollY.toString());
     });
 </script>
