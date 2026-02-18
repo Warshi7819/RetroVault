@@ -214,7 +214,8 @@ namespace RetroVault
             // Search
             var results = await api.SearchVaultItemsAsync(name: searchBox.Text,
                                                           category: this.selectedCategory,
-                                                          system: this.selectedSystem);
+                                                          system: this.selectedSystem,
+                                                          pageSize: 40);
 
             foreach (VaultItem item in results.Items)
             {

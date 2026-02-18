@@ -159,8 +159,6 @@ namespace RetroVault
 
                 // Set update flag
                 thumbnailUpdated = true;
-
-                MessageBox.Show("Thumbnail set successfully!", "Thumbnail", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
