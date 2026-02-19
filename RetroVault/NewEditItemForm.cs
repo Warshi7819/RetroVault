@@ -41,12 +41,20 @@ namespace RetroVault
             foreach (string category in config.Categories)
             {
                 categoryComboBox.Items.Add(category);
+                if (category == "Games") 
+                {
+                    // As the majority of items will likely be games,
+                    // set it as the default to reduce number of clicks
+                    categoryComboBox.SelectedItem = category;
+                }
             }
             foreach (string currency in config.Currencies)
             {
                 currencyComboBox.Items.Add(currency);
             }
-
+            // Set default currency to first one, again to reduce the number of clicks
+            // Users should specify the most used currency first in the config
+            currencyComboBox.SelectedIndex = 0;
 
             //populate fields if editing an existing item
             if (vaultItem != null)

@@ -1,6 +1,6 @@
 {
-  "RESTAPI": "http://localhost:5149/api/",
-  "ThumbnailURL": "http://localhost:5149",
+  "RESTAPI": "http://192.168.86.22:5149/api/",
+  "ThumbnailURL": "http://192.168.86.22:5149",
   "VaultPath": "",
   "MediaLibraryPath": "",
   "Categories": [
@@ -8,10 +8,16 @@
     "Hardware",
     "Peripherals",
     "Games",
-    "Software"
+    "Software",
+    "LP",
+    "Books",
+    "Magazines",
+    "Movies",
+    "Other"
   ],
   "Systems": [
     "All",
+    "PC",
     "Commodore 64/128",
     "Commodore Amiga",
     "Atari 2600",
@@ -34,7 +40,8 @@
     "Nintendo DS",
     "GameCube",
     "Tandy/Radio Shack",
-    "Evercade"
+    "Evercade",
+    "WII"
   ],
   "Currencies": [
     "NOK",

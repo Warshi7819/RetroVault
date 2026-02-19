@@ -1,1 +1,1 @@
-﻿1) Flesh out the Details page. Thumbnail and all info.
+﻿1) Dynamically load catetories and systems from the DB instead of configuration file. 
