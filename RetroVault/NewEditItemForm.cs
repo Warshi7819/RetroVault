@@ -12,26 +12,29 @@ namespace RetroVault
         internal VaultSettingsConfig config;
         internal Boolean deleteItem = false;
         internal Boolean thumbnailUpdated = false;
-        public NewEditItemForm(VaultItem item, VaultSettingsConfig conf)
+        public NewEditItemForm(VaultItem item, VaultSettingsConfig conf, Point parentLoc)
         {
             InitializeComponent();
             vaultItem = item;
             config = conf;
-            if (vaultItem == null)
-            {
-                this.Text = "Add New Item";
-                this.deleteButton.Enabled = false;
-                this.openMediaFolderButton.Enabled = false;
-                this.setThumbnailButton.Enabled = false;
-            }
-            else
-            {
-                this.Text = "Edit Item";
-            }
+
+            this.Text = "Edit Item";
 
             // Load icon
             string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon", "RetroVault.ico");
             this.Icon = new Icon(iconPath);
+
+            // Position the form relative to the parent form
+            int offsetX = 20;  
+            int offsetY = 20;  
+
+            this.StartPosition = FormStartPosition.Manual;
+            this.Location = new Point(
+                parentLoc.X + offsetX,
+                parentLoc.Y + offsetY
+            );
+            
+
 
             // Load categories and systems
             foreach (string system in config.Systems)

@@ -119,7 +119,7 @@ namespace RetroVault
 
         private async Task updateVaultItemHelper(VaultItem vaultItem)
         {
-            NewEditItemForm editForm = new NewEditItemForm(vaultItem, vaultSettingsConfig);
+            NewEditItemForm editForm = new NewEditItemForm(vaultItem, vaultSettingsConfig, this.Location);
             editForm.ShowDialog();
 
             if (editForm.DialogResult == DialogResult.OK)
