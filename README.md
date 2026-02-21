@@ -1,19 +1,17 @@
-Overview:
+## Overview
 
 
 
-License Info:
+## License Info
 
 
+## 3in1 - The Kinder egg Of Software
+RetroVault consists of three seperate programs that work in perfect harmony to fulfill your cataloging needs. 
 
-Support:
+### Server Side - API
+I decided to create an REST API to handle the items I want to catalouge. Also I want to have more than one frontend! Thus it made perfect sense to actually build the backend as it's own thing (service if you will) 
 
-
-
-Server Side - API
-
-
-Client Side - Windows Forms
+### Client Side - Windows Forms
 
 
 Sever Side - Web APP (Optional, but is it really?)
