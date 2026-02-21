@@ -113,54 +113,68 @@ namespace RetroVault
         {
             if (sender is VaultItemCard card)
             {
-                NewEditItemForm editForm = new NewEditItemForm(card.GetVaultItem(), vaultSettingsConfig);
-                editForm.ShowDialog();
-
-                if (editForm.DialogResult == DialogResult.OK)
-                {
-                    if (editForm.isDeleteRequested())
-                    { 
-                        // see if we should remove thumbnail image
-                        var thumbPath = "thumbnails/" + "item_" + editForm.getVaultItem().Id.ToString() + ".png";
-                        if(System.IO.File.Exists(thumbPath))        
-                        {
-                            System.IO.File.Delete(thumbPath);
-                        }
-                        
-                        await api.DeleteVaultItemAsync(editForm.getVaultItem().Id);
-                    }
-                    else
-                    {
-                        // Update existing vault item using the api
-                        await updateVaultItem(editForm.getVaultItem());
-                        // Check if thumbnail is updated, if so upload
-                        if (editForm.isThumbnailUpdated())
-                        {
-                            var thumbPath = "thumbnails/" + "item_" + editForm.getVaultItem().Id.ToString() + ".png";
-                            await api.UploadThumbnail(editForm.getVaultItem().Id, thumbPath);
-                        }
-                    }
-                   
-                    // Refresh current search results
-                    await DoSearchAsync();
-                }
-
+                await updateVaultItemHelper(card.GetVaultItem());
             }
         }
 
-        private async void newButton_Click(object sender, EventArgs e)
+        private async Task updateVaultItemHelper(VaultItem vaultItem)
         {
-            NewEditItemForm newItemForm = new NewEditItemForm(null, vaultSettingsConfig);
-            newItemForm.ShowDialog();
+            NewEditItemForm editForm = new NewEditItemForm(vaultItem, vaultSettingsConfig);
+            editForm.ShowDialog();
 
-            if (newItemForm.DialogResult == DialogResult.OK)
+            if (editForm.DialogResult == DialogResult.OK)
             {
-                // Update existing vault item using the api
-                await createVaultItem(newItemForm.getVaultItem());
+                if (editForm.isDeleteRequested())
+                {
+                    // see if we should remove thumbnail image
+                    var thumbPath = "thumbnails/" + "item_" + editForm.getVaultItem().Id.ToString() + ".png";
+                    if (System.IO.File.Exists(thumbPath))
+                    {
+                        System.IO.File.Delete(thumbPath);
+                    }
+
+                    // TODO: See if we should delete the corresponding media folder and contents as well.
+                    // Or maybe just let it sit.. as we may be deleting media files that are not easily recovered. 
+
+                    // Delete vault item from DB using the api
+                    await api.DeleteVaultItemAsync(editForm.getVaultItem().Id);
+                }
+                else
+                {
+                    // Update existing vault item using the api
+                    await updateVaultItem(editForm.getVaultItem());
+                    // Check if thumbnail is updated, if so upload
+                    if (editForm.isThumbnailUpdated())
+                    {
+                        var thumbPath = "thumbnails/" + "item_" + editForm.getVaultItem().Id.ToString() + ".png";
+                        await api.UploadThumbnail(editForm.getVaultItem().Id, thumbPath);
+                    }
+                }
 
                 // Refresh current search results
                 await DoSearchAsync();
             }
+        }
+
+
+        private async void newButton_Click(object sender, EventArgs e)
+        {
+            // I needed to change this so that the vault item is created and 
+            // stored to the DB before we open the form. This is because we need the ID of the vault item
+            // to create the media folder. 
+
+            // Once the item is created, this will be just like any other update. 
+            // Possible downside is that if a user cancels out a blank item has been created in the DB. 
+            // The user has to then explicitly delete it to be removed. But I guess that is better as we are
+            // optimizing the common route with less clicks this way
+
+            var item = new VaultItem();
+            item.Name = "New Item"; // Name must be set or item won't be created
+  
+            // Essential to get the new item returned from API and use that one 
+            // going forward as this is the one containing the correct ID.
+            var newItem = await createVaultItem(item);
+            await updateVaultItemHelper(newItem);
         }
 
         private async Task updateVaultItem(VaultItem vaultItem)
@@ -168,9 +182,9 @@ namespace RetroVault
             var result = await api.UpdateVaultItemAsync(vaultItem.Id, vaultItem);
         }
 
-        private async Task createVaultItem(VaultItem vaultItem)
+        private async Task<VaultItem> createVaultItem(VaultItem vaultItem)
         {   
-            var result = await api.CreateVaultItemAsync(vaultItem);
+            return await api.CreateVaultItemAsync(vaultItem);
         }
 
 

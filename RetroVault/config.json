@@ -18,17 +18,22 @@
   "Systems": [
     "All",
     "PC",
+    "PC Engine/TurboGrafx",
     "Commodore 64/128",
     "Commodore Amiga",
     "Atari 2600",
     "Atari 800XL",
     "Atari 7800",
     "Atari ST",
+    "Game & Watch",
     "MSX",
     "Playstation 1",
     "Playstation 2",
     "Playstation 3",
     "Playstation Portable (PSP)",
+    "Sega Master System",
+    "Sega Megadrive",
+    "Sega Genesis",
     "NES",
     "Famicom",
     "SNES",
@@ -41,7 +46,8 @@
     "GameCube",
     "Tandy/Radio Shack",
     "Evercade",
-    "WII"
+    "WII",
+    "Other"
   ],
   "Currencies": [
     "NOK",

@@ -66,6 +66,14 @@ namespace RetroVault.Shared
         public async Task<VaultItem?> CreateVaultItemAsync(VaultItem item)
         {
             var response = await _http.PostAsJsonAsync("VaultItem", item);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                // Read error details and throw
+                var error = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Failed to create VaultItem. Status: {response.StatusCode}. Error: {error}"); 
+            }
+
             return await response.Content.ReadFromJsonAsync<VaultItem>();
         }
 
