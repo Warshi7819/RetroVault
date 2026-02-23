@@ -17,7 +17,7 @@ IMAGES From PHONE, WEB and Windows Application.
 RetroVault consists of three seperate programs that work in perfect harmony to fulfill your cataloging needs. In this section we will go through all three in a bit more detail which might make it easier to navigate the code itself.
 
 > [!NOTE]
-> During development you can of course configure all three projects to start up in Visual Studio to test it locally. 
+> During development you can of course configure all three projects to start up in Visual Studio to test em all locally. 
 
 ### RetroVaultAPI - Backend API
 This is the backend storage with an API to manipulate your retro items. The REST API supports the following:
