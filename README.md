@@ -61,6 +61,11 @@ Since there is no user management implemented there's no possibility to host mul
 ### Outro
 That’s it. If you're still left with more burning questions then have a look at the code.  
 
+### Configuration
+user password config
+systems and category configuration
+kestrel? or just point to some doc about it.. 
+
 ##
 > [!CAUTION]
 > Code may unexpectedly explode at any time, possibly unscrewing your hard drive and throwing it out the window. 
