@@ -1,4 +1,4 @@
-<image src="" hgiht="150px"/>
+<image src="RetroVault/images/TransparentSplash.png" height="150px"/>
 
 # Overview
 I have too much retro stuff! Old games, consoles etc. So, I decided to create a RetroVault to get organized. Once organized I can buy even more stuff because, you know, it’s organized. Mkey? 
