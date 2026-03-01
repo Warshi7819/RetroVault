@@ -2,10 +2,22 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
+using RetroVault.Shared;
+using RetroVaultWebApp.Config;
+using RetroVaultWebApp.Services;
 using System.Security.Claims;
 
 public class LoginModel : PageModel
 {
+    private readonly VaultOptions _options;
+
+    public LoginModel(IOptions<VaultOptions> options)
+    {
+        _options = options.Value;
+    }
+
+
     [BindProperty]
     public string Username { get; set; }
 
@@ -16,11 +28,24 @@ public class LoginModel : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-        // Hardcoded credentials
-        const string validUser = "admin";
-        const string validPass = "pass";
+        // Retrieve valid credentials from configuration
+        string validUser = _options.User["Username"];
+        string validPass = _options.User["Password"];
 
-        if (Username == validUser && Password == validPass)
+        var passwordProcessed = Password;
+        if (_options.User["UseSHA256Hash"] != "false")
+        {
+            // Hash supplied password with SHA256 when configured to do so
+            using (var sha256 = System.Security.Cryptography.SHA256.Create())
+            {
+                var bytes = System.Text.Encoding.UTF8.GetBytes(Password);
+                var hash = sha256.ComputeHash(bytes);
+                passwordProcessed = Convert.ToBase64String(hash);
+            }
+        }
+
+
+        if (Username == validUser && passwordProcessed == validPass)
         {
             var claims = new List<Claim>
             {
