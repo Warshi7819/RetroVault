@@ -19,6 +19,15 @@ builder.Services.AddAuthentication("MyCookieAuth")
         options.Cookie.SameSite = SameSiteMode.Strict;
     });
 
+// Configure the antiforgery options directly to please penetration test...
+builder.Services.AddAntiforgery(options =>
+{
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+});
+
+
 // Add rate limiting services - to be used to protect the login endpoint
 builder.Services.AddRateLimiter(options =>
 {
@@ -64,8 +73,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
+
 app.Use(async (context, next) =>
 {
     var isDev = app.Environment.IsDevelopment();
@@ -79,7 +87,7 @@ app.Use(async (context, next) =>
     context.Items["CSP-Nonce"] = nonce;
     var scriptSrc = $"script-src 'self' 'nonce-{nonce}' https://challenges.cloudflare.com https://static.cloudflareinsights.com";
     var connectSrc = "connect-src 'self' https://*.cloudflare.com";
-    
+
     if (isDev)
     {
         // Use Dev settings instead of prod settings.
@@ -101,17 +109,16 @@ app.Use(async (context, next) =>
         "upgrade-insecure-requests;";
 
     context.Response.Headers["Content-Security-Policy"] = csp;
-
+    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
     await next();
 });
 
-
+app.UseStaticFiles();
+app.UseRouting();
 app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapStaticAssets();
 app.MapRazorPages()
    .WithStaticAssets();
-
 app.Run();
