@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "The Vault";
 }
+@using System.Text.Encodings.Web
 
 <form method="get">
     <div class="row mb-3">
@@ -106,8 +107,12 @@ else
             {
                 <li class="page-item">
                     <a class="page-link"
-                        href="?Name=@Model.Name&System=@Model.System&Category=@Model.Category&PageNumber=@(Model.PageNumber - 1)&search=true"
-                        data-reset-scroll>
+                       asp-route-Name="@Model.Name"
+                       asp-route-System="@Model.System"
+                       asp-route-Category="@Model.Category"
+                       asp-route-PageNumber="@(Model.PageNumber - 1)"
+                       asp-route-search="true"
+                       data-reset-scroll>
                         Previous
                     </a>
                 </li>
@@ -123,8 +128,12 @@ else
             {
                 <li class="page-item">
                     <a class="page-link"
-                        href="?Name=@Model.Name&System=@Model.System&Category=@Model.Category&PageNumber=@(Model.PageNumber + 1)&search=true"
-                        data-reset-scroll>
+                       asp-route-Name="@Model.Name"
+                       asp-route-System="@Model.System"
+                       asp-route-Category="@Model.Category"
+                       asp-route-PageNumber="@(Model.PageNumber + 1)"
+                       asp-route-search="true"
+                       data-reset-scroll>
                         Next
                     </a>
                 </li>
