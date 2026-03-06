@@ -12,7 +12,10 @@ builder.Services.AddRazorPages();
 builder.Services.AddAuthentication("MyCookieAuth") 
     .AddCookie("MyCookieAuth", options => 
     { 
-        options.LoginPath = "/Login"; 
+        options.LoginPath = "/Login";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Always requires HTTPS
+        options.Cookie.SameSite = SameSiteMode.Strict;
     });
 
 // Add rate limiting services - to be used to protect the login endpoint
