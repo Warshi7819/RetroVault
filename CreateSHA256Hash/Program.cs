@@ -10,6 +10,12 @@ namespace CreateSHA256HASH
             Console.WriteLine("Enter the password you want to hash:");
             var password = Console.ReadLine();
 
+            if (string.IsNullOrEmpty(password))
+            {
+                Console.WriteLine("No password entered. Exiting.");
+                return;
+            }
+
             // Hash supplied password with SHA256 when configured to do so
             using (var sha256 = System.Security.Cryptography.SHA256.Create())
             {
