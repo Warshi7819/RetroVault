@@ -34,7 +34,12 @@
         </div>
 
         <div class="col">
-            <button class="btn btn-primary" type="submit" name="Search" value="true" onclick="sessionStorage.removeItem('retroVaultScroll')">Search</button>
+            <button class="btn btn-primary"
+                type="submit"
+                name="Search"
+                value="true"
+                data-clear-scroll>Search
+            </button>
         </div>
     </div>
 </form>
@@ -57,38 +62,39 @@ else if (Model.Results == null || !Model.Results.Items.Any())
 }
 else
 {
-    <ul class="list-group mb-3">
+     <ul class="list-group mb-3">
         @foreach (var item in Model.Results.Items)
         {
-            <div class="row align-items-center mb-3 p-2 border rounded"
-                 style="cursor: pointer;"
-                 onclick="window.location='@Url.Page("Details", new 
-                 {
-                    id = item.Id,
-                    name = Model.Name,
-                    system = Model.System,
-                    category = Model.Category,
-                    pageNumber = Model.PageNumber,
-                    search = true
-                 })'">
+            <li class="list-group-item p-0 border-0 bg-transparent">
+                <div class="row align-items-center mb-3 p-2 border rounded"
+                     style="cursor: pointer;"
+                     data-nav="@Url.Page("Details", new {
+                         id = item.Id,
+                         name = Model.Name,
+                         system = Model.System,
+                         category = Model.Category,
+                         pageNumber = Model.PageNumber,
+                         search = true
+                     })">
 
-                <!-- LEFT COLUMN: Text info -->
-                <div class="col-8">
-                    <div class="fw-bold fs-5">@item.Name</div>
-                    <div><strong>System:</strong> @item.System</div>
-                    <div><strong>Category:</strong> @item.Category</div>
-                    <div><strong>Year:</strong> @item.Year</div>
-                </div>
+                    <!-- LEFT COLUMN -->
+                    <div class="col-8">
+                        <div class="fw-bold fs-5">@item.Name</div>
+                        <div><strong>System:</strong> @item.System</div>
+                        <div><strong>Category:</strong> @item.Category</div>
+                        <div><strong>Year:</strong> @item.Year</div>
+                    </div>
 
-                <!-- RIGHT COLUMN: Thumbnail -->
-                <div class="col-4 text-end">
-                    <img src="images/thumbnails/@(item.Id).png"
-                         alt="@item.Name thumbnail"
-                         class="img-fluid rounded"
-                         style="max-height: 120px; object-fit: contain;"
-                         onerror="this.src='/images/detective.png';" />
+                    <!-- RIGHT COLUMN -->
+                    <div class="col-4 text-end">
+                        <img src="images/thumbnails/@(item.Id).png"
+                             alt="@item.Name thumbnail"
+                             class="img-fluid rounded"
+                             style="max-height: 120px; object-fit: contain;"
+                             data-fallback="/images/detective.png" />
+                    </div>
                 </div>
-            </div>
+            </li>
         }
     </ul>
 
@@ -100,8 +106,8 @@ else
             {
                 <li class="page-item">
                     <a class="page-link"
-                       href="?Name=@Model.Name&System=@Model.System&Category=@Model.Category&PageNumber=@(Model.PageNumber - 1)&search=true" 
-                       onclick="return resetScrollAndSkipSave()">
+                        href="?Name=@Model.Name&System=@Model.System&Category=@Model.Category&PageNumber=@(Model.PageNumber - 1)&search=true"
+                        data-reset-scroll>
                         Previous
                     </a>
                 </li>
@@ -117,8 +123,8 @@ else
             {
                 <li class="page-item">
                     <a class="page-link"
-                       href="?Name=@Model.Name&System=@Model.System&Category=@Model.Category&PageNumber=@(Model.PageNumber + 1)&search=true" 
-                       onclick="return resetScrollAndSkipSave()">
+                        href="?Name=@Model.Name&System=@Model.System&Category=@Model.Category&PageNumber=@(Model.PageNumber + 1)&search=true"
+                        data-reset-scroll>
                         Next
                     </a>
                 </li>
@@ -128,30 +134,62 @@ else
 }
 
 <!-- I hate JavaScript, the following is therefore produced by AI -->
-<script>
+<script nonce="@(HttpContext.Items["CSP-Nonce"])">
     const scrollKey = "retroVaultScroll";
     const skipKey = "retroVaultSkipScrollSave";
 
     function resetScrollAndSkipSave() {
-        sessionStorage.setItem(skipKey, "true");      // tell beforeunload to do nothing
-        sessionStorage.removeItem(scrollKey);         // clear stored scroll
-        return true;                                  // allow normal navigation
+        sessionStorage.setItem(skipKey, "true");
+        sessionStorage.removeItem(scrollKey);
+        return true;
     }
 
-    // Restore scroll position on load
     document.addEventListener("DOMContentLoaded", () => {
+        // Restore scroll
         const saved = sessionStorage.getItem(scrollKey);
         if (saved) {
             window.scrollTo(0, parseInt(saved));
         }
-        // reset the skip flag on each load
         sessionStorage.removeItem(skipKey);
+
+        // Search button: clear scroll
+        document.querySelectorAll("[data-clear-scroll]")
+            .forEach(el =>
+                el.addEventListener("click", () => {
+                    sessionStorage.removeItem(scrollKey);
+                }));
+
+        // Pagination: use resetScrollAndSkipSave
+        document.querySelectorAll("[data-reset-scroll]")
+            .forEach(el =>
+                el.addEventListener("click", e => {
+                    if (!resetScrollAndSkipSave()) {
+                        e.preventDefault();
+                    }
+                }));
+
+        // Clickable rows: navigate via data-nav
+        document.querySelectorAll("[data-nav]")
+            .forEach(el =>
+                el.addEventListener("click", () => {
+                    const target = el.getAttribute("data-nav");
+                    if (target) window.location = target;
+                }));
+
+        // Image fallback instead of onerror
+        document.querySelectorAll("img[data-fallback]")
+            .forEach(img => {
+                img.addEventListener("error", () => {
+                    const fallback = img.getAttribute("data-fallback");
+                    if (fallback) img.src = fallback;
+                });
+            });
     });
 
-    // Save scroll position before navigating away
     window.addEventListener("beforeunload", () => {
         const skip = sessionStorage.getItem(skipKey);
-        if (skip === "true") return;                  // don't save on Next/Previous
+        if (skip === "true") return;
         sessionStorage.setItem(scrollKey, window.scrollY.toString());
     });
 </script>
+

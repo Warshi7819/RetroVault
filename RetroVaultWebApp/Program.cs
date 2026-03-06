@@ -1,6 +1,7 @@
 using RetroVault.Shared;
 using RetroVaultWebApp.Config;
 using RetroVaultWebApp.Services;
+using System.Security.Cryptography;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -65,6 +66,46 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.Use(async (context, next) =>
+{
+    var isDev = app.Environment.IsDevelopment();
+
+    // Generate a per-request nonce
+    var nonceBytes = new byte[16];
+    RandomNumberGenerator.Fill(nonceBytes);
+    var nonce = Convert.ToBase64String(nonceBytes);
+
+    // Store nonce so Razor pages can use it
+    context.Items["CSP-Nonce"] = nonce;
+    var scriptSrc = $"script-src 'self' 'nonce-{nonce}' https://challenges.cloudflare.com https://static.cloudflareinsights.com";
+    var connectSrc = "connect-src 'self' https://*.cloudflare.com";
+    
+    if (isDev)
+    {
+        // Use Dev settings instead of prod settings.
+        connectSrc += " http://localhost:* https://localhost:* ws://localhost:* wss://localhost:*";
+        scriptSrc = $"script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com";
+    }
+    var csp =
+        "default-src 'self'; " +
+        scriptSrc + "; " +
+        "style-src 'self' 'unsafe-inline'; " +
+        "img-src 'self' data: https:; " +
+        "font-src 'self' https://fonts.gstatic.com; " +
+        connectSrc + "; " +
+        "frame-src https://challenges.cloudflare.com; " +
+        "object-src 'none'; " +
+        "base-uri 'self'; " +
+        "form-action 'self'; " +
+        "frame-ancestors 'none'; " +
+        "upgrade-insecure-requests;";
+
+    context.Response.Headers["Content-Security-Policy"] = csp;
+
+    await next();
+});
+
+
 app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
