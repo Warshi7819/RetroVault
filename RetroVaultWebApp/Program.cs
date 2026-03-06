@@ -73,7 +73,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.Use(async (context, next) =>
 {
     var isDev = app.Environment.IsDevelopment();
