@@ -2,12 +2,14 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 using RetroVault.Shared;
 using RetroVaultWebApp.Config;
 using RetroVaultWebApp.Services;
 using System.Security.Claims;
 
+[EnableRateLimiting("LoginPolicy")]
 public class LoginModel : PageModel
 {
     private readonly VaultOptions _options;

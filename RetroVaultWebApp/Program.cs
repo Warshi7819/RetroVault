@@ -1,6 +1,7 @@
 using RetroVault.Shared;
 using RetroVaultWebApp.Config;
 using RetroVaultWebApp.Services;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,23 @@ builder.Services.AddAuthentication("MyCookieAuth")
     { 
         options.LoginPath = "/Login"; 
     });
+
+// Add rate limiting services - to be used to protect the login endpoint
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // Define a "LoginPolicy" that allows 3 requests every 1 minute per IP
+    options.AddPolicy("LoginPolicy", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 3,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+});
 
 builder.Services.Configure<VaultOptions>(
     builder.Configuration.GetSection("VaultOptions"));
@@ -44,7 +62,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 
