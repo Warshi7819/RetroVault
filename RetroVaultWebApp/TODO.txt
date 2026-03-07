@@ -1,2 +1,1 @@
-﻿1) Dynamically load catetories and systems from the DB instead of configuration file. 
-2) Username and password stored in the application settings file. password as a sha256 hash not plain text password.
+﻿1) Dynamically load catetories and systems from the DB instead of configuration file.
