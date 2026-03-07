@@ -1,6 +1,7 @@
 using RetroVault.Shared;
 using RetroVaultWebApp.Config;
 using RetroVaultWebApp.Services;
+using System.ComponentModel;
 using System.Security.Cryptography;
 using System.Threading.RateLimiting;
 
@@ -51,6 +52,11 @@ builder.Services.Configure<VaultOptions>(
 var vaultOptions = builder.Configuration
     .GetSection("VaultOptions")
     .Get<VaultOptions>();
+
+if (vaultOptions == null)
+{
+    throw new InvalidOperationException("Missing VaultOptions in appsettings.json file");
+}
 
 builder.Services.AddHttpClient<VaultApiClient>(client =>
 {

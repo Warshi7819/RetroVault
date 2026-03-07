@@ -19,20 +19,27 @@ public class LoginModel : PageModel
         _options = options.Value;
     }
 
+    
+    [BindProperty]
+    public string? Username { get; set; }
 
     [BindProperty]
-    public string Username { get; set; }
+    public string? Password { get; set; }
 
-    [BindProperty]
-    public string Password { get; set; }
-
-    public string ErrorMessage { get; set; }
+    public string? ErrorMessage { get; set; }
 
     public async Task<IActionResult> OnPost()
     {
         // Retrieve valid credentials from configuration
         string validUser = _options.User["Username"];
         string validPass = _options.User["Password"];
+
+        // If given username or password is empty, return.
+        if (string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(Username)) 
+        {
+            ErrorMessage = "Invalid username or password";
+            return Page();
+        }
 
         var passwordProcessed = Password;
         if (_options.User["UseSHA256Hash"] != "false")
