@@ -25,12 +25,14 @@ namespace RetroVault
 
 
             // Center form horizontally (x), but not vertically (y)
-            this.StartPosition = FormStartPosition.Manual;
-            Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
-            int centerX = (workingArea.Width - this.Width) / 2;
-            int customY = 200;
-            this.Location = new Point(centerX, customY);
-
+            if (Screen.PrimaryScreen != null)
+            {
+                this.StartPosition = FormStartPosition.Manual;
+                Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
+                int centerX = (workingArea.Width - this.Width) / 2;
+                int customY = 200;
+                this.Location = new Point(centerX, customY);
+            }
 
             // Load icon
             string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon", "RetroVault.ico");

@@ -185,7 +185,7 @@ namespace RetroVault
             var result = await api.UpdateVaultItemAsync(vaultItem.Id, vaultItem);
         }
 
-        private async Task<VaultItem> createVaultItem(VaultItem vaultItem)
+        private async Task<VaultItem?> createVaultItem(VaultItem vaultItem)
         {   
             return await api.CreateVaultItemAsync(vaultItem);
         }
