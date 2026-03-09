@@ -12,6 +12,7 @@ namespace RetroVault
         string selectedSystem = "All";
         string selectedCategory = "All";
         string vaultPath = "";
+        int currentPage = 1;
 
         // Configuration
         VaultSettingsConfig vaultSettingsConfig;
@@ -28,8 +29,8 @@ namespace RetroVault
             LoadConfig();
 
             // Center form horizontally (x), but not vertically (y)
-            if(Screen.PrimaryScreen != null)
-            { 
+            if (Screen.PrimaryScreen != null)
+            {
                 this.StartPosition = FormStartPosition.Manual;
                 Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
                 int centerX = (workingArea.Width - this.Width) / 2;
@@ -86,6 +87,10 @@ namespace RetroVault
 
             systemComboBox.SelectedIndex = 0; // Select "All" by default
             catComboBox.SelectedIndex = 0; // Select "All" by default
+
+            // Disable prev and next button at startup
+            buttonNext.Enabled = false;
+            buttonPrev.Enabled = false;
         }
 
 
@@ -173,7 +178,7 @@ namespace RetroVault
 
             var item = new VaultItem();
             item.Name = "New Item"; // Name must be set or item won't be created
-  
+
             // Essential to get the new item returned from API and use that one 
             // going forward as this is the one containing the correct ID.
             var newItem = await createVaultItem(item);
@@ -186,7 +191,7 @@ namespace RetroVault
         }
 
         private async Task<VaultItem?> createVaultItem(VaultItem vaultItem)
-        {   
+        {
             return await api.CreateVaultItemAsync(vaultItem);
         }
 
@@ -195,6 +200,11 @@ namespace RetroVault
         {
             // update search term
             searchTerm = searchBox.Text;
+
+            this.labelNumSearchResults.Text = "Results: Unknown, Issue Search";
+            this.currentPage = 1; // reset to first page when changing search term
+            this.buttonNext.Enabled = false;
+            this.buttonPrev.Enabled = false;
         }
 
         private async void systemComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -204,21 +214,24 @@ namespace RetroVault
 
             if (initializedForm)
             {
+                this.currentPage = 1; // reset to first page when changing system filter
                 await DoSearchAsync();
             }
         }
 
         private async void catComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        { 
+        {
             // Implement category filtering logic here
             selectedCategory = catComboBox.SelectedItem.ToString() ?? "All";
             if (initializedForm)
             {
+                this.currentPage = 1; // reset to first page when changing category filter
                 await DoSearchAsync();
             }
         }
         private async void searchButton_ClickAsync(object sender, EventArgs e)
         {
+            this.currentPage = 1; // reset to first page when performing new search
             await DoSearchAsync();
         }
 
@@ -232,7 +245,40 @@ namespace RetroVault
             var results = await api.SearchVaultItemsAsync(name: searchBox.Text,
                                                           category: this.selectedCategory,
                                                           system: this.selectedSystem,
-                                                          pageSize: 40);
+                                                          pageSize: 5,
+                                                          page: this.currentPage);
+
+            // Get total count and calculate pagination 
+            if (results.TotalCount > 0)
+            {
+                this.labelNumSearchResults.Text = "Results: " + results.TotalCount + " (Page " + this.currentPage + " of " + results.TotalPages + ")";
+            }
+            else
+            {
+                this.labelNumSearchResults.Text = "Results: 0";
+            }
+
+            if (this.currentPage > 1)
+            {
+                // Make previous available
+                this.buttonPrev.Enabled = true;
+            }
+            else
+            {
+                // Make previous unavailable
+                this.buttonPrev.Enabled = false;
+            }
+
+            if (this.currentPage < results.TotalPages)
+            {
+                // Make next available
+                this.buttonNext.Enabled = true;
+            }
+            else 
+            {
+                // Make next unavailable
+                this.buttonNext.Enabled = false;
+            }
 
             foreach (VaultItem item in results.Items)
             {
@@ -256,7 +302,7 @@ namespace RetroVault
             ConfigForm configForm = new ConfigForm(vaultSettingsConfig);
             configForm.ShowDialog();
 
-            if(configForm.DialogResult == DialogResult.OK)
+            if (configForm.DialogResult == DialogResult.OK)
             {
                 // Reload config
                 SaveConfig(configForm.getVaultSettingsConfig());
@@ -270,6 +316,27 @@ namespace RetroVault
                 e.SuppressKeyPress = true; // optional: prevents ding sound }
                 searchButton_ClickAsync(sender, e);
             }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonPrev_Click(object sender, EventArgs e)
+        {
+            this.currentPage--;
+            this.buttonPrev.Enabled = false;
+            this.buttonNext.Enabled = false;
+            _ = DoSearchAsync();
+        }
+
+        private void buttonNext_Click(object sender, EventArgs e)
+        {
+            this.currentPage++;
+            this.buttonPrev.Enabled = false;
+            this.buttonNext.Enabled = false;
+            _ = DoSearchAsync();
         }
     }
 }

@@ -38,6 +38,9 @@
             newButton = new Button();
             vaultPanel = new FlowLayoutPanel();
             configButton = new Button();
+            labelNumSearchResults = new Label();
+            buttonPrev = new Button();
+            buttonNext = new Button();
             SuspendLayout();
             // 
             // label1
@@ -136,11 +139,43 @@
             configButton.UseVisualStyleBackColor = true;
             configButton.Click += configButton_Click;
             // 
+            // labelNumSearchResults
+            // 
+            labelNumSearchResults.AutoSize = true;
+            labelNumSearchResults.Location = new Point(220, 106);
+            labelNumSearchResults.Name = "labelNumSearchResults";
+            labelNumSearchResults.Size = new Size(110, 32);
+            labelNumSearchResults.TabIndex = 10;
+            labelNumSearchResults.Text = "Results: -";
+            // 
+            // buttonPrev
+            // 
+            buttonPrev.Location = new Point(621, 99);
+            buttonPrev.Name = "buttonPrev";
+            buttonPrev.Size = new Size(150, 46);
+            buttonPrev.TabIndex = 11;
+            buttonPrev.Text = "< Previous";
+            buttonPrev.UseVisualStyleBackColor = true;
+            buttonPrev.Click += buttonPrev_Click;
+            // 
+            // buttonNext
+            // 
+            buttonNext.Location = new Point(787, 99);
+            buttonNext.Name = "buttonNext";
+            buttonNext.Size = new Size(150, 46);
+            buttonNext.TabIndex = 12;
+            buttonNext.Text = "Next >";
+            buttonNext.UseVisualStyleBackColor = true;
+            buttonNext.Click += buttonNext_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1419, 1187);
+            Controls.Add(buttonNext);
+            Controls.Add(buttonPrev);
+            Controls.Add(labelNumSearchResults);
             Controls.Add(configButton);
             Controls.Add(vaultPanel);
             Controls.Add(newButton);
@@ -153,6 +188,7 @@
             Controls.Add(label1);
             Name = "Form1";
             Text = "TheRetroVault";
+            Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -169,5 +205,8 @@
         private Button newButton;
         private FlowLayoutPanel vaultPanel;
         private Button configButton;
+        private Label labelNumSearchResults;
+        private Button buttonPrev;
+        private Button buttonNext;
     }
 }
