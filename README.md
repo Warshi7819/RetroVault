@@ -1,7 +1,7 @@
-<image src="RetroVault/images/TransparentSplash.png" height="150px"/>
+<p align="center"><image src="RetroVault/images/TransparentSplash.png" height="200px" /></p>
 
 # Overview
-I have too much retro stuff! Old games, consoles etc. So, I decided to create a RetroVault to get organized. Once organized I can buy even more stuff because, you know, it’s organized. Mkey? 
+I have too much retro stuff! Old games, consoles, joysticks etc. So, I decided to create a RetroVault to get organized. Once organized I can buy even more stuff because, you know, it’s organized. Mkey? 
 
 Setting out I had three goals:
 * Backend storage with an API to store, manipulate and retrieve retro items.
@@ -9,7 +9,7 @@ Setting out I had three goals:
 * A mobile friendly frontend so that I can carry my retro items digitally with me – at all times!
   * Also known as **Duplicate Prevention**. "Do I have an analog joystick for my Dragon 32? Yes, I have!"
 
-I’m currently running RetroVault on my own server and I have cataloged more than 400 items so I guess it’s reached the somewhat “stable” phase already. 
+I’m currently running RetroVault on my own server and I have cataloged more than 600 items so I guess it’s reached the somewhat “stable” phase already. 
 
 IMAGES From PHONE, WEB and Windows Application.
 
@@ -18,6 +18,10 @@ RetroVault consists of three seperate programs that work in perfect harmony to f
 
 > [!NOTE]
 > During development you can of course configure all three projects to start up in Visual Studio to test em all locally. 
+
+### High Level Architecture
+<image src="RetroVault/design/RetroVault.png" height="500px"/>
+A picture says a thousand words, so this one should pretty much sum it all up. 
 
 ### RetroVaultAPI - Backend API
 This is the backend storage with an API to manipulate your retro items. The REST API supports the following:
@@ -38,7 +42,9 @@ To be able to use the client you first need to setup and launch the RetroVaultAP
 As storage the backend uses SQLite. Nothing fancy there, but easy enough to change for a more powerful solution later if the need arises. The backend also enables you to store and retrieve one thumbnail image per item. These images are stored on disk in a directory named thumbnails. Only used for making search results more interesting. Storing real data about your items is discussed below when we look at the client app. 
 
 > [!NOTE]
-> The **RetroVault.Shared** project contains code that is shared by the three programs mentioned here. Especially it contains RetroVault.Shared.VaultApiClient.cs that makes it easier to use the REST API from C#.  
+> The **RetroVault.Shared** project contains code that is shared by the three programs mentioned here. Especially it contains RetroVault.Shared.VaultApiClient.cs that makes it easier to use the REST API from C#.
+> 
+> There's also a tool included (CreateSHA256Hash) to help you hash the password used for the RetroVaultWebApp.  
  
 ### RetroVault - Client Side Application
 This is a Windows Forms application. “And why would you be so…” Well, it’s super fast for me to create as I have created one too many over the years. And if it works, it works, right? Oh, look at that custom splash screen on boot!
@@ -59,9 +65,33 @@ There is no user management implemented as there is only one username and passwo
 Since there is no user management implemented there's no possibility to host multiple collections for multiple people either. But it should be pretty easy to add if you have the need (and at least some skill).  
 
 ### Configuration
-user password config
-systems and category configuration
-kestrel? or just point to some doc about it.. 
+**RetroVaultAPI**
+
+ The **appsettings.json** config file should be configured so that you expose the API on the port you want. Default setting is: http://0.0.0.0:5149
+
+**RetroVault**
+
+The **config.json** file must be configured to reflect the address to the RetroVaultAPI you setup. It also let's you configure the Categories, Currencies, Regions and Complete. The latter two is actually not used in the app yet because I forgot all about it. 
+
+**RetroVaultWebApp**
+
+The **appsettings.json** file must be configured to specify username, password settings, address to your RetroVaultAPI and the Systems and Categories as they are configured in the RetroVault application. You will also have to configure the Kestrel settings to control where the Web application is exposed and also to use certificate and https. My kestrel config looks something like this:
+
+```
+ "Kestrel": {
+    "Endpoints": {
+      "Https": {
+        "Url": "https://0.0.0.0:8080",
+        "Certificate": {
+          "Path": "certs/yourcert.pfx",
+          "Password": "vERYsECREtpASS"
+        }
+      }
+    }
+  }
+```
+
+> **TODO:** In the future I plan to build the Systems and Categories dynamically by querying the DB instead. And no, my certificate password is not vERYsECREtpASS. 
 
 ### Outro
 That’s it. If you're still left with more burning questions then have a look at the code. 
