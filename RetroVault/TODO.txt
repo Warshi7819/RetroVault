@@ -1,16 +1,11 @@
-﻿1) Pagination of search results - number of results per page, and ability to navigate between pages and total results
-  - fetch 5 or 10 by default. 
-
-2) Caching of thumbnails on client - not sure it's needed. it's fast enough maybe.. 
-
-3) Create report of all items in the database - export to CSV or Excel. 
+﻿1) Create report of all items in the database - export to CSV or Excel. 
   - Include all metadata fields?
   - Report per system - num items, total price. total price per system/category combo. 
 
-4) For sale, sold and sale price fields.
+2) For sale, sold and sale price fields.
  * Enable filtering on items for sale
  * Enable filtering on items missing vital information/photos/or assets like complete box but missing the game.
 
-5) Backup rutine for production database, media folder and thumbnails. 
+3) Backup rutine for production database, media folder and thumbnails. 
  * Create a private game collection project on github?
  * This program could create such an backup as it has access to all the data.
