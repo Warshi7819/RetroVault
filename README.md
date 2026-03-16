@@ -1,4 +1,4 @@
-<p align="center"><image src="RetroVault/images/TransparentSplash.png" height="200px" /></p>
+<p align="center"><img src="RetroVault/images/TransparentSplash.png" height="200px" /></p>
 
 # Overview
 I have too much retro stuff! Old games, consoles, joysticks etc. So, I decided to create a RetroVault to get organized. Once organized I can buy even more stuff because, you know, it’s organized. Mkey? 
@@ -11,7 +11,24 @@ Setting out I had three goals:
 
 I’m currently running RetroVault on my own server and I have cataloged more than 600 items so I guess it’s reached the somewhat “stable” phase already. 
 
-IMAGES From PHONE, WEB and Windows Application.
+<table>
+  <thead>
+    <tr>
+      <th colspan="3">Application Previews</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="RetroVault/screenshots/client1.png" height="150px" alt="Windows Form Client - RetroVault"/><br/> Windows Forms App</td>
+      <td><img src="RetroVault/screenshots/client2.png" height="150px" alt="Windows Form Client - RetroVault"/><br/> Windows Forms App</td>
+      <td><img src="RetroVault/screenshots/mobile1.png" height="200px" alt="RetroVaultWebApp"/><br/> Mobile - Web</td>
+    </tr>
+    <tr>
+      <td><img src="RetroVault/screenshots/mobile2.png" height="200px" alt="RetroVaultWebApp"/><br/> Mobile - Web</td>
+      <td colspan="2"><img src="RetroVault/screenshots/web.png" height="200px" alt="RetroVaultWebApp"/><br/> Web</td>
+    </tr>
+  </tbody>
+</table>
 
 ## 3in1 - The Kinder Egg Of Software
 RetroVault consists of three seperate programs that work in perfect harmony to fulfill your cataloging needs. In this section we will go through all three in a bit more detail which might make it easier to navigate the code itself.
