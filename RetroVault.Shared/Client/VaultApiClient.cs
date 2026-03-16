@@ -36,14 +36,20 @@ namespace RetroVault.Shared
             var query = new List<string>();
 
             if (!string.IsNullOrWhiteSpace(name))
+            {
+                name = name.Trim();
                 query.Add($"name={Uri.EscapeDataString(name)}");
-
+            }
             if (!string.IsNullOrWhiteSpace(system) && system != "All")
+            {
+                system = system.Trim();
                 query.Add($"system={Uri.EscapeDataString(system)}");
-
+            }
             if (!string.IsNullOrWhiteSpace(category) && category != "All")
+            {
+                category = category.Trim();
                 query.Add($"category={Uri.EscapeDataString(category)}");
-
+            }
             query.Add($"page={page}");
             query.Add($"pageSize={pageSize}");
 
