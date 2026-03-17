@@ -60,6 +60,7 @@ namespace RetroVaultAPI.Controllers
             var totalCount = await query.CountAsync();
 
             var items = await query
+                .OrderBy(v => v.Name)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
