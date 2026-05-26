@@ -14,7 +14,12 @@ namespace RetroVault
         public List<string> Regions { get; set; }
         public List<string> Complete { get; set; }
         public string RESTAPI { get; set; }
-
         public string ThumbnailURL { get; set; }
+        public string GeminiModel { get; set; }
+
+        public bool AutoAIOnPaste { get; set; }
+        public bool AutoOpenImgFolderOnSave { get; set; }
+
+        public string DefaultStorageRef { get; set; }
     }
 }

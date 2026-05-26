@@ -60,6 +60,7 @@
             deleteButton = new Button();
             cancelButton = new Button();
             setThumbnailButton = new Button();
+            button1 = new Button();
             SuspendLayout();
             // 
             // saveButton
@@ -354,11 +355,23 @@
             setThumbnailButton.UseVisualStyleBackColor = true;
             setThumbnailButton.Click += setThumbnailButton_Click;
             // 
+            // button1
+            // 
+            button1.Enabled = false;
+            button1.Location = new Point(731, 872);
+            button1.Name = "button1";
+            button1.Size = new Size(231, 46);
+            button1.TabIndex = 35;
+            button1.Text = "Info From Gemini";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click_1;
+            // 
             // NewEditItemForm
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(974, 1029);
+            Controls.Add(button1);
             Controls.Add(setThumbnailButton);
             Controls.Add(cancelButton);
             Controls.Add(deleteButton);
@@ -431,5 +444,6 @@
         private Button deleteButton;
         private Button cancelButton;
         private Button setThumbnailButton;
+        private Button button1;
     }
 }

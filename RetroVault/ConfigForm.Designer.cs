@@ -32,6 +32,10 @@
             selectMediaLibraryButton = new Button();
             saveButton = new Button();
             cancelButton = new Button();
+            checkBox1 = new CheckBox();
+            checkBox2 = new CheckBox();
+            label2 = new Label();
+            textBox1 = new TextBox();
             SuspendLayout();
             // 
             // label1
@@ -75,11 +79,52 @@
             cancelButton.UseVisualStyleBackColor = true;
             cancelButton.Click += cancelButton_Click;
             // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(20, 227);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(786, 36);
+            checkBox1.TabIndex = 4;
+            checkBox1.Text = "Auto AI search (and set as thumbnail) on image paste (new/edit item)";
+            checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+            // 
+            // checkBox2
+            // 
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new Point(20, 281);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new Size(625, 36);
+            checkBox2.TabIndex = 5;
+            checkBox2.Text = "Auto open image folder when saving new/edited item";
+            checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(22, 161);
+            label2.Name = "label2";
+            label2.Size = new Size(219, 32);
+            label2.TabIndex = 6;
+            label2.Text = "Default storage ref:";
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(247, 154);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(312, 39);
+            textBox1.TabIndex = 7;
+            // 
             // ConfigForm
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(933, 590);
+            Controls.Add(textBox1);
+            Controls.Add(label2);
+            Controls.Add(checkBox2);
+            Controls.Add(checkBox1);
             Controls.Add(cancelButton);
             Controls.Add(saveButton);
             Controls.Add(selectMediaLibraryButton);
@@ -96,5 +141,9 @@
         private Button selectMediaLibraryButton;
         private Button saveButton;
         private Button cancelButton;
+        private CheckBox checkBox1;
+        private CheckBox checkBox2;
+        private Label label2;
+        private TextBox textBox1;
     }
 }

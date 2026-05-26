@@ -25,6 +25,10 @@ namespace RetroVault
             {
                 label1.Text = config.MediaLibraryPath;
             }
+            checkBox1.Checked = config.AutoAIOnPaste;
+            checkBox2.Checked = config.AutoOpenImgFolderOnSave;
+            textBox1.Text = config.DefaultStorageRef;
+
             // Load icon
             string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon", "RetroVault.ico");
             this.Icon = new Icon(iconPath);
@@ -52,17 +56,35 @@ namespace RetroVault
         {
             // Update config
             var mediaPath = label1.Text;
-            if(string.IsNullOrWhiteSpace(mediaPath))
+            if (string.IsNullOrWhiteSpace(mediaPath))
             {
                 MessageBox.Show("Please select a valid media library path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if(!System.IO.Directory.Exists(mediaPath))
+            if (!System.IO.Directory.Exists(mediaPath))
             {
                 MessageBox.Show("The selected media library path does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             config.MediaLibraryPath = label1.Text;
+            config.DefaultStorageRef = textBox1.Text;
+            if (checkBox1.Checked)
+            {
+                config.AutoAIOnPaste = true;
+            }
+            else
+            {
+                config.AutoAIOnPaste = false;
+            }
+
+            if (checkBox2.Checked) { 
+                config.AutoOpenImgFolderOnSave = true;
+            }
+            else
+            {
+                config.AutoOpenImgFolderOnSave = false;
+            }
+
 
             DialogResult = DialogResult.OK;
             this.Close();
@@ -72,6 +94,11 @@ namespace RetroVault
         {
             DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            ;
         }
     }
 }

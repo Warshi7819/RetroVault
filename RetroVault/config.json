@@ -1,6 +1,10 @@
 {
   "RESTAPI": "http://192.168.86.22:5149/api/",
   "ThumbnailURL": "http://192.168.86.22:5149",
+  "GeminiModel": "gemini-2.5-flash",
+  "AutoAIOnPaste": false,
+  "AutoOpenImgFolderOnSave": false,
+  "DefaultStorageRef": "",
   "VaultPath": "",
   "MediaLibraryPath": "",
   "Categories": [
