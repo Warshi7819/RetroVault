@@ -2,15 +2,11 @@
   - Include all metadata fields?
   - Report per system - num items, total price. total price per system/category combo. 
 
-2) For sale, sold and sale price fields.
- * Enable filtering on items for sale
- * Enable filtering on items missing vital information/photos/or assets like complete box but missing the game.
-
-3) Backup rutine for production database, media folder and thumbnails. 
+2) Backup rutine for production database, media folder and thumbnails. 
  * Create a private game collection project on github?
  * This program could create such an backup as it has access to all the data.
 
-4) Need to sort the systems and categories. It's a bit messy at the moment ;)
+3) Need to sort the systems and categories. It's a bit messy at the moment ;)
    Could sort it in code but there's something nice with the fact that stuff
    is displayed in the order it is configured. Thus the user may do whatever 
    he/she wants wrt. ordering...
