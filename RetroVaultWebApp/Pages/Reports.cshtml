@@ -1,6 +1,9 @@
 ﻿@page
-@model RetroVaultWebApp.Pages.Index1Model
+@model RetroVaultWebApp.Pages.ReportsModel
 @{
     ViewData["Title"] = "Reports";
 }
 <h1>Reports!</h1>
+Number of retro items in the database: @Model.TotalItems
+<br />
+Number of items counted: @Model.CountedItems

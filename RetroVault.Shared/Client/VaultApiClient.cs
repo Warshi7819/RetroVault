@@ -25,6 +25,8 @@ namespace RetroVault.Shared
             return await response.Content.ReadFromJsonAsync<VaultItem>();
         }
 
+
+        // GET ALL SYSTEMS
         public async Task<List<string>> GetSystemsAsync()
         {
             var response = await _http.GetAsync("VaultItem/systems");
@@ -33,6 +35,7 @@ namespace RetroVault.Shared
             return await response.Content.ReadFromJsonAsync<List<string>>() ?? new List<string>();
         }
 
+        // GET ALL CATEGORIES
         public async Task<List<string>> GetCategoriesAsync()
         {
             var response = await _http.GetAsync("VaultItem/categories");
