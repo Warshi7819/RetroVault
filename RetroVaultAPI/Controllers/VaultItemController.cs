@@ -118,6 +118,8 @@ namespace RetroVaultAPI.Controllers
             existingItem.StorageLocation = updatedItem.StorageLocation;
             existingItem.PurchasePrice = updatedItem.PurchasePrice;
             existingItem.Currency = updatedItem.Currency;
+            existingItem.Sold = updatedItem.Sold;
+            existingItem.SalePrice = updatedItem.SalePrice;
 
 
             await _context.SaveChangesAsync();

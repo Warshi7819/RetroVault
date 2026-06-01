@@ -12,7 +12,7 @@ namespace RetroVault
     {
         VaultSettingsConfig config;
 
-        public ConfigForm(VaultSettingsConfig conf)
+        public ConfigForm(VaultSettingsConfig conf, Point parentLoc)
         {
             InitializeComponent();
             config = conf;
@@ -32,6 +32,16 @@ namespace RetroVault
             // Load icon
             string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon", "RetroVault.ico");
             this.Icon = new Icon(iconPath);
+
+            // Position the form relative to the parent form
+            int offsetX = 20;
+            int offsetY = 20;
+
+            this.StartPosition = FormStartPosition.Manual;
+            this.Location = new Point(
+                parentLoc.X + offsetX,
+                parentLoc.Y + offsetY
+            );
         }
 
         public VaultSettingsConfig getVaultSettingsConfig()
@@ -77,7 +87,8 @@ namespace RetroVault
                 config.AutoAIOnPaste = false;
             }
 
-            if (checkBox2.Checked) { 
+            if (checkBox2.Checked)
+            {
                 config.AutoOpenImgFolderOnSave = true;
             }
             else
@@ -99,6 +110,13 @@ namespace RetroVault
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             ;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // Fire up the backup dialog
+            BackupForm backupForm = new BackupForm(config, this.Location); 
+            backupForm.ShowDialog();
         }
     }
 }

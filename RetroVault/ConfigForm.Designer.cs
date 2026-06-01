@@ -36,6 +36,7 @@
             checkBox2 = new CheckBox();
             label2 = new Label();
             textBox1 = new TextBox();
+            button1 = new Button();
             SuspendLayout();
             // 
             // label1
@@ -116,11 +117,22 @@
             textBox1.Size = new Size(312, 39);
             textBox1.TabIndex = 7;
             // 
+            // button1
+            // 
+            button1.Location = new Point(20, 380);
+            button1.Name = "button1";
+            button1.Size = new Size(196, 46);
+            button1.TabIndex = 8;
+            button1.Text = "Backup Data";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // ConfigForm
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(933, 590);
+            Controls.Add(button1);
             Controls.Add(textBox1);
             Controls.Add(label2);
             Controls.Add(checkBox2);
@@ -145,5 +157,6 @@
         private CheckBox checkBox2;
         private Label label2;
         private TextBox textBox1;
+        private Button button1;
     }
 }

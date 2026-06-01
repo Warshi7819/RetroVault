@@ -100,6 +100,11 @@ namespace RetroVault
             // Set default currency to first one, again to reduce the number of clicks
             // Users should specify the most used currency first in the config
             currencyComboBox.SelectedIndex = 0;
+            saleCurrencyLabel.Text = currencyComboBox.SelectedItem.ToString();
+
+            // Set default storage location if configured, otherwise it will be blank.
+            // The less input per item, the better!
+            this.storageTextBox.Text = config.DefaultStorageRef;
 
             //populate fields if editing an existing item
             if (vaultItem != null)
@@ -110,6 +115,7 @@ namespace RetroVault
                 categoryComboBox.SelectedItem = vaultItem.Category;
                 priceTextBox.Text = vaultItem.PurchasePrice.ToString();
                 currencyComboBox.SelectedItem = vaultItem.Currency;
+                saleCurrencyLabel.Text = vaultItem.Currency.ToString();
                 regionTextBox.Text = vaultItem.Region;
                 acquiredFromTextBox.Text = vaultItem.AcquiredFrom;
                 completeTextBox.Text = vaultItem.Completeness;
@@ -119,11 +125,17 @@ namespace RetroVault
                 devTextBox.Text = vaultItem.Developer;
                 storageTextBox.Text = vaultItem.StorageLocation;
 
-            }
+                if (vaultItem.Sold != null && vaultItem.Sold.ToLower() == "yes")
+                {
+                    soldCheckBox.Checked = true;
+                    salePriceTextBox.Text = vaultItem.SalePrice.ToString();
+                }
+                else 
+                {
+                    salePriceTextBox.Text = "0";
+                }
 
-            // Set default storage location if configured, otherwise it will be blank.
-            // The less input per item, the better!
-            this.storageTextBox.Text = config.DefaultStorageRef;
+            }
 
 
             // Create media folders on new item creation. 
@@ -156,9 +168,19 @@ namespace RetroVault
             vaultItem.Publisher = publisherTextBox.Text;
             vaultItem.Developer = devTextBox.Text;
             vaultItem.StorageLocation = storageTextBox.Text;
+            if (soldCheckBox.Checked)
+            {   
+                vaultItem.Sold = "Yes";
+                vaultItem.SalePrice = int.TryParse(salePriceTextBox.Text, out int salePrice) ? salePrice : 0;
+            }
+            else
+            {
+                vaultItem.Sold = "No";
+                vaultItem.SalePrice = 0;
+            }
 
             // Check if we should open the image folder before closing the dialog, based on user settings.
-            if(config.AutoOpenImgFolderOnSave)
+            if (config.AutoOpenImgFolderOnSave)
             {
                 OpenFolder(Path.Combine(config.MediaLibraryPath, vaultItem.Id.ToString(), "Images"));
             }
@@ -215,8 +237,8 @@ namespace RetroVault
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string selectedImagePath = openFileDialog.FileName;
-                
-               
+
+
                 // Create thumbnail
                 createThumbnail(selectedImagePath, 300);
 
@@ -502,5 +524,14 @@ namespace RetroVault
             return response.Candidates[0].Content.Parts[0].Text;
         }
 
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void currencyComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.saleCurrencyLabel.Text = currencyComboBox.SelectedItem.ToString();
+        }
     }
 }

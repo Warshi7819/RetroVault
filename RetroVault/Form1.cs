@@ -176,6 +176,8 @@ namespace RetroVault
             // The user has to then explicitly delete it to be removed. But I guess that is better as we are
             // optimizing the common route with less clicks this way
 
+            newButton.Enabled = false;
+
             var item = new VaultItem();
             item.Name = "New Item"; // Name must be set or item won't be created
 
@@ -183,6 +185,8 @@ namespace RetroVault
             // going forward as this is the one containing the correct ID.
             var newItem = await createVaultItem(item);
             await updateVaultItemHelper(newItem);
+
+            newButton.Enabled = true;
         }
 
         private async Task updateVaultItem(VaultItem vaultItem)
@@ -299,7 +303,7 @@ namespace RetroVault
         private void configButton_Click(object sender, EventArgs e)
         {
             // Open configuration/settings logic here
-            ConfigForm configForm = new ConfigForm(vaultSettingsConfig);
+            ConfigForm configForm = new ConfigForm(vaultSettingsConfig, this.Location);
             configForm.ShowDialog();
 
             if (configForm.DialogResult == DialogResult.OK)

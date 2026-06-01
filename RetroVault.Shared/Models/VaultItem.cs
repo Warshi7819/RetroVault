@@ -18,5 +18,7 @@
         public int PurchasePrice { get; set; } = 0;
         public string Currency { get; set; } = string.Empty;
         public string Thumbnail { get; set; } = string.Empty;
+        public string Sold { get; set; } = "No";
+        public int SalePrice { get; set; } = 0;
     }
 }
