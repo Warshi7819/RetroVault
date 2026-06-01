@@ -24,6 +24,32 @@ namespace RetroVaultAPI.Controllers
             return Ok(await _context.VaultItems.ToListAsync());
         }
 
+        [HttpGet("categories")]
+        public async Task<ActionResult<List<string>>> GetCategories()
+        {
+            var categories = await _context.VaultItems
+                .Select(v => v.Category)
+                .Where(c => c != null && c != "")
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
+
+            return Ok(categories);
+        }
+
+        [HttpGet("systems")]
+        public async Task<ActionResult<List<string>>> GetSystems()
+        {
+            var systems = await _context.VaultItems
+                .Select(v => v.System)
+                .Where(s => s != null && s != "")
+                .Distinct()
+                .OrderBy(s => s)
+                .ToListAsync();
+
+            return Ok(systems);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<VaultItem>> GetVaultItem(int id)
         {

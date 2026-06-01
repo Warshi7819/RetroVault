@@ -3,6 +3,15 @@
 ### GET ALL
 GET {{rootURL}}/api/VaultItem/
 Accept: application/json
+
+### GET All Categories
+GET {{rootURL}}/api/VaultItem/categories
+Accept: application/json
+
+### GET All Systems
+GET {{rootURL}}/api/VaultItem/systems
+Accept: application/json
+
 ### GET BY ID
 GET {{rootURL}}/api/VaultItem/-1
 Accept: application/json
@@ -16,11 +25,12 @@ Content-Type: application/json
   "year": "1983"
 }
 ### UPDATE EXISTING
-PUT {{rootURL}}/api/VaultItem/1
+PUT {{rootURL}}/api/VaultItem/5
 Content-Type: application/json
 {
   "name": "Updated Vault Item",
-  "price": "15"
+  "price": "15",
+  "system": "Xbox"
 }
 ### DELETE
 DELETE {{rootURL}}/api/VaultItem/2
