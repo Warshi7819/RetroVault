@@ -6,10 +6,10 @@ namespace RetroVaultWebApp.Pages
 {
     public class LogoutModel : PageModel
     {
-
-        public async Task OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
             await HttpContext.SignOutAsync("MyCookieAuth");
+            return RedirectToPage("/Index");
         }
     }
 }
