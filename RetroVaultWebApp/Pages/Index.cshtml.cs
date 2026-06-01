@@ -21,7 +21,7 @@ namespace RetroVaultWebApp.Pages
         { 
             _api = api; 
             _options = options.Value; 
-            _thumbs = thumbs; 
+            _thumbs = thumbs;
         }
 
         // Search inputs
@@ -44,12 +44,23 @@ namespace RetroVaultWebApp.Pages
 
         public List<string> Systems = new List<string>() { "All" };
 
-
-
         public PagedResult<VaultItem>? Results { get; set; }
 
         public async Task OnGetAsync()
         {
+            // Load cats and systems
+            if (Systems.Count == 1)
+            {
+                Systems = await _api.GetSystemsAsync();
+                Systems.Insert(0, "All");
+            }
+
+            if (Categories.Count == 1)
+            {
+                Categories = await _api.GetCategoriesAsync();
+                Categories.Insert(0, "All");
+            }
+
             if (!Search)
             {
                 // No search criteria and not returning from details page, so just show empty results
@@ -61,18 +72,6 @@ namespace RetroVaultWebApp.Pages
             foreach (var item in Results.Items)
             {
                 await _thumbs.EnsureThumbnailAsync(item.Id);
-            }
-
-            if (Systems.Count == 1)
-            {
-                Systems = await _api.GetSystemsAsync();
-                Systems.Insert(0, "All");
-            }
-
-            if(Categories.Count == 1)
-            {
-                Categories = await _api.GetCategoriesAsync();
-                Categories.Insert(0, "All");
             }
         }
     }
