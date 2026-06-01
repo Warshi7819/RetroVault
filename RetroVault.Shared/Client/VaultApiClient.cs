@@ -25,6 +25,22 @@ namespace RetroVault.Shared
             return await response.Content.ReadFromJsonAsync<VaultItem>();
         }
 
+        public async Task<List<string>> GetSystemsAsync()
+        {
+            var response = await _http.GetAsync("VaultItem/systems");
+            if (!response.IsSuccessStatusCode)
+                return new List<string>();
+            return await response.Content.ReadFromJsonAsync<List<string>>() ?? new List<string>();
+        }
+
+        public async Task<List<string>> GetCategoriesAsync()
+        {
+            var response = await _http.GetAsync("VaultItem/categories");
+            if (!response.IsSuccessStatusCode)
+                return new List<string>();
+            return await response.Content.ReadFromJsonAsync<List<string>>() ?? new List<string>();
+        }
+
         // SEARCH (name, system, category)
         public async Task<PagedResult<VaultItem>> SearchVaultItemsAsync(
             string? name = null,

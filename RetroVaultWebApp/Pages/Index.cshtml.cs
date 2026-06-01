@@ -40,8 +40,11 @@ namespace RetroVaultWebApp.Pages
         [BindProperty(SupportsGet = true)] 
         public bool Search { get; set; }
 
-        public List<string> Systems => _options.Systems; 
-        public List<string> Categories => _options.Categories;
+        public List<string> Categories = new List<string>() { "All" };
+
+        public List<string> Systems = new List<string>() { "All" };
+
+
 
         public PagedResult<VaultItem>? Results { get; set; }
 
@@ -58,6 +61,18 @@ namespace RetroVaultWebApp.Pages
             foreach (var item in Results.Items)
             {
                 await _thumbs.EnsureThumbnailAsync(item.Id);
+            }
+
+            if (Systems.Count == 1)
+            {
+                Systems = await _api.GetSystemsAsync();
+                Systems.Insert(0, "All");
+            }
+
+            if(Categories.Count == 1)
+            {
+                Categories = await _api.GetCategoriesAsync();
+                Categories.Insert(0, "All");
             }
         }
     }
