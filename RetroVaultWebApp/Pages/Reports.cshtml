@@ -3,7 +3,112 @@
 @{
     ViewData["Title"] = "Reports";
 }
-<h1>Reports!</h1>
-Number of retro items in the database: @Model.TotalItems
+<h1>Report</h1>
+Investigated @Model.CountedItems of @Model.TotalItems items currently in the vault.
 <br />
-Number of items counted: @Model.CountedItems
+Total cost of investigated items: @Model.TotalCost.ToString("N0")
+<br />
+<br />
+@if (Model.CatInf != null && Model.CatInf.Count > 0)
+{
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h5 class="card-title mb-3">Category Data</h5>
+
+            <table class="table table-sm table-striped table-bordered my-column-stripes">
+                <tbody>
+                    <tr><th>Category Name</th><th>Number of Items</th><th>Total Cost</th><th>Avg. Price</th></tr>
+
+                    @foreach (var kv in Model.CatInf.OrderByDescending(x => x.Value.ItemCount))
+                    {
+                        <tr>
+                            <td>@kv.Key</td>
+                            <td class="text-end">@kv.Value.ItemCount.ToString("N0")</td>
+                            <td class="text-end">@kv.Value.TotalCost.ToString("N0")</td>
+                            <td class="text-end">@kv.Value.AveragePrice.ToString("N0")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+<br />
+<br />
+
+@if (Model.SysInf != null && Model.SysInf.Count > 0)
+{
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h5 class="card-title mb-3">System Data</h5>
+
+            <table class="table table-sm table-striped table-bordered my-column-stripes">
+                <tbody>
+                    <tr><th>System Name</th><th>Number of Items</th><th>Total Cost</th><th>Avg. Price</th></tr>
+
+                    @foreach (var kv in Model.SysInf.OrderByDescending(x => x.Value.ItemCount))
+                    {
+                        <tr>
+                            <td>@kv.Key</td>
+                            <td class="text-end">@kv.Value.ItemCount.ToString("N0")</td>
+                            <td class="text-end">@kv.Value.TotalCost.ToString("N0")</td>
+                            <td class="text-end">@kv.Value.AveragePrice.ToString("N0")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+<br />
+<br />
+
+@if (Model.Top10Publishers != null)
+{
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h5 class="card-title mb-3">Top 10 Publishers</h5>
+
+            <table class="table table-sm table-striped table-bordered my-column-stripes">
+                <tbody>
+                    <tr><th>Publisher</th><th>Number of hits</th></tr>
+                    @foreach (var pub in Model.Top10Publishers)
+                    {
+                        <tr>
+                            <td>@pub.Key</td>
+                            <td class="text-end">@pub.Value.ItemCount.ToString("N0")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+<br />
+<br />
+
+@if (Model.Top10Developers != null)
+{
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h5 class="card-title mb-3">Top 10 Developers</h5>
+
+            <table class="table table-sm table-striped table-bordered my-column-stripes">
+                <tbody>
+                    <tr><th>Developer</th><th>Number of hits</th></tr>
+                    @foreach (var dev in Model.Top10Developers)
+                    {
+                        <tr>
+                            <td>@dev.Key</td>
+                            <td class="text-end">@dev.Value.ItemCount.ToString("N0")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
