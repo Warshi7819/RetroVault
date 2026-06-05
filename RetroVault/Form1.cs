@@ -121,13 +121,13 @@ namespace RetroVault
         {
             if (sender is VaultItemCard card)
             {
-                await updateVaultItemHelper(card.GetVaultItem());
+                await updateVaultItemHelper(card.GetVaultItem(), false);
             }
         }
 
-        private async Task updateVaultItemHelper(VaultItem vaultItem)
+        private async Task updateVaultItemHelper(VaultItem vaultItem, Boolean isItemNew)
         {
-            NewEditItemForm editForm = new NewEditItemForm(vaultItem, vaultSettingsConfig, this.Location);
+            NewEditItemForm editForm = new NewEditItemForm(vaultItem, vaultSettingsConfig, this.Location, isItemNew);
             editForm.ShowDialog();
 
             if (editForm.DialogResult == DialogResult.OK)
@@ -184,7 +184,7 @@ namespace RetroVault
             // Essential to get the new item returned from API and use that one 
             // going forward as this is the one containing the correct ID.
             var newItem = await createVaultItem(item);
-            await updateVaultItemHelper(newItem);
+            await updateVaultItemHelper(newItem, true);
 
             newButton.Enabled = true;
         }

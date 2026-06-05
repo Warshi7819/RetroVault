@@ -27,7 +27,7 @@ namespace RetroVault
         string geminiPrompt = "";
 
 
-        public NewEditItemForm(VaultItem item, VaultSettingsConfig conf, Point parentLoc)
+        public NewEditItemForm(VaultItem item, VaultSettingsConfig conf, Point parentLoc, Boolean isItemNew)
         {
             InitializeComponent();
             vaultItem = item;
@@ -102,10 +102,6 @@ namespace RetroVault
             currencyComboBox.SelectedIndex = 0;
             saleCurrencyLabel.Text = currencyComboBox.SelectedItem.ToString();
 
-            // Set default storage location if configured, otherwise it will be blank.
-            // The less input per item, the better!
-            this.storageTextBox.Text = config.DefaultStorageRef;
-
             //populate fields if editing an existing item
             if (vaultItem != null)
             {
@@ -134,9 +130,14 @@ namespace RetroVault
                 {
                     salePriceTextBox.Text = "0";
                 }
-
             }
 
+            if (isItemNew)
+            {
+                // Set default storage location if configured, otherwise it will be blank.
+                // The less input per item, the better!
+                this.storageTextBox.Text = config.DefaultStorageRef;
+            }
 
             // Create media folders on new item creation. 
             createMediaFolders();
