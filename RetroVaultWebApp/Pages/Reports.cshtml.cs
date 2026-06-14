@@ -41,12 +41,12 @@ namespace RetroVaultWebApp.Pages
             // var categories = await _api.GetCategoriesAsync();
 
             // Get every retro item, 10 items per page request (which is the default).
-            var res = await _api.SearchVaultItemsAsync("", "", "", 0);
+            var res = await _api.SearchVaultItemsAsync("", "", "", 1);
             TotalItems = res.TotalCount;
             Dictionary<string, PublisherInfo> pubInf = new Dictionary<string, PublisherInfo>();
             Dictionary<string, DeveloperInfo> devInf = new Dictionary<string, DeveloperInfo>();
 
-            for (int pageNum = 1; pageNum <= res.TotalPages; pageNum++)
+            for (int pageNum = 2; pageNum <= res.TotalPages; pageNum++)
             {
                 foreach (var item in res.Items)
                 {
@@ -90,7 +90,7 @@ namespace RetroVaultWebApp.Pages
                 }
 
                 Top10Publishers = pubInf.OrderByDescending(x => x.Value.ItemCount).Take(10);
-                Top10Developers = devInf.OrderByDescending(x => x.Value.ItemCount).Take(10);    
+                Top10Developers = devInf.OrderByDescending(x => x.Value.ItemCount).Take(10);
 
                 // Get next page of items
                 res = await _api.SearchVaultItemsAsync("", "", "", pageNum);
