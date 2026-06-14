@@ -34,12 +34,6 @@ namespace RetroVaultWebApp.Pages
             // a pretty heavy operation. But works for several thousand items so good enough for now. 
             // What mad man/woman has more than a few thousand retro items in their vault?
 
-            // Get set of systems
-            // var systems = await _api.GetSystemsAsync();
-
-            // Get set of categories
-            // var categories = await _api.GetCategoriesAsync();
-
             // Get every retro item, 10 items per page request (which is the default).
             var res = await _api.SearchVaultItemsAsync("", "", "", 1);
             var totalPages = res.TotalPages;
