@@ -146,6 +146,10 @@ namespace RetroVaultAPI.Controllers
             existingItem.Currency = updatedItem.Currency;
             existingItem.Sold = updatedItem.Sold;
             existingItem.SalePrice = updatedItem.SalePrice;
+            existingItem.PriceChartingURL = updatedItem.PriceChartingURL;
+            existingItem.PriceChartingLoosePrice = updatedItem.PriceChartingLoosePrice;
+            existingItem.PriceChartingCompletePrice = updatedItem.PriceChartingCompletePrice;
+            existingItem.PriceChartingLastUpdated = updatedItem.PriceChartingLastUpdated;
 
 
             await _context.SaveChangesAsync();

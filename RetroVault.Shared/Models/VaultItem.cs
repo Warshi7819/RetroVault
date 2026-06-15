@@ -20,5 +20,9 @@
         public string Thumbnail { get; set; } = string.Empty;
         public string Sold { get; set; } = "No";
         public int SalePrice { get; set; } = 0;
+        public string PriceChartingURL {  get; set; } = string.Empty;
+        public int PriceChartingLoosePrice { get; set; } = 0;
+        public int PriceChartingCompletePrice { get; set; } = 0;
+        public string PriceChartingLastUpdated {  get; set; } = string.Empty;
     }
 }
