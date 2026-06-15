@@ -3,6 +3,7 @@
     public class SystemInfo
     {
         public int ItemCount { get; set; } = 0;
+        public int GameCount { get; set; } = 0;
         public int TotalCost { get; set; } = 0;
 
         public int AveragePrice

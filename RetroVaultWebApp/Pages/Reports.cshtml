@@ -6,7 +6,56 @@
 <h1>Report</h1>
 Investigated @Model.CountedItems of @Model.TotalItems items currently in the vault.
 <br />
-Total cost of investigated items: @Model.TotalCost.ToString("N0")
+<br />
+@if (Model.TotalCostPerCurrency != null && Model.TotalCostPerCurrency.Count > 0)
+{
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Total Cost Per Currency</h5>
+            <table class="table table-sm table-striped table-bordered my-column-stripes">
+                <tbody>
+                    <tr><th>Total Cost</th><th>Currency</th></tr>
+                    @foreach (var kv in Model.TotalCostPerCurrency)
+                    {
+                        <tr>
+                            <td>@kv.Value.ToString("N0")</td>
+                            <td>@kv.Key</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+<br />
+<br />
+@if (Model.SysInf != null && Model.SysInf.Count > 0)
+{
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h5 class="card-title mb-3">System Data</h5>
+
+            <table class="table table-sm table-striped table-bordered my-column-stripes">
+                <tbody>
+                    <tr><th>System Name</th><th>Number of Items</th><th>Number of Games</th><th>Total Cost</th><th>Avg. Price</th></tr>
+
+                    @foreach (var kv in Model.SysInf.OrderByDescending(x => x.Value.ItemCount))
+                    {
+                        <tr>
+                            <td>@kv.Key</td>
+                            <td class="text-end">@kv.Value.ItemCount.ToString("N0")</td>
+                            <td class="text-end">@kv.Value.GameCount.ToString("N0")</td>
+                            <td class="text-end">@kv.Value.TotalCost.ToString("N0")</td>
+                            <td class="text-end">@kv.Value.AveragePrice.ToString("N0")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
 <br />
 <br />
 @if (Model.CatInf != null && Model.CatInf.Count > 0)
@@ -21,34 +70,6 @@ Total cost of investigated items: @Model.TotalCost.ToString("N0")
                     <tr><th>Category Name</th><th>Number of Items</th><th>Total Cost</th><th>Avg. Price</th></tr>
 
                     @foreach (var kv in Model.CatInf.OrderByDescending(x => x.Value.ItemCount))
-                    {
-                        <tr>
-                            <td>@kv.Key</td>
-                            <td class="text-end">@kv.Value.ItemCount.ToString("N0")</td>
-                            <td class="text-end">@kv.Value.TotalCost.ToString("N0")</td>
-                            <td class="text-end">@kv.Value.AveragePrice.ToString("N0")</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-}
-<br />
-<br />
-
-@if (Model.SysInf != null && Model.SysInf.Count > 0)
-{
-    <div class="card shadow-sm">
-        <div class="card-body">
-
-            <h5 class="card-title mb-3">System Data</h5>
-
-            <table class="table table-sm table-striped table-bordered my-column-stripes">
-                <tbody>
-                    <tr><th>System Name</th><th>Number of Items</th><th>Total Cost</th><th>Avg. Price</th></tr>
-
-                    @foreach (var kv in Model.SysInf.OrderByDescending(x => x.Value.ItemCount))
                     {
                         <tr>
                             <td>@kv.Key</td>

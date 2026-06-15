@@ -22,7 +22,7 @@ namespace RetroVaultWebApp.Pages
 
         public int TotalItems = 0;
         public int CountedItems = 0;
-        public int TotalCost = 0;
+        public Dictionary<string, int> TotalCostPerCurrency = new Dictionary<string, int>();
         public Dictionary<string, CategoryInfo> CatInf = new Dictionary<string, CategoryInfo>();
         public Dictionary<string, SystemInfo> SysInf = new Dictionary<string, SystemInfo>();
         public IEnumerable<KeyValuePair<string, PublisherInfo>> Top10Publishers;
@@ -61,6 +61,10 @@ namespace RetroVaultWebApp.Pages
                     }
                     SysInf[item.System].TotalCost += item.PurchasePrice;
                     SysInf[item.System].ItemCount += 1;
+                    if (item.Category.Equals("Games"))
+                    {
+                        SysInf[item.System].GameCount += 1;
+                    }
 
                     if (!CatInf.ContainsKey(item.Category))
                     {
@@ -89,9 +93,19 @@ namespace RetroVaultWebApp.Pages
                         devInf[item.Developer].ItemCount += 1;
                     }
 
+                    if (item.PurchasePrice > 0)
+                    {
+                        if (!string.IsNullOrEmpty(item.Currency))
+                        {
+                            if (!TotalCostPerCurrency.ContainsKey(item.Currency))
+                            { 
+                                TotalCostPerCurrency[item.Currency] = 0;
+                            }
+                            TotalCostPerCurrency[item.Currency] += item.PurchasePrice;
+                        }
+                    }
 
                     CountedItems += 1;
-                    TotalCost += item.PurchasePrice;
                 }
             }
 
