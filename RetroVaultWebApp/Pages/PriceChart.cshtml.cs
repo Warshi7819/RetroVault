@@ -83,8 +83,8 @@ namespace RetroVaultWebApp.Pages
                     CountedItems += 1;
                 }
 
-                DiffCIB = CostData["PriceChart: CIB"] - CostData["My Collection: CIB"];
-                DiffLoose = CostData["PriceChart: Loose"] - CostData["My Collection: Loose"];
+                DiffCIB += CostData["PriceChart: CIB"] - CostData["My Collection: CIB"];
+                DiffLoose += CostData["PriceChart: Loose"] - CostData["My Collection: Loose"];
 
                 // Sort the winners and losers dictionaries by value
                 TopTenWinners = TopTenWinners.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);

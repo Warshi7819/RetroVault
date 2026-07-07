@@ -61,7 +61,7 @@ Comparing Loose purchases towards PriceChart: @Model.DiffLoose
                 @foreach (var kv in Model.TopTenLoosers)
                 {
                     <tr>
-                        <td>@kv.Key.ToString()</td>
+                        <td><a href="/Details?id=@kv.Key.ToString()">@kv.Key.ToString()</a></td>
                         <td>@kv.Value.ToString("N0")</td>
                     </tr>
                 }
