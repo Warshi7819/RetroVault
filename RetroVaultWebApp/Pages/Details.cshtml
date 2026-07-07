@@ -41,6 +41,12 @@ else
                         <tr><th>Storage Location</th><td>@Model.Item.StorageLocation</td></tr>
                         <tr><th>Purchase Price</th><td>@Model.Item.PurchasePrice @Model.Item.Currency</td></tr>
                         <tr><th>Description</th><td style="white-space: pre-wrap;">@Model.Item.Description</td></tr>
+                        @if (Model.Item.PriceChartingLoosePrice > 0 && Model.Item.PriceChartingCompletePrice > 0)
+                        {
+                            <tr><th>PriceChart (CIB)</th><td>@Model.Item.PriceChartingCompletePrice @Model.Item.Currency</td></tr>
+                            <tr><th>PriceChart (Loose)</th><td>@Model.Item.PriceChartingLoosePrice @Model.Item.Currency</td></tr>
+                            <tr><th>PriceChart (Last Updated)</th><td>@Model.Item.PriceChartingLastUpdated</td></tr>
+                        }
                     </tbody>
                 </table>
 

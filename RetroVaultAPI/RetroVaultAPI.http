@@ -19,18 +19,27 @@ Accept: application/json
 POST {{rootURL}}/api/VaultItem/
 Content-Type: application/json
 {
-  "name": "C64 - Breadbin2",
-  "category": "Hardware",
-  "system": "Commodore 64",
-  "year": "1983"
+  "name": "XBOX Game 2 FTW",
+  "purchasePrice": "30",
+  "system": "Xbox",
+  "category": "Games",
+  "completeness": "Disc,Box",
+  "priceChartingLoosePrice": 10,
+  "priceChartingCompletePrice": 20,
+  "priceChartingLastUpdated": "2026-07-07"
 }
 ### UPDATE EXISTING
 PUT {{rootURL}}/api/VaultItem/5
 Content-Type: application/json
 {
-  "name": "Updated Vault Item",
-  "price": "15",
-  "system": "Xbox"
+  "name": "XBOX Game FTW",
+  "purchasePrice": "15",
+  "system": "Xbox",
+  "category": "Games",
+  "completeness": "CIB",
+  "priceChartingLoosePrice": 10,
+  "priceChartingCompletePrice": 20,
+  "priceChartingLastUpdated": "2026-07-07"
 }
 ### DELETE
 DELETE {{rootURL}}/api/VaultItem/2

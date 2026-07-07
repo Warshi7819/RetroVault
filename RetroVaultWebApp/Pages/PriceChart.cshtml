@@ -1,0 +1,71 @@
+﻿@page
+@model RetroVaultWebApp.Pages.PriceChartModel
+@{
+    ViewData["Title"] = "PriceChart";
+}
+<h1>PriceChart</h1>
+Investigated @Model.CountedItems of @Model.TotalItems items currently in the vault.
+<br />
+@Model.NumItemsWithPriceData items contains price data and is thus included in this report.
+<br />
+<br />
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title mb-3">Overall Compare</h5>
+        <table class="table table-sm table-striped table-bordered my-column-stripes">
+            <tbody>
+                <tr><th>Price Info</th><th>Total Worth</th></tr>
+                @foreach (var kv in Model.CostData)
+                {
+                    <tr>
+                        <td>@kv.Key</td>
+                        <td>@kv.Value.ToString("N0")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<br />
+Comparing CIB purchases towards PriceChart: @Model.DiffCIB
+<br />
+Comparing Loose purchases towards PriceChart: @Model.DiffLoose
+<br />
+<br />
+<br />
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title mb-3">Biggest Winners</h5>
+        <table class="table table-sm table-striped table-bordered my-column-stripes">
+            <tbody>
+                <tr><th>Item Id</th><th>Total Diff</th></tr>
+                @foreach (var kv in Model.TopTenWinners)
+                {
+                    <tr>
+                        <td><a href="/Details?id=@kv.Key.ToString()">@kv.Key.ToString()</a></td>
+                        <td>@kv.Value.ToString("N0")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<br />
+<br />
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title mb-3">Biggest Loosers</h5>
+        <table class="table table-sm table-striped table-bordered my-column-stripes">
+            <tbody>
+                <tr><th>Item Id</th><th>Total Diff</th></tr>
+                @foreach (var kv in Model.TopTenLoosers)
+                {
+                    <tr>
+                        <td>@kv.Key.ToString()</td>
+                        <td>@kv.Value.ToString("N0")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

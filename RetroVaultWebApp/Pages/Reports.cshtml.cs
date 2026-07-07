@@ -14,8 +14,7 @@ namespace RetroVaultWebApp.Pages
     {
         private readonly VaultApiClient _api;
         
-        public ReportsModel(VaultApiClient api, IOptions<VaultOptions> options,
-                  ThumbnailService thumbs)
+        public ReportsModel(VaultApiClient api, IOptions<VaultOptions> options)
         {
             _api = api;
         }
