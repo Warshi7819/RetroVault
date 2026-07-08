@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,7 @@ using System.Xml.Linq;
 
 namespace RetroVaultWebApp.Pages
 {
+    [Authorize]
     public class ReportsModel : PageModel
     {
         private readonly VaultApiClient _api;

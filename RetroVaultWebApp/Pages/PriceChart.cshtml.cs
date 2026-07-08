@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
@@ -8,6 +9,7 @@ using RetroVaultWebApp.Services;
 
 namespace RetroVaultWebApp.Pages
 {
+    [Authorize]
     public class PriceChartModel : PageModel
     {
 
