@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
   <Project Path="CreateSHA256Hash/CreateSHA256Hash.csproj" Id="5069e29c-af2d-4a97-9f2a-b99450be5bfb" />
   <Project Path="RetroVault.Shared/RetroVault.Shared.csproj" Id="11c857d1-3860-486e-ace1-3b633b1ce50e" />
   <Project Path="RetroVault/RetroVault.csproj" />
