@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Options;
 using RetroVault.Shared;
 using RetroVault.Shared.Models;
-using RetroVaultWebApp.Config;
 using RetroVaultWebApp.Services;
 
 namespace RetroVaultWebApp.Pages
@@ -13,14 +11,11 @@ namespace RetroVaultWebApp.Pages
     public class IndexModel : PageModel
     {
         private readonly VaultApiClient _api;
-        private readonly VaultOptions _options;
         private readonly ThumbnailService _thumbs;
 
-        public IndexModel(VaultApiClient api, IOptions<VaultOptions> options, 
-                          ThumbnailService thumbs) 
+        public IndexModel(VaultApiClient api, ThumbnailService thumbs) 
         { 
             _api = api; 
-            _options = options.Value; 
             _thumbs = thumbs;
         }
 

@@ -1,13 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Options;
 using RetroVault.Shared;
-using RetroVaultWebApp.Config;
 using RetroVaultWebApp.Reporting;
 using RetroVaultWebApp.Services;
-using System.Reflection;
-using System.Xml.Linq;
 
 namespace RetroVaultWebApp.Pages
 {
@@ -16,7 +11,7 @@ namespace RetroVaultWebApp.Pages
     {
         private readonly VaultApiClient _api;
         
-        public ReportsModel(VaultApiClient api, IOptions<VaultOptions> options)
+        public ReportsModel(VaultApiClient api)
         {
             _api = api;
         }

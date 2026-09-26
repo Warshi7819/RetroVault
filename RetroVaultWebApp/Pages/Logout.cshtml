@@ -1,6 +1,10 @@
 ﻿@page
 @model RetroVaultWebApp.Pages.LogoutModel
 @{
-    ViewData["Title"] = "Logout";
+    ViewData["Title"] = "Sign out";
 }
-<h1>Logged Out!</h1>
+
+<form method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Click here to sign out</button>
+</form>

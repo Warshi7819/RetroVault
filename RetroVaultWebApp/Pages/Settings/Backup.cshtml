@@ -1,0 +1,63 @@
+@page
+@model RetroVaultWebApp.Pages.Settings.BackupModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Backup";
+}
+
+<h2 class="mb-4"><i class="bi bi-cloud-download"></i> Backup</h2>
+
+<div class="card mb-4" style="max-width: 560px;">
+    <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-folder"></i> Backup Folder</h5>
+        <p class="text-muted small mb-3">
+            Select a local folder to backup your vault items and thumbnails.
+            Works best with Chromium browsers (Chrome, Edge).
+            Point this to your OneDrive or any synced folder.
+        </p>
+
+        <div id="fs-support-alert" class="alert alert-warning py-2 d-none">
+            <i class="bi bi-exclamation-triangle"></i>
+            Your browser does not support the File System Access API.
+            Please use a Chromium-based browser (Chrome, Edge, Opera) for backup.
+        </div>
+
+        <div id="folder-section">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <button id="btn-select-folder" type="button" class="btn btn-outline-primary">
+                    <i class="bi bi-folder2-open"></i> Select Backup Folder
+                </button>
+                <span id="folder-name" class="text-muted"></span>
+            </div>
+
+            <div id="backup-progress" class="d-none mb-3">
+                <div class="progress" style="height: 6px;">
+                    <div id="backup-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                </div>
+                <small id="backup-progress-text" class="text-muted mt-1 d-block"></small>
+            </div>
+
+            <div id="backup-result" class="d-none mb-3"></div>
+
+            <button id="btn-backup" type="button" class="btn btn-primary" disabled>
+                <i class="bi bi-cloud-upload"></i> Backup Now
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="max-width: 560px;">
+    <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-info-circle"></i> How it works</h5>
+        <ul class="mb-0 small text-muted">
+            <li>Click <strong>Select Backup Folder</strong> and choose a directory</li>
+            <li>On each backup, a <code>vault.json</code> file is created with all your vault data</li>
+            <li>Thumbnails are stored in a <code>thumbnails/</code> subfolder — only new thumbnails are downloaded on subsequent backups</li>
+            <li>The backup folder can point to OneDrive, Dropbox, or any synced directory</li>
+        </ul>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/backup.js" asp-append-version="true"></script>
+}

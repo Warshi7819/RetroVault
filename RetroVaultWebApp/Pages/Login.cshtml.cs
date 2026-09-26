@@ -1,25 +1,26 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.Extensions.Options;
-using RetroVault.Shared;
-using RetroVaultWebApp.Config;
-using RetroVaultWebApp.Services;
-using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+using RetroVaultWebApp.Data;
+using RetroVaultWebApp.Models;
+
+namespace RetroVaultWebApp.Pages;
 
 [EnableRateLimiting("LoginPolicy")]
 public class LoginModel : PageModel
 {
-    private readonly VaultOptions _options;
+    private readonly RetroVaultWebDbContext _db;
 
-    public LoginModel(IOptions<VaultOptions> options)
+    public LoginModel(RetroVaultWebDbContext db)
     {
-        _options = options.Value;
+        _db = db;
     }
 
-    
     [BindProperty]
     public string? Username { get; set; }
 
@@ -28,48 +29,62 @@ public class LoginModel : PageModel
 
     public string? ErrorMessage { get; set; }
 
-    public async Task<IActionResult> OnPost()
+    public IActionResult OnGet()
     {
-        // Retrieve valid credentials from configuration
-        string validUser = _options.User["Username"];
-        string validPass = _options.User["Password"];
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToPage("/Index");
+        }
+        return Page();
+    }
 
-        // If given username or password is empty, return.
-        if (string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(Username)) 
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
         {
             ErrorMessage = "Invalid username or password";
             return Page();
         }
 
-        var passwordProcessed = Password;
-        if (_options.User["UseSHA256Hash"] != "false")
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == Username);
+        if (user is null)
         {
-            // Hash supplied password with SHA256 when configured to do so
-            using (var sha256 = System.Security.Cryptography.SHA256.Create())
-            {
-                var bytes = System.Text.Encoding.UTF8.GetBytes(Password);
-                var hash = sha256.ComputeHash(bytes);
-                passwordProcessed = Convert.ToBase64String(hash);
-            }
+            ErrorMessage = "Invalid username or password";
+            return Page();
         }
 
-
-        if (Username == validUser && passwordProcessed == validPass)
+        var hasher = new PasswordHasher<User>();
+        var result = hasher.VerifyHashedPassword(user, user.PasswordHash, Password);
+        if (result == PasswordVerificationResult.Failed)
         {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, Username)
-            };
-
-            var identity = new ClaimsIdentity(claims, "MyCookieAuth");
-            var principal = new ClaimsPrincipal(identity);
-
-            await HttpContext.SignInAsync("MyCookieAuth", principal);
-
-            return RedirectToPage("/Index");
+            ErrorMessage = "Invalid username or password";
+            return Page();
         }
 
-        ErrorMessage = "Invalid username or password";
-        return Page();
+        if (user.IsDisabled)
+        {
+            ErrorMessage = "This account has been disabled";
+            return Page();
+        }
+
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, user.Username)
+        };
+        if (!string.IsNullOrEmpty(user.Alias))
+        {
+            claims.Add(new Claim("Alias", user.Alias));
+        }
+        if (user.IsAdmin)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+        }
+
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(identity));
+
+        return RedirectToPage("/Index");
     }
 }

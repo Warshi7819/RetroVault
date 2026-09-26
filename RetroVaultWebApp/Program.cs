@@ -1,26 +1,34 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 using RetroVault.Shared;
 using RetroVaultWebApp.Config;
+using RetroVaultWebApp.Data;
 using RetroVaultWebApp.Services;
-using System.ComponentModel;
 using System.Security.Cryptography;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/");
+    options.Conventions.AllowAnonymousToPage("/Login");
+});
 
-// Add cookie authentication
-builder.Services.AddAuthentication("MyCookieAuth") 
-    .AddCookie("MyCookieAuth", options => 
-    { 
+builder.Services.AddDbContext<RetroVaultWebDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("WebAppDb")));
+
+builder.Services.AddDataProtection();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
         options.LoginPath = "/Login";
         options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Always requires HTTPS
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.Strict;
     });
 
-// Configure the antiforgery options directly to please penetration test...
 builder.Services.AddAntiforgery(options =>
 {
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
@@ -28,13 +36,9 @@ builder.Services.AddAntiforgery(options =>
     options.Cookie.SameSite = SameSiteMode.Strict;
 });
 
-
-// Add rate limiting services - to be used to protect the login endpoint
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-
-    // Define a "LoginPolicy" that allows 3 requests every 1 minute per IP
     options.AddPolicy("LoginPolicy", httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
             partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
@@ -70,11 +74,16 @@ builder.Services.AddHttpClient<ThumbnailService>(client =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<RetroVaultWebDbContext>();
+    db.Database.EnsureCreated();
+    db.EnsureSeeded();
+}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -83,28 +92,25 @@ app.Use(async (context, next) =>
 {
     var isDev = app.Environment.IsDevelopment();
 
-    // Generate a per-request nonce
     var nonceBytes = new byte[16];
     RandomNumberGenerator.Fill(nonceBytes);
     var nonce = Convert.ToBase64String(nonceBytes);
 
-    // Store nonce so Razor pages can use it
     context.Items["CSP-Nonce"] = nonce;
     var scriptSrc = $"script-src 'self' 'nonce-{nonce}' https://challenges.cloudflare.com https://static.cloudflareinsights.com";
     var connectSrc = "connect-src 'self' https://*.cloudflare.com";
 
     if (isDev)
     {
-        // Use Dev settings instead of prod settings.
         connectSrc += " http://localhost:* https://localhost:* ws://localhost:* wss://localhost:*";
         scriptSrc = $"script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com";
     }
     var csp =
         "default-src 'self'; " +
         scriptSrc + "; " +
-        "style-src 'self' 'unsafe-inline'; " +
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
         "img-src 'self' data: https:; " +
-        "font-src 'self' https://fonts.gstatic.com; " +
+        "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " +
         connectSrc + "; " +
         "frame-src https://challenges.cloudflare.com; " +
         "object-src 'none'; " +

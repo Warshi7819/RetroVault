@@ -1,17 +1,19 @@
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace RetroVaultWebApp.Pages
+namespace RetroVaultWebApp.Pages;
+
+public class LogoutModel : PageModel
 {
-    [Authorize]
-    public class LogoutModel : PageModel
+    public void OnGet()
     {
-        public async Task<IActionResult> OnGetAsync()
-        {
-            await HttpContext.SignOutAsync("MyCookieAuth");
-            return RedirectToPage("/Index");
-        }
+    }
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToPage("/Login");
     }
 }

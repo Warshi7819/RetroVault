@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Options;
 using RetroVault.Shared;
-using RetroVaultWebApp.Config;
 using RetroVaultWebApp.Reporting;
 using RetroVaultWebApp.Services;
 
@@ -15,8 +12,7 @@ namespace RetroVaultWebApp.Pages
 
         private readonly VaultApiClient _api;
         private readonly ThumbnailService _thumbs;
-        public PriceChartModel(VaultApiClient api, IOptions<VaultOptions> options,
-            ThumbnailService thumbs) 
+        public PriceChartModel(VaultApiClient api, ThumbnailService thumbs) 
         { 
             _api = api;
             _thumbs = thumbs;
