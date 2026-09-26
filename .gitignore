@@ -362,3 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /RetroVaultWebApp/wwwroot/images/thumbnails
+/RetroVaultWebApp/retrovaultweb.db
+/RetroVaultWebApp/retrovaultweb.db-shm
+/RetroVaultWebApp/retrovaultweb.db-wal
