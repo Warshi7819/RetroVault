@@ -365,3 +365,7 @@ FodyWeavers.xsd
 /RetroVaultWebApp/retrovaultweb.db
 /RetroVaultWebApp/retrovaultweb.db-shm
 /RetroVaultWebApp/retrovaultweb.db-wal
+/debug.txt
+/RetroVaultAPI/retrovault.db
+/RetroVaultAPI/retrovault.db-shm
+/RetroVaultAPI/retrovault.db-wal
