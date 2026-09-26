@@ -166,7 +166,7 @@ namespace RetroVaultAPI.Controllers
             }
 
             // If thumbnail uploaded, delete that as well
-            var thumbnailsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Thumbnails", item.Thumbnail);
+            var thumbnailsPath = Path.Combine(Environment.CurrentDirectory, "Thumbnails", item.Thumbnail);
             if (System.IO.File.Exists(thumbnailsPath))
             { 
                 System.IO.File.Delete(thumbnailsPath);
@@ -190,7 +190,7 @@ namespace RetroVaultAPI.Controllers
                 return BadRequest("No file uploaded.");
 
             // Ensure folder exists
-            var thumbnailsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Thumbnails");
+            var thumbnailsPath = Path.Combine(Environment.CurrentDirectory, "Thumbnails");
             if (!Directory.Exists(thumbnailsPath))
                 Directory.CreateDirectory(thumbnailsPath);
 

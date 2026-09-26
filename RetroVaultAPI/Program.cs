@@ -22,7 +22,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Check if Thumbnail dir exists, if not create
-var thumbDir = Path.Combine(AppContext.BaseDirectory, "Thumbnails");
+var thumbDir = Path.Combine(Environment.CurrentDirectory, "Thumbnails");
 if (!System.IO.Directory.Exists(thumbDir))
 { 
     Directory.CreateDirectory(thumbDir);
