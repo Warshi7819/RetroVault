@@ -26,7 +26,13 @@ else
         <div class="card shadow-sm">
             <div class="card-body">
 
-                <h5 class="card-title mb-3">@Model.Item.Name</h5>
+                <h5 class="card-title mb-3">
+                    @Model.Item.Name
+                    @if (Model.Item.Sold == "Yes")
+                    {
+                        <span class="badge bg-danger ms-2">SOLD</span>
+                    }
+                </h5>
 
                 <table class="table table-sm table-striped">
                     <tbody>
