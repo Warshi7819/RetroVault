@@ -12,7 +12,7 @@ namespace RetroVault
 {
     public partial class VaultItemCard : UserControl
     {
-        public event EventHandler CardClicked;
+        public event EventHandler? CardClicked;
         private string id = "";
 
         private string lineOne = "";

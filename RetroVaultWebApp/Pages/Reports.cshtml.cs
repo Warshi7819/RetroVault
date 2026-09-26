@@ -21,8 +21,8 @@ namespace RetroVaultWebApp.Pages
         public Dictionary<string, int> TotalCostPerCurrency = new Dictionary<string, int>();
         public Dictionary<string, CategoryInfo> CatInf = new Dictionary<string, CategoryInfo>();
         public Dictionary<string, SystemInfo> SysInf = new Dictionary<string, SystemInfo>();
-        public IEnumerable<KeyValuePair<string, PublisherInfo>> Top10Publishers;
-        public IEnumerable<KeyValuePair<string, DeveloperInfo>> Top10Developers;
+        public IEnumerable<KeyValuePair<string, PublisherInfo>> Top10Publishers = Enumerable.Empty<KeyValuePair<string, PublisherInfo>>();
+        public IEnumerable<KeyValuePair<string, DeveloperInfo>> Top10Developers = Enumerable.Empty<KeyValuePair<string, DeveloperInfo>>();
 
         public async Task OnGetAsync()
         {

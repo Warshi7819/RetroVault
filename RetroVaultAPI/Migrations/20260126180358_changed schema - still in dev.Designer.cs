@@ -11,7 +11,7 @@ namespace RetroVaultAPI.Migrations
 {
     [DbContext(typeof(RetroVaultContext))]
     [Migration("20260126180358_changed schema - still in dev")]
-    partial class changedschemastillindev
+    partial class ChangedSchemaStillInDev
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

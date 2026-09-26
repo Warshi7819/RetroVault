@@ -46,7 +46,7 @@ namespace RetroVault
 
             this.api = new VaultApiClient(new HttpClient
             {
-                BaseAddress = new Uri(this.vaultSettingsConfig.RESTAPI)
+                BaseAddress = new Uri(this.vaultSettingsConfig!.RESTAPI)
             });
 
             // set initialized to true after loading config
@@ -109,7 +109,7 @@ namespace RetroVault
         }
 
 
-        private void vaultPanel_SizeChanged(object sender, EventArgs e)
+        private void vaultPanel_SizeChanged(object? sender, EventArgs e)
         {
             foreach (Control c in vaultPanel.Controls)
             {
@@ -184,7 +184,8 @@ namespace RetroVault
             // Essential to get the new item returned from API and use that one 
             // going forward as this is the one containing the correct ID.
             var newItem = await createVaultItem(item);
-            await updateVaultItemHelper(newItem, true);
+            if (newItem != null)
+                await updateVaultItemHelper(newItem, true);
 
             newButton.Enabled = true;
         }
@@ -214,7 +215,7 @@ namespace RetroVault
         private async void systemComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Implement system filtering logic here
-            selectedSystem = systemComboBox.SelectedItem.ToString() ?? "All";
+            selectedSystem = systemComboBox.SelectedItem?.ToString() ?? "All";
 
             if (initializedForm)
             {
@@ -226,7 +227,7 @@ namespace RetroVault
         private async void catComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Implement category filtering logic here
-            selectedCategory = catComboBox.SelectedItem.ToString() ?? "All";
+            selectedCategory = catComboBox.SelectedItem?.ToString() ?? "All";
             if (initializedForm)
             {
                 this.currentPage = 1; // reset to first page when changing category filter

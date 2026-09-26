@@ -13,13 +13,13 @@ namespace RetroVault
 {
     public partial class NewEditItemForm : Form
     {
-        internal VaultItem vaultItem;
+        internal VaultItem vaultItem = null!;
         internal VaultSettingsConfig config;
         internal Boolean deleteItem = false;
         internal Boolean thumbnailUpdated = false;
 
         public string GeminiAPIEnvKey = "GOOGLE_API_KEY";
-        Client client;
+        Client client = null!;
         internal string? imagePath = null;
         internal string? apiKey = null;
 
@@ -100,7 +100,7 @@ namespace RetroVault
             // Set default currency to first one, again to reduce the number of clicks
             // Users should specify the most used currency first in the config
             currencyComboBox.SelectedIndex = 0;
-            saleCurrencyLabel.Text = currencyComboBox.SelectedItem.ToString();
+            saleCurrencyLabel.Text = currencyComboBox.SelectedItem?.ToString() ?? "";
 
             //populate fields if editing an existing item
             if (vaultItem != null)
@@ -411,8 +411,8 @@ namespace RetroVault
                 {
                     // Save clipboard image 
                     string frontImagePath = Path.Combine(config.MediaLibraryPath, vaultItem.Id.ToString(), "Images", "Front.png");
-                    System.Drawing.Image img = Clipboard.GetImage();
-                    img.Save(frontImagePath, System.Drawing.Imaging.ImageFormat.Png);
+                    System.Drawing.Image? img = Clipboard.GetImage();
+                    img?.Save(frontImagePath, System.Drawing.Imaging.ImageFormat.Png);
 
                     // Create thumbnail
                     createThumbnail(frontImagePath, 300);
@@ -438,7 +438,7 @@ namespace RetroVault
         {
             try
             {
-                string output = await SendTextAndImageAsync(this.geminiModel, this.geminiPrompt, this.imagePath);
+                string output = await SendTextAndImageAsync(this.geminiModel, this.geminiPrompt, this.imagePath ?? "");
 
                 string[] lines = output.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -522,7 +522,7 @@ namespace RetroVault
             );
 
             // Extract text
-            return response.Candidates[0].Content.Parts[0].Text;
+            return response.Candidates?[0]?.Content?.Parts?[0]?.Text ?? "";
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -532,7 +532,7 @@ namespace RetroVault
 
         private void currencyComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.saleCurrencyLabel.Text = currencyComboBox.SelectedItem.ToString();
+            this.saleCurrencyLabel.Text = currencyComboBox.SelectedItem?.ToString() ?? "";
         }
     }
 }

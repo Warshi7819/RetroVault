@@ -5,7 +5,7 @@
 namespace RetroVaultAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class changedschemastillindev : Migration
+    public partial class ChangedSchemaStillInDev : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
