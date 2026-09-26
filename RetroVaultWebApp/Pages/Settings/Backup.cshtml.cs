@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RetroVault.Shared;
 using RetroVault.Shared.Models;
+using RetroVaultWebApp.Services;
 
 namespace RetroVaultWebApp.Pages.Settings;
 
@@ -12,11 +13,13 @@ public class BackupModel : PageModel
 {
     private readonly VaultApiClient _api;
     private readonly IWebHostEnvironment _env;
+    private readonly ThumbnailService _thumbnails;
 
-    public BackupModel(VaultApiClient api, IWebHostEnvironment env)
+    public BackupModel(VaultApiClient api, IWebHostEnvironment env, ThumbnailService thumbnails)
     {
         _api = api;
         _env = env;
+        _thumbnails = thumbnails;
     }
 
     public void OnGet()
@@ -71,30 +74,41 @@ public class BackupModel : PageModel
 
     public async Task<IActionResult> OnGetThumbnailsAsync()
     {
-        var thumbnailsDir = Path.Combine(_env.WebRootPath, "images", "thumbnails");
-        if (!Directory.Exists(thumbnailsDir))
+        var allItems = new List<VaultItem>();
+        int page = 1;
+        const int pageSize = 100;
+
+        while (true)
         {
-            return new JsonResult(Array.Empty<string>());
+            var result = await _api.SearchVaultItemsAsync(null, null, null, page, pageSize);
+            allItems.AddRange(result.Items);
+
+            if (page >= result.TotalPages || !result.Items.Any())
+                break;
+
+            page++;
         }
 
-        var files = Directory.GetFiles(thumbnailsDir, "*.png")
-            .Select(f => Path.GetFileName(f))
-            .Where(f => f != null)
+        var thumbnails = allItems
+            .Where(i => !string.IsNullOrEmpty(i.Thumbnail))
+            .Select(i => i.Id)
             .ToList();
 
-        return new JsonResult(files);
+        return new JsonResult(thumbnails);
     }
 
     public async Task<IActionResult> OnGetThumbnailAsync(int id)
     {
-        var thumbnailsDir = Path.Combine(_env.WebRootPath, "images", "thumbnails");
-        var filePath = Path.Combine(thumbnailsDir, $"{id}.png");
+        var filePath = await _thumbnails.EnsureThumbnailAsync(id, forceRefresh: true);
 
-        if (!System.IO.File.Exists(filePath))
+        if (filePath == "/images/no-thumb.png")
         {
             return NotFound();
         }
 
-        return PhysicalFile(filePath, "image/png");
+        var thumbnailsDir = Path.Combine(_env.WebRootPath, "images", "thumbnails");
+        var localPath = Path.Combine(thumbnailsDir, $"{id}.png");
+
+        return PhysicalFile(localPath, "image/png");
     }
 }

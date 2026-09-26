@@ -14,7 +14,7 @@
             _env = env;
         }
 
-        public async Task<string> EnsureThumbnailAsync(int itemId)
+        public async Task<string> EnsureThumbnailAsync(int itemId, bool forceRefresh = false)
         {
             string folder = Path.Combine(_env.WebRootPath, "images", "thumbnails");
             Directory.CreateDirectory(folder);
@@ -23,7 +23,7 @@
 
             bool needsRefresh = true;
 
-            if (File.Exists(localPath))
+            if (!forceRefresh && File.Exists(localPath))
             {
                 DateTime lastWrite = File.GetLastWriteTimeUtc(localPath);
 

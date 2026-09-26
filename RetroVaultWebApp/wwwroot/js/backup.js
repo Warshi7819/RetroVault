@@ -206,7 +206,7 @@
             if (!thumbnailsResponse.ok) {
                 throw new Error('Failed to fetch thumbnail list: ' + thumbnailsResponse.status);
             }
-            const thumbnailFilenames = await thumbnailsResponse.json();
+            const thumbnailIds = await thumbnailsResponse.json();
 
             const thumbnailsDir = await getDirHandle(currentDirHandle, 'thumbnails');
             if (!thumbnailsDir) {
@@ -215,10 +215,12 @@
 
             let newCount = 0;
             let skippedCount = 0;
-            const total = thumbnailFilenames.length;
+            let failedCount = 0;
+            const total = thumbnailIds.length;
 
             for (let i = 0; i < total; i++) {
-                const filename = thumbnailFilenames[i];
+                const id = thumbnailIds[i];
+                const filename = id + '.png';
                 const percent = 20 + Math.round((i / total) * 80);
                 showProgress(percent, 'Processing thumbnails (' + (i + 1) + '/' + total + ')...');
 
@@ -227,9 +229,9 @@
                     continue;
                 }
 
-                const id = filename.replace('.png', '');
                 const imgResponse = await fetch('?handler=Thumbnail&id=' + encodeURIComponent(id));
                 if (!imgResponse.ok) {
+                    failedCount++;
                     continue;
                 }
                 const blob = await imgResponse.blob();
@@ -239,7 +241,7 @@
 
             showProgress(100, 'Done!');
             hideProgress();
-            const msg = 'Backup completed: ' + itemCount + ' items saved! ' + newCount + ' new thumbnail(s) saved, ' + skippedCount + ' already existed.';
+            const msg = 'Backup completed: ' + itemCount + ' items saved! ' + newCount + ' new thumbnail(s) saved, ' + skippedCount + ' already existed' + (failedCount > 0 ? ', ' + failedCount + ' failed.' : '.');
             showResult(msg, false);
         } catch (err) {
             hideProgress();
