@@ -46,20 +46,11 @@ else
                         <tr><th>Completeness</th><td>@Model.Item.Completeness</td></tr>
                         <tr><th>Storage Location</th><td>@Model.Item.StorageLocation</td></tr>
                         <tr><th>Purchase Price</th><td>@Model.Item.PurchasePrice @Model.Item.Currency</td></tr>
+                        @if (Model.Item.Sold == "Yes")
+                        {
+                            <tr><th>Sold Price</th><td>@Model.Item.SalePrice @Model.Item.Currency</td></tr>
+                        }
                         <tr><th>Description</th><td style="white-space: pre-wrap;">@Model.Item.Description</td></tr>
-                        <tr>
-                            <th>Sold</th>
-                            <td>
-                                @if (Model.Item.Sold == "Yes")
-                                {
-                                    @:Yes (@Model.Item.SalePrice @Model.Item.Currency)
-                                }
-                                else
-                                {
-                                    @:No
-                                }
-                            </td>
-                        </tr>
                         @if (Model.Item.PriceChartingLoosePrice > 0 && Model.Item.PriceChartingCompletePrice > 0)
                         {
                             <tr><th>PriceChart (CIB)</th><td>@Model.Item.PriceChartingCompletePrice @Model.Item.Currency</td></tr>
