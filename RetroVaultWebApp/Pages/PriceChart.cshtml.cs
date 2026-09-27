@@ -82,13 +82,13 @@ namespace RetroVaultWebApp.Pages
                     CountedItems += 1;
                 }
 
-                DiffCIB += CostData["PriceChart: CIB"] - CostData["My Collection: CIB"];
-                DiffLoose += CostData["PriceChart: Loose"] - CostData["My Collection: Loose"];
-
                 // Sort the winners and losers dictionaries by value
                 TopTenWinners = TopTenWinners.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
                 TopTenLoosers = TopTenLoosers.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
             }
+
+            DiffCIB = CostData["My Collection: CIB"] - CostData["PriceChart: CIB"];
+            DiffLoose = CostData["My Collection: Loose"] - CostData["PriceChart: Loose"];
         }
 
         private void AddPossibleWinnerLooser(int id, int diff)
