@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -22,11 +23,22 @@ public class ProfileModel : PageModel
     public string ErrorMessage { get; set; } = string.Empty;
     public string? CurrentAlias { get; set; }
     public string CurrentPreferredCurrency { get; set; } = "NOK";
+    public string NumberFormatDisplayName { get; set; } = "Unknown";
 
     public static readonly string[] Currencies = ["NOK", "USD", "EUR", "GBP", "SEK", "DKK"];
 
     public async Task<IActionResult> OnGetAsync()
     {
+        var acceptLanguage = HttpContext.Request.Headers["Accept-Language"].FirstOrDefault();
+        if (!string.IsNullOrEmpty(acceptLanguage))
+        {
+            var firstCulture = acceptLanguage.Split(',').FirstOrDefault()?.Split(';').FirstOrDefault()?.Trim();
+            if (!string.IsNullOrEmpty(firstCulture))
+            {
+                try { NumberFormatDisplayName = new CultureInfo(firstCulture).DisplayName; } catch { }
+            }
+        }
+
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var user = await _db.Users.FindAsync(userId);
         CurrentAlias = user?.Alias;

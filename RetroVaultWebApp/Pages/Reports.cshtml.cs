@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RetroVault.Shared;
@@ -23,9 +24,20 @@ namespace RetroVaultWebApp.Pages
         public Dictionary<string, SystemInfo> SysInf = new Dictionary<string, SystemInfo>();
         public IEnumerable<KeyValuePair<string, PublisherInfo>> Top10Publishers = Enumerable.Empty<KeyValuePair<string, PublisherInfo>>();
         public IEnumerable<KeyValuePair<string, DeveloperInfo>> Top10Developers = Enumerable.Empty<KeyValuePair<string, DeveloperInfo>>();
+        public CultureInfo NumberCulture { get; set; } = CultureInfo.InvariantCulture;
 
         public async Task OnGetAsync()
         {
+            var acceptLanguage = HttpContext.Request.Headers["Accept-Language"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(acceptLanguage))
+            {
+                var firstCulture = acceptLanguage.Split(',').FirstOrDefault()?.Split(';').FirstOrDefault()?.Trim();
+                if (!string.IsNullOrEmpty(firstCulture))
+                {
+                    try { NumberCulture = new CultureInfo(firstCulture); } catch { }
+                }
+            }
+
             // We process every item in the DB. This happens on the server but it's still
             // a pretty heavy operation. But works for several thousand items so good enough for now. 
             // What mad man/woman has more than a few thousand retro items in their vault?

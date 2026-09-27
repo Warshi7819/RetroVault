@@ -4,7 +4,7 @@
     ViewData["Title"] = "Reports";
 }
 <h1>Report</h1>
-Investigated @Model.CountedItems of @Model.TotalItems items currently in the vault.
+Investigated @Model.CountedItems.ToString("N0", Model.NumberCulture) of @Model.TotalItems.ToString("N0", Model.NumberCulture) items currently in the vault.
 <br />
 <br />
 @if (Model.TotalCostPerCurrency != null && Model.TotalCostPerCurrency.Count > 0)
@@ -18,7 +18,7 @@ Investigated @Model.CountedItems of @Model.TotalItems items currently in the vau
                     @foreach (var kv in Model.TotalCostPerCurrency)
                     {
                         <tr>
-                            <td>@kv.Value.ToString("N0")</td>
+                            <td>@kv.Value.ToString("N0", Model.NumberCulture)</td>
                             <td>@kv.Key</td>
                         </tr>
                     }
@@ -44,10 +44,10 @@ Investigated @Model.CountedItems of @Model.TotalItems items currently in the vau
                     {
                         <tr>
                             <td>@kv.Key</td>
-                            <td class="text-end">@kv.Value.ItemCount.ToString("N0")</td>
-                            <td class="text-end">@kv.Value.GameCount.ToString("N0")</td>
-                            <td class="text-end">@kv.Value.TotalCost.ToString("N0")</td>
-                            <td class="text-end">@kv.Value.AveragePrice.ToString("N0")</td>
+                            <td class="text-end">@kv.Value.ItemCount.ToString("N0", Model.NumberCulture)</td>
+                            <td class="text-end">@kv.Value.GameCount.ToString("N0", Model.NumberCulture)</td>
+                            <td class="text-end">@kv.Value.TotalCost.ToString("N0", Model.NumberCulture)</td>
+                            <td class="text-end">@kv.Value.AveragePrice.ToString("N0", Model.NumberCulture)</td>
                         </tr>
                     }
                 </tbody>
@@ -73,9 +73,9 @@ Investigated @Model.CountedItems of @Model.TotalItems items currently in the vau
                     {
                         <tr>
                             <td>@kv.Key</td>
-                            <td class="text-end">@kv.Value.ItemCount.ToString("N0")</td>
-                            <td class="text-end">@kv.Value.TotalCost.ToString("N0")</td>
-                            <td class="text-end">@kv.Value.AveragePrice.ToString("N0")</td>
+                            <td class="text-end">@kv.Value.ItemCount.ToString("N0", Model.NumberCulture)</td>
+                            <td class="text-end">@kv.Value.TotalCost.ToString("N0", Model.NumberCulture)</td>
+                            <td class="text-end">@kv.Value.AveragePrice.ToString("N0", Model.NumberCulture)</td>
                         </tr>
                     }
                 </tbody>
@@ -100,7 +100,7 @@ Investigated @Model.CountedItems of @Model.TotalItems items currently in the vau
                     {
                         <tr>
                             <td>@pub.Key</td>
-                            <td class="text-end">@pub.Value.ItemCount.ToString("N0")</td>
+                            <td class="text-end">@pub.Value.ItemCount.ToString("N0", Model.NumberCulture)</td>
                         </tr>
                     }
                 </tbody>
@@ -125,7 +125,7 @@ Investigated @Model.CountedItems of @Model.TotalItems items currently in the vau
                     {
                         <tr>
                             <td>@dev.Key</td>
-                            <td class="text-end">@dev.Value.ItemCount.ToString("N0")</td>
+                            <td class="text-end">@dev.Value.ItemCount.ToString("N0", Model.NumberCulture)</td>
                         </tr>
                     }
                 </tbody>
