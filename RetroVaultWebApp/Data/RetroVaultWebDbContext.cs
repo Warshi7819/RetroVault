@@ -19,6 +19,7 @@ public class RetroVaultWebDbContext : DbContext
             e.Property(u => u.Username).HasMaxLength(100);
             e.Property(u => u.Alias).HasMaxLength(100);
             e.Property(u => u.PasswordHash).HasMaxLength(200);
+            e.Property(u => u.PreferredCurrency).HasMaxLength(10).HasDefaultValue("NOK");
         });
 
         modelBuilder.Entity<Theme>(e =>

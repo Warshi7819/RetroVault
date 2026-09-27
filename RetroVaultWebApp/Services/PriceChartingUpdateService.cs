@@ -13,7 +13,8 @@ namespace RetroVaultWebApp.Services
 
         private readonly IHttpClientFactory _httpFactory;
         private readonly IOptions<VaultOptions> _options;
-        private readonly Channel<int> _triggerChannel = Channel.CreateUnbounded<int>();
+        private readonly ExchangeRateService _exchangeRate;
+        private readonly Channel<(string Currency, bool Force)> _triggerChannel = Channel.CreateUnbounded<(string, bool)>();
 
         public bool IsRunning { get; private set; }
         public int TotalItems { get; private set; }
@@ -23,15 +24,17 @@ namespace RetroVaultWebApp.Services
         public string? ErrorMessage { get; private set; }
         public DateTime? CompletedAt { get; private set; }
 
-        public PriceChartingUpdateService(IHttpClientFactory httpFactory, IOptions<VaultOptions> options)
+        public PriceChartingUpdateService(IHttpClientFactory httpFactory, IOptions<VaultOptions> options,
+            ExchangeRateService exchangeRate)
         {
             _httpFactory = httpFactory;
             _options = options;
+            _exchangeRate = exchangeRate;
         }
 
-        public void TriggerUpdate()
+        public void TriggerUpdate(string preferredCurrency, bool forceUpdate)
         {
-            _triggerChannel.Writer.TryWrite(1);
+            _triggerChannel.Writer.TryWrite((preferredCurrency, forceUpdate));
         }
 
         public async Task<(string? LoosePrice, string? CompletePrice)> ScrapePriceChartingUrlAsync(string url)
@@ -70,8 +73,7 @@ namespace RetroVaultWebApp.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await _triggerChannel.Reader.WaitToReadAsync(stoppingToken);
-                await _triggerChannel.Reader.ReadAsync(stoppingToken);
+                var (preferredCurrency, forceUpdate) = await _triggerChannel.Reader.ReadAsync(stoppingToken);
 
                 IsRunning = true;
                 CompletedAt = null;
@@ -83,6 +85,9 @@ namespace RetroVaultWebApp.Services
 
                 try
                 {
+                    StatusMessage = $"Fetching USD → {preferredCurrency} exchange rate...";
+                    var usdRate = await _exchangeRate.GetUsdRateAsync(preferredCurrency);
+
                     using var apiHttp = _httpFactory.CreateClient(ApiClientName);
                     var api = new VaultApiClient(apiHttp);
 
@@ -98,13 +103,14 @@ namespace RetroVaultWebApp.Services
                     var cutoff = DateTime.UtcNow.AddDays(-7);
                     var toUpdate = allItems.Where(i =>
                         !string.IsNullOrWhiteSpace(i.PriceChartingURL) &&
-                        (string.IsNullOrWhiteSpace(i.PriceChartingLastUpdated) ||
+                        (forceUpdate ||
+                         string.IsNullOrWhiteSpace(i.PriceChartingLastUpdated) ||
                          !DateTime.TryParse(i.PriceChartingLastUpdated, out var last) ||
                          last < cutoff))
                         .ToList();
 
                     TotalItems = toUpdate.Count;
-                    StatusMessage = $"Found {TotalItems} items to update.";
+                    StatusMessage = $"Found {TotalItems} items to update. Rate: 1 USD = {usdRate} {preferredCurrency}";
 
                     foreach (var item in toUpdate)
                     {
@@ -117,11 +123,12 @@ namespace RetroVaultWebApp.Services
                         {
                             var (loose, complete) = await ScrapePriceChartingUrlAsync(item.PriceChartingURL);
 
-                            if (loose != null && ParsePrice(loose) is int looseVal)
-                                item.PriceChartingLoosePrice = looseVal;
-                            if (complete != null && ParsePrice(complete) is int completeVal)
-                                item.PriceChartingCompletePrice = completeVal;
+                            if (loose != null && ParsePrice(loose) is decimal looseUsd)
+                                item.PriceChartingLoosePrice = (int)Math.Round(looseUsd * usdRate);
+                            if (complete != null && ParsePrice(complete) is decimal completeUsd)
+                                item.PriceChartingCompletePrice = (int)Math.Round(completeUsd * usdRate);
 
+                            item.Currency = preferredCurrency;
                             item.PriceChartingLastUpdated = DateTime.UtcNow.ToString("yyyy-MM-dd");
                             await api.UpdateVaultItemAsync(item.Id, item);
                         }
@@ -155,12 +162,12 @@ namespace RetroVaultWebApp.Services
             }
         }
 
-        private static int? ParsePrice(string price)
+        private static decimal? ParsePrice(string price)
         {
             var cleaned = price.Replace("$", "").Replace(",", "").Trim();
             if (decimal.TryParse(cleaned, System.Globalization.NumberStyles.Any,
                 System.Globalization.CultureInfo.InvariantCulture, out var val))
-                return (int)Math.Round(val);
+                return val;
             return null;
         }
     }

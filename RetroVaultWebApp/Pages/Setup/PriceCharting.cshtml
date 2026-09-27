@@ -30,8 +30,17 @@
         {
             <hr />
             <div class="mb-0">
-                <strong>Loose:</strong> @(Model.TestLoosePrice ?? "not found")<br />
+                <strong>Loose:</strong> @(Model.TestLoosePrice ?? "not found")
+                @if (Model.TestLoosePriceConverted != null)
+                {
+                    <span class="text-muted"> → @Model.TestLoosePriceConverted @Model.PreferredCurrency</span>
+                }
+                <br />
                 <strong>Complete:</strong> @(Model.TestCompletePrice ?? "not found")
+                @if (Model.TestCompletePriceConverted != null)
+                {
+                    <span class="text-muted"> → @Model.TestCompletePriceConverted @Model.PreferredCurrency</span>
+                }
             </div>
         }
     </div>
@@ -43,10 +52,16 @@
         <p class="text-muted small mb-3">
             Trigger a background job to fetch updated PriceCharting prices for all vault items
             with a URL that hasn't been updated in the last 7 days. Runs at 1 item per @Model.UpdateIntervalSeconds seconds.
+            Prices are converted from USD to <strong>@Model.PreferredCurrency</strong>.
+            <a asp-page="/Settings/Profile">Change currency</a>
         </p>
 
         <form method="post" asp-page-handler="TriggerUpdate" class="d-inline">
             @Html.AntiForgeryToken()
+            <div class="form-check mb-2">
+                <input type="checkbox" asp-for="ForceUpdate" class="form-check-input" id="forceUpdate" />
+                <label class="form-check-label" for="forceUpdate">Force update all items (ignore 7-day filter)</label>
+            </div>
             <button type="submit" class="btn btn-primary" id="btn-start">
                 <i class="bi bi-play-fill"></i> Start Update
             </button>

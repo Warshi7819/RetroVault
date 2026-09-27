@@ -86,13 +86,14 @@ builder.Services.AddHttpClient("PriceChartingScrape", client =>
 
 builder.Services.AddSingleton<PriceChartingUpdateService>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<PriceChartingUpdateService>());
+builder.Services.AddSingleton<ExchangeRateService>();
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<RetroVaultWebDbContext>();
-    db.Database.EnsureCreated();
+    db.Database.Migrate();
     db.EnsureSeeded();
 }
 

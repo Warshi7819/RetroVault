@@ -21,12 +21,16 @@ public class ProfileModel : PageModel
 
     public string ErrorMessage { get; set; } = string.Empty;
     public string? CurrentAlias { get; set; }
+    public string CurrentPreferredCurrency { get; set; } = "NOK";
+
+    public static readonly string[] Currencies = ["NOK", "USD", "EUR", "GBP", "SEK", "DKK"];
 
     public async Task<IActionResult> OnGetAsync()
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var user = await _db.Users.FindAsync(userId);
         CurrentAlias = user?.Alias;
+        CurrentPreferredCurrency = user?.PreferredCurrency ?? "NOK";
         return Page();
     }
 
@@ -57,6 +61,22 @@ public class ProfileModel : PageModel
             new ClaimsPrincipal(identity!));
 
         TempData["Success"] = "Alias updated";
+        return RedirectToPage();
+    }
+
+    public async Task<IActionResult> OnPostUpdateCurrencyAsync(string preferredCurrency)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var user = await _db.Users.FindAsync(userId);
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        user.PreferredCurrency = preferredCurrency;
+        await _db.SaveChangesAsync();
+
+        TempData["Success"] = "Preferred currency updated";
         return RedirectToPage();
     }
 
