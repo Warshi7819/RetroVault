@@ -229,13 +229,13 @@ namespace RetroVaultWebApp.Pages
         {
             Categories = await _db.ListItems
                 .Where(l => l.ListType == "Category")
-                .OrderBy(l => l.SortOrder).ThenBy(l => l.Name)
+                .OrderBy(l => l.Name)
                 .Select(l => l.Name)
                 .ToListAsync();
 
             Systems = await _db.ListItems
                 .Where(l => l.ListType == "System")
-                .OrderBy(l => l.SortOrder).ThenBy(l => l.Name)
+                .OrderBy(l => l.Name)
                 .Select(l => l.Name)
                 .ToListAsync();
 
