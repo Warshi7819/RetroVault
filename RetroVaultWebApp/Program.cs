@@ -72,6 +72,20 @@ builder.Services.AddHttpClient<ThumbnailService>(client =>
     client.BaseAddress = new Uri(vaultOptions.BaseServerUrl);
 });
 
+builder.Services.AddHttpClient(PriceChartingUpdateService.ApiClientName, client =>
+{
+    client.BaseAddress = new Uri($"{vaultOptions.BaseServerUrl}api/");
+});
+
+builder.Services.AddHttpClient("PriceChartingScrape", client =>
+{
+    client.DefaultRequestHeaders.UserAgent.ParseAdd(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+        "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
+});
+
+builder.Services.AddSingleton<PriceChartingUpdateService>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
