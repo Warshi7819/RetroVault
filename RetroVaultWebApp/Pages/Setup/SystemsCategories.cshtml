@@ -1,8 +1,10 @@
 @page
 @model RetroVaultWebApp.Pages.Setup.SystemsCategoriesModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery AntiForgery
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Systems & Categories";
+    var token = AntiForgery.GetAndStoreTokens(HttpContext).RequestToken;
 }
 
 <h2 class="mb-4"><i class="bi bi-list-ul"></i> Systems &amp; Categories</h2>
@@ -27,7 +29,7 @@
                                 </button>
                                 <form method="post" asp-page-handler="Delete" asp-route-id="@cat.Id" class="d-inline delete-confirm"
                                       data-confirm-msg="Delete category &quot;@(cat.Name)&quot;?">
-                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="__RequestVerificationToken" value="@token" />
                                     <button type="submit" class="btn btn-sm btn-outline-danger">
                                         <i class="bi bi-trash"></i>
                                     </button>
@@ -35,7 +37,7 @@
                             </span>
                             <span class="item-rename d-none">
                                 <form method="post" asp-page-handler="Rename" class="d-flex gap-1">
-                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="__RequestVerificationToken" value="@token" />
                                     <input type="hidden" name="RenameItemId" value="@cat.Id" />
                                     <input type="text" name="RenameItemName" value="@cat.Name" class="form-control form-control-sm" maxlength="200" />
                                     <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></button>
@@ -47,7 +49,7 @@
                 </ul>
 
                 <form method="post" asp-page-handler="AddCategory" class="d-flex gap-1">
-                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="__RequestVerificationToken" value="@token" />
                     <input type="text" name="NewCategoryName" class="form-control" placeholder="New category..." maxlength="200" required />
                     <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i></button>
                 </form>
@@ -73,7 +75,7 @@
                                 </button>
                                 <form method="post" asp-page-handler="Delete" asp-route-id="@sys.Id" class="d-inline delete-confirm"
                                       data-confirm-msg="Delete system &quot;@(sys.Name)&quot;?">
-                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="__RequestVerificationToken" value="@token" />
                                     <button type="submit" class="btn btn-sm btn-outline-danger">
                                         <i class="bi bi-trash"></i>
                                     </button>
@@ -81,7 +83,7 @@
                             </span>
                             <span class="item-rename d-none">
                                 <form method="post" asp-page-handler="Rename" class="d-flex gap-1">
-                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="__RequestVerificationToken" value="@token" />
                                     <input type="hidden" name="RenameItemId" value="@sys.Id" />
                                     <input type="text" name="RenameItemName" value="@sys.Name" class="form-control form-control-sm" maxlength="200" />
                                     <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></button>
@@ -93,7 +95,7 @@
                 </ul>
 
                 <form method="post" asp-page-handler="AddSystem" class="d-flex gap-1">
-                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="__RequestVerificationToken" value="@token" />
                     <input type="text" name="NewSystemName" class="form-control" placeholder="New system..." maxlength="200" required />
                     <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i></button>
                 </form>
