@@ -72,7 +72,7 @@ namespace RetroVaultWebApp.Services
             TotalItems = 0;
             CurrentItemName = string.Empty;
 
-            await Task.Run(async () =>
+            _ = Task.Run(async () =>
             {
                 try
                 {
