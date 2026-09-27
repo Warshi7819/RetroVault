@@ -369,3 +369,5 @@ FodyWeavers.xsd
 /RetroVaultAPI/retrovault.db
 /RetroVaultAPI/retrovault.db-shm
 /RetroVaultAPI/retrovault.db-wal
+/RetroVaultAPI/Thumbnails
+/woopsies
