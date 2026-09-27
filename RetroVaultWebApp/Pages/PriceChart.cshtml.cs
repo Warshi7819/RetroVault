@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RetroVault.Shared;
@@ -26,9 +27,20 @@ namespace RetroVaultWebApp.Pages
         public Dictionary<string, int> CostData = new Dictionary<string, int>();
         public Dictionary<int, int> TopTenWinners = new Dictionary<int, int>();
         public Dictionary<int, int> TopTenLoosers = new Dictionary<int, int>();
+        public CultureInfo NumberCulture { get; set; } = CultureInfo.InvariantCulture;
 
         public async Task OnGetAsync()
         {
+            var acceptLanguage = HttpContext.Request.Headers["Accept-Language"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(acceptLanguage))
+            {
+                var firstCulture = acceptLanguage.Split(',').FirstOrDefault()?.Split(';').FirstOrDefault()?.Trim();
+                if (!string.IsNullOrEmpty(firstCulture))
+                {
+                    try { NumberCulture = new CultureInfo(firstCulture); } catch { }
+                }
+            }
+
             // Get every retro item, 10 items per page request (which is the default).
             var res = await _api.SearchVaultItemsAsync("", "", "", 1);
             var totalPages = res.TotalPages;

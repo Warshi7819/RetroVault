@@ -4,9 +4,10 @@
     ViewData["Title"] = "PriceChart";
 }
 <h1>PriceChart</h1>
-Investigated @Model.CountedItems of @Model.TotalItems items currently in the vault.
+Investigated @Model.CountedItems.ToString("N0", Model.NumberCulture) of @Model.TotalItems.ToString("N0", Model.NumberCulture) items currently in the vault.
 <br />
-@Model.NumItemsWithPriceData items contains price data and is thus included in this report.
+@Model.NumItemsWithPriceData.ToString("N0", Model.NumberCulture) items contains price data and is thus included in this report.
+<small class="text-muted">(Number format: @Model.NumberCulture.DisplayName)</small>
 <br />
 <br />
 <div class="card shadow-sm">
@@ -19,7 +20,7 @@ Investigated @Model.CountedItems of @Model.TotalItems items currently in the vau
                 {
                     <tr>
                         <td>@kv.Key</td>
-                        <td>@kv.Value.ToString("N0")</td>
+                        <td>@kv.Value.ToString("N0", Model.NumberCulture)</td>
                     </tr>
                 }
             </tbody>
@@ -27,9 +28,9 @@ Investigated @Model.CountedItems of @Model.TotalItems items currently in the vau
     </div>
 </div>
 <br />
-Comparing CIB purchases towards PriceChart: @Model.DiffCIB
+Comparing CIB purchases towards PriceChart: @(Model.DiffCIB.ToString("N0", Model.NumberCulture))
 <br />
-Comparing Loose purchases towards PriceChart: @Model.DiffLoose
+Comparing Loose purchases towards PriceChart: @(Model.DiffLoose.ToString("N0", Model.NumberCulture))
 <br />
 <br />
 <br />
@@ -43,7 +44,7 @@ Comparing Loose purchases towards PriceChart: @Model.DiffLoose
                 {
                     <tr>
                         <td><a href="/Details?id=@kv.Key.ToString()">@kv.Key.ToString()</a></td>
-                        <td>@kv.Value.ToString("N0")</td>
+                        <td>@kv.Value.ToString("N0", Model.NumberCulture)</td>
                     </tr>
                 }
             </tbody>
@@ -62,7 +63,7 @@ Comparing Loose purchases towards PriceChart: @Model.DiffLoose
                 {
                     <tr>
                         <td><a href="/Details?id=@kv.Key.ToString()">@kv.Key.ToString()</a></td>
-                        <td>@kv.Value.ToString("N0")</td>
+                        <td>@kv.Value.ToString("N0", Model.NumberCulture)</td>
                     </tr>
                 }
             </tbody>
