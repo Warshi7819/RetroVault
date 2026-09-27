@@ -66,6 +66,23 @@ else
         </div>
 
         <div class="mt-3">
+            <a asp-page="CreateEdit"
+               asp-route-id="@Model.Item.Id"
+               class="btn btn-primary me-2">
+                <i class="bi bi-pencil-square me-1"></i>Edit
+            </a>
+            <form method="post" asp-page-handler="Delete" asp-route-id="@Model.Item.Id" class="d-inline delete-confirm" id="delete-form"
+                  data-confirm-msg="Are you sure you want to delete @(Model.Item.Name)?">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Name" value="@Model.Name" />
+                <input type="hidden" name="System" value="@Model.System" />
+                <input type="hidden" name="Category" value="@Model.Category" />
+                <input type="hidden" name="PageNumber" value="@Model.PageNumber" />
+                <input type="hidden" name="Search" value="true" />
+                <button type="submit" class="btn btn-danger me-2">
+                    <i class="bi bi-trash me-1"></i>Delete
+                </button>
+            </form>
             <a asp-page="Index"
                asp-route-name="@Model.Name"
                asp-route-system="@Model.System"

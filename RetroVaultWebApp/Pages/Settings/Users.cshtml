@@ -101,7 +101,7 @@
                                 </button>
                             </form>
                             <form method="post" asp-page-handler="Delete" asp-route-id="@user.Id" style="display:inline"
-                                  onsubmit="return confirm('Delete this user?');">
+                                  class="delete-confirm" data-confirm-msg="Delete user &quot;@(user.Username)&quot;?">
                                 <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"
                                         @(Model.IsLastEnabledAdmin(user) ? "disabled" : "")>
                                     <i class="bi bi-trash"></i>

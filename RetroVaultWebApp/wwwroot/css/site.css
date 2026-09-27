@@ -33,3 +33,45 @@ body {
 .table > :not(caption) > * > * {
   color: var(--bs-body-color);
 }
+
+.dropzone {
+  border: 2px dashed var(--bs-border-color);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropzone:hover,
+.dropzone-hover {
+  border-color: var(--bs-primary);
+  background-color: rgba(var(--bs-primary-rgb), 0.05);
+}
+
+.dropzone:focus {
+  outline: none;
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.dropzone-placeholder {
+  color: var(--bs-secondary-color);
+}
+
+.dropzone-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dropzone-preview img {
+  max-height: 200px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+}

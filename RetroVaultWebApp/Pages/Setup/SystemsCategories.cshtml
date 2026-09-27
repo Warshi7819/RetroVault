@@ -1,0 +1,127 @@
+@page
+@model RetroVaultWebApp.Pages.Setup.SystemsCategoriesModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Systems & Categories";
+}
+
+<h2 class="mb-4"><i class="bi bi-list-ul"></i> Systems &amp; Categories</h2>
+
+<div class="row g-4">
+
+    <!-- Categories -->
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-3"><i class="bi bi-tag"></i> Categories</h5>
+
+                <ul class="list-group mb-3">
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <li class="list-group-item d-flex align-items-center justify-content-between">
+                            <span class="item-label">@cat.Name</span>
+                            <span class="item-actions d-flex gap-1">
+                                <button type="button" class="btn btn-sm btn-outline-primary rename-btn"
+                                        data-id="@cat.Id" data-name="@cat.Name" data-type="category">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@cat.Id" class="d-inline delete-confirm"
+                                      data-confirm-msg="Delete category &quot;@(cat.Name)&quot;?">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </span>
+                            <span class="item-rename d-none">
+                                <form method="post" asp-page-handler="Rename" class="d-flex gap-1">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="RenameItemId" value="@cat.Id" />
+                                    <input type="text" name="RenameItemName" value="@cat.Name" class="form-control form-control-sm" maxlength="200" />
+                                    <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></button>
+                                    <button type="button" class="btn btn-sm btn-secondary cancel-rename-btn"><i class="bi bi-x-lg"></i></button>
+                                </form>
+                            </span>
+                        </li>
+                    }
+                </ul>
+
+                <form method="post" asp-page-handler="AddCategory" class="d-flex gap-1">
+                    @Html.AntiForgeryToken()
+                    <input type="text" name="NewCategoryName" class="form-control" placeholder="New category..." maxlength="200" required />
+                    <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Systems -->
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-3"><i class="bi bi-pc-display"></i> Systems</h5>
+
+                <ul class="list-group mb-3" style="max-height: 500px; overflow-y: auto;">
+                    @foreach (var sys in Model.Systems)
+                    {
+                        <li class="list-group-item d-flex align-items-center justify-content-between">
+                            <span class="item-label">@sys.Name</span>
+                            <span class="item-actions d-flex gap-1">
+                                <button type="button" class="btn btn-sm btn-outline-primary rename-btn"
+                                        data-id="@sys.Id" data-name="@sys.Name" data-type="system">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@sys.Id" class="d-inline delete-confirm"
+                                      data-confirm-msg="Delete system &quot;@(sys.Name)&quot;?">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </span>
+                            <span class="item-rename d-none">
+                                <form method="post" asp-page-handler="Rename" class="d-flex gap-1">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="RenameItemId" value="@sys.Id" />
+                                    <input type="text" name="RenameItemName" value="@sys.Name" class="form-control form-control-sm" maxlength="200" />
+                                    <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></button>
+                                    <button type="button" class="btn btn-sm btn-secondary cancel-rename-btn"><i class="bi bi-x-lg"></i></button>
+                                </form>
+                            </span>
+                        </li>
+                    }
+                </ul>
+
+                <form method="post" asp-page-handler="AddSystem" class="d-flex gap-1">
+                    @Html.AntiForgeryToken()
+                    <input type="text" name="NewSystemName" class="form-control" placeholder="New system..." maxlength="200" required />
+                    <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script nonce="@(HttpContext.Items["CSP-Nonce"])">
+        document.querySelectorAll('.rename-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var li = btn.closest('li');
+                li.querySelector('.item-label').classList.add('d-none');
+                li.querySelector('.item-actions').classList.add('d-none');
+                li.querySelector('.item-rename').classList.remove('d-none');
+                li.querySelector('.item-rename input[type="text"]').focus();
+            });
+        });
+
+        document.querySelectorAll('.cancel-rename-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var li = btn.closest('li');
+                li.querySelector('.item-label').classList.remove('d-none');
+                li.querySelector('.item-actions').classList.remove('d-none');
+                li.querySelector('.item-rename').classList.add('d-none');
+            });
+        });
+    </script>
+}

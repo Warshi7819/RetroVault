@@ -1,6 +1,22 @@
 @{
     Layout = "/Pages/Shared/_Layout.cshtml";
+    var currentPage = ViewContext.RouteData.Values["page"]?.ToString();
 }
+
+<ul class="nav nav-pills mb-4">
+    <li class="nav-item">
+        <a class="nav-link @(currentPage == "/Setup/PriceCharting" ? "active" : "")"
+           asp-page="/Setup/PriceCharting">
+            <i class="bi bi-currency-dollar"></i> PriceCharting
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentPage == "/Setup/SystemsCategories" ? "active" : "")"
+           asp-page="/Setup/SystemsCategories">
+            <i class="bi bi-list-ul"></i> Systems &amp; Categories
+        </a>
+    </li>
+</ul>
 
 @RenderBody()
 

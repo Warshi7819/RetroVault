@@ -38,7 +38,7 @@
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <form method="post" asp-page-handler="Delete" asp-route-id="@theme.Id"
-                                      onsubmit="return confirm('Delete this theme?')" class="d-inline">
+                                      class="d-inline delete-confirm" data-confirm-msg="Delete theme &quot;@(theme.Name)&quot;?">
                                     <button type="submit" class="btn btn-outline-danger" title="Delete theme">
                                         <i class="bi bi-trash"></i>
                                     </button>

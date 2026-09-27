@@ -48,5 +48,18 @@ namespace RetroVaultWebApp.Pages
 
             return Page();
         }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            await _api.DeleteVaultItemAsync(id);
+            return RedirectToPage("Index", new
+            {
+                name = Name,
+                system = System,
+                category = Category,
+                pageNumber = PageNumber,
+                search = true
+            });
+        }
     }
 }

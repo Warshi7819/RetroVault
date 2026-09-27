@@ -116,13 +116,23 @@ namespace RetroVault.Shared
             return response.IsSuccessStatusCode;
         }
 
-        // UPLOAD THUMBNAIL
+        // UPLOAD THUMBNAIL (from file path)
         public async Task<bool> UploadThumbnail(int id, string path)
         {
             var filename = Path.GetFileName(path);
             var form = new MultipartFormDataContent();
             form.Add(new StreamContent(File.OpenRead(path)), "file", filename);
             
+            var response = await _http.PostAsync($"VaultItem/{id}/thumbnail", form);
+            return response.IsSuccessStatusCode;
+        }
+
+        // UPLOAD THUMBNAIL (from stream)
+        public async Task<bool> UploadThumbnailAsync(int id, Stream stream, string fileName)
+        {
+            var form = new MultipartFormDataContent();
+            form.Add(new StreamContent(stream), "file", fileName);
+
             var response = await _http.PostAsync($"VaultItem/{id}/thumbnail", form);
             return response.IsSuccessStatusCode;
         }

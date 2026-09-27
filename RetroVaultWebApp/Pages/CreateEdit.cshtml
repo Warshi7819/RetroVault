@@ -1,0 +1,389 @@
+@page
+@model RetroVaultWebApp.Pages.CreateEditModel
+@{
+    ViewData["Title"] = Model.IsEdit ? "Edit Item" : "New Item";
+}
+
+<h2 class="mb-4">@(Model.IsEdit ? "Edit Item" : "New Item")</h2>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+@if (TempData["Error"] is string tempError)
+{
+    <div class="alert alert-warning">@tempError</div>
+}
+@if (TempData["Success"] is string tempSuccess)
+{
+    <div class="alert alert-success">@tempSuccess</div>
+}
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Item.Id" />
+
+    <div class="row g-3">
+
+        <!-- Thumbnail Dropzone -->
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <label class="form-label fw-bold">Thumbnail</label>
+                    <div class="row">
+                        @if (Model.IsEdit)
+                        {
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label text-muted small">Current Image</label>
+                                <div class="text-center">
+                                    <img src="/images/thumbnails/@(Model.Item.Id).png"
+                                         alt="Current thumbnail"
+                                         class="img-fluid rounded"
+                                         style="max-height: 200px; object-fit: contain;"
+                                         data-fallback="/images/detective.png" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">Replace with new image</label>
+                                <div id="dropzone" class="dropzone"
+                                     tabindex="0"
+                                     role="button"
+                                     aria-label="Drop, paste, or click to upload a thumbnail image">
+                                    <div id="dropzone-placeholder" class="dropzone-placeholder">
+                                        <i class="bi bi-cloud-arrow-up fs-1"></i>
+                                        <p class="mb-1">Drag &amp; drop an image here</p>
+                                        <p class="mb-1">or <strong>Ctrl+V</strong> to paste</p>
+                                        <p class="text-muted small mb-0">or click to browse</p>
+                                    </div>
+                                    <div id="dropzone-preview" class="dropzone-preview" style="display:none;">
+                                        <img id="preview-img" src="" alt="Thumbnail preview" />
+                                        <button type="button" id="remove-thumb" class="btn btn-sm btn-outline-danger mt-2">
+                                            <i class="bi bi-trash"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-12">
+                                <div id="dropzone" class="dropzone"
+                                     tabindex="0"
+                                     role="button"
+                                     aria-label="Drop, paste, or click to upload a thumbnail image">
+                                    <div id="dropzone-placeholder" class="dropzone-placeholder">
+                                        <i class="bi bi-cloud-arrow-up fs-1"></i>
+                                        <p class="mb-1">Drag &amp; drop an image here</p>
+                                        <p class="mb-1">or <strong>Ctrl+V</strong> to paste</p>
+                                        <p class="text-muted small mb-0">or click to browse</p>
+                                    </div>
+                                    <div id="dropzone-preview" class="dropzone-preview" style="display:none;">
+                                        <img id="preview-img" src="" alt="Thumbnail preview" />
+                                        <button type="button" id="remove-thumb" class="btn btn-sm btn-outline-danger mt-2">
+                                            <i class="bi bi-trash"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <input type="file" asp-for="ThumbnailFile" id="thumbnail-input" accept="image/*" class="d-none" />
+                    <span asp-validation-for="ThumbnailFile" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Basic Info -->
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title mb-3">Basic Info</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="Item.Name" class="form-label">Name <span class="text-danger">*</span></label>
+                            <input asp-for="Item.Name" class="form-control" maxlength="200" required />
+                            <span asp-validation-for="Item.Name" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Item.Category" class="form-label">Category <span class="text-danger">*</span></label>
+                            <select asp-for="Item.Category" class="form-select" required>
+                                <option value="">-- Select Category --</option>
+                                @foreach (var cat in Model.Categories)
+                                {
+                                    <option value="@cat">@cat</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Item.Category" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Item.System" class="form-label">System <span class="text-danger">*</span></label>
+                            <select asp-for="Item.System" class="form-select" required>
+                                <option value="">-- Select System --</option>
+                                @foreach (var sys in Model.Systems)
+                                {
+                                    <option value="@sys">@sys</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Item.System" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Item.Description" class="form-label">Description</label>
+                            <textarea asp-for="Item.Description" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Item.Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metadata -->
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title mb-3">Metadata</h6>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label asp-for="Item.Region" class="form-label">Region</label>
+                            <input asp-for="Item.Region" class="form-control" maxlength="100" />
+                            <span asp-validation-for="Item.Region" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Item.Developer" class="form-label">Developer</label>
+                            <input asp-for="Item.Developer" class="form-control" maxlength="200" />
+                            <span asp-validation-for="Item.Developer" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Item.Publisher" class="form-label">Publisher</label>
+                            <input asp-for="Item.Publisher" class="form-control" maxlength="200" />
+                            <span asp-validation-for="Item.Publisher" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Item.Year" class="form-label">Year</label>
+                            <input asp-for="Item.Year" type="number" class="form-control" min="0" max="2099" />
+                            <span asp-validation-for="Item.Year" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acquisition -->
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title mb-3">Acquisition</h6>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label asp-for="Item.AcquiredDate" class="form-label">Acquired Date</label>
+                            <input asp-for="Item.AcquiredDate" class="form-control" maxlength="50" placeholder="e.g. 2024-01-15" />
+                            <span asp-validation-for="Item.AcquiredDate" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Item.AcquiredFrom" class="form-label">Acquired From</label>
+                            <input asp-for="Item.AcquiredFrom" class="form-control" maxlength="200" />
+                            <span asp-validation-for="Item.AcquiredFrom" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Item.Completeness" class="form-label">Completeness</label>
+                            <input asp-for="Item.Completeness" class="form-control" maxlength="50" placeholder="e.g. CIB, Loose" />
+                            <span asp-validation-for="Item.Completeness" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Item.StorageLocation" class="form-label">Storage Location</label>
+                            <input asp-for="Item.StorageLocation" class="form-control" maxlength="200" />
+                            <span asp-validation-for="Item.StorageLocation" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial -->
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title mb-3">Financial</h6>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label asp-for="Item.PurchasePrice" class="form-label">Purchase Price</label>
+                            <input asp-for="Item.PurchasePrice" type="number" class="form-control" min="0" />
+                            <span asp-validation-for="Item.PurchasePrice" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-2">
+                            <label asp-for="Item.Currency" class="form-label">Currency <span class="text-danger">*</span></label>
+                            <input asp-for="Item.Currency" class="form-control" maxlength="10" required />
+                            <span asp-validation-for="Item.Currency" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-2">
+                            <label asp-for="Item.Sold" class="form-label">Sold</label>
+                            <select asp-for="Item.Sold" class="form-select">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                            <span asp-validation-for="Item.Sold" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-2">
+                            <label asp-for="Item.SalePrice" class="form-label">Sale Price</label>
+                            <input asp-for="Item.SalePrice" type="number" class="form-control" min="0" />
+                            <span asp-validation-for="Item.SalePrice" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Item.PriceChartingURL" class="form-label">PriceCharting URL</label>
+                            <input asp-for="Item.PriceChartingURL" type="url" class="form-control" maxlength="500" placeholder="https://..." />
+                            <span asp-validation-for="Item.PriceChartingURL" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-4 mb-4">
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-lg me-1"></i>@(Model.IsEdit ? "Save Changes" : "Create Item")
+        </button>
+        @if (Model.IsEdit)
+        {
+            <a asp-page="Details" asp-route-id="@Model.ItemId" class="btn btn-secondary ms-2">Cancel</a>
+            <a asp-page="Index" class="btn btn-outline-secondary ms-2">Back to Search</a>
+        }
+        else
+        {
+            <a asp-page="Index" class="btn btn-secondary ms-2">Cancel</a>
+        }
+    </div>
+</form>
+
+@section Scripts {
+    <script nonce="@(HttpContext.Items["CSP-Nonce"])">
+        (function () {
+            const dropzone = document.getElementById('dropzone');
+            const placeholder = document.getElementById('dropzone-placeholder');
+            const preview = document.getElementById('dropzone-preview');
+            const previewImg = document.getElementById('preview-img');
+            const fileInput = document.getElementById('thumbnail-input');
+            const removeBtn = document.getElementById('remove-thumb');
+            const TARGET_HEIGHT = 300;
+
+            function showPreview(dataUrl) {
+                previewImg.src = dataUrl;
+                placeholder.style.display = 'none';
+                preview.style.display = 'block';
+            }
+
+            function clearPreview() {
+                previewImg.src = '';
+                placeholder.style.display = '';
+                preview.style.display = 'none';
+                fileInput.value = '';
+            }
+
+            function resizeImage(file, callback) {
+                const img = new Image();
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    img.onload = function () {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (height > TARGET_HEIGHT) {
+                            width = Math.round(width * (TARGET_HEIGHT / height));
+                            height = TARGET_HEIGHT;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob(function (blob) {
+                            const resizedFile = new File([blob], file.name.replace(/\.[^.]+$/, '.png'), { type: 'image/png' });
+                            const dataUrl = canvas.toDataURL('image/png');
+                            callback(resizedFile, dataUrl);
+                        }, 'image/png');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function handleFile(file) {
+                if (!file || !file.type.startsWith('image/')) return;
+                resizeImage(file, function (resizedFile, dataUrl) {
+                    const dt = new DataTransfer();
+                    dt.items.add(resizedFile);
+                    fileInput.files = dt.files;
+                    showPreview(dataUrl);
+                });
+            }
+
+            // Click to browse
+            dropzone.addEventListener('click', function () {
+                if (preview.style.display === 'none') {
+                    fileInput.click();
+                }
+            });
+
+            fileInput.addEventListener('change', function () {
+                if (fileInput.files.length > 0) {
+                    handleFile(fileInput.files[0]);
+                }
+            });
+
+            // Drag and drop
+            dropzone.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                dropzone.classList.add('dropzone-hover');
+            });
+
+            dropzone.addEventListener('dragleave', function () {
+                dropzone.classList.remove('dropzone-hover');
+            });
+
+            dropzone.addEventListener('drop', function (e) {
+                e.preventDefault();
+                dropzone.classList.remove('dropzone-hover');
+                if (e.dataTransfer.files.length > 0) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
+            });
+
+            // Ctrl+V paste
+            document.addEventListener('paste', function (e) {
+                var items = e.clipboardData && e.clipboardData.items;
+                if (!items) return;
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].type.startsWith('image/')) {
+                        var file = items[i].getAsFile();
+                        if (file) {
+                            handleFile(file);
+                            e.preventDefault();
+                            break;
+                        }
+                    }
+                }
+            });
+
+            // Remove thumbnail
+            removeBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                clearPreview();
+            });
+
+            // Image fallback for current thumbnail
+            document.querySelectorAll("img[data-fallback]")
+                .forEach(img => {
+                    img.addEventListener("error", () => {
+                        const fallback = img.getAttribute("data-fallback");
+                        if (fallback) img.src = fallback;
+                    });
+                });
+        })();
+    </script>
+}
