@@ -11,11 +11,9 @@ namespace RetroVaultWebApp.Pages
     {
 
         private readonly VaultApiClient _api;
-        private readonly ThumbnailService _thumbs;
-        public PriceChartModel(VaultApiClient api, ThumbnailService thumbs) 
+        public PriceChartModel(VaultApiClient api) 
         { 
             _api = api;
-            _thumbs = thumbs;
         }
 
         public int TotalItems = 0;
@@ -91,18 +89,6 @@ namespace RetroVaultWebApp.Pages
                 // Sort the winners and losers dictionaries by value
                 TopTenWinners = TopTenWinners.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
                 TopTenLoosers = TopTenLoosers.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-
-
-                // Ensure that we prepare the thumbnails for the top ten winners and losers
-                foreach (var item in TopTenLoosers)
-                {
-                    await _thumbs.EnsureThumbnailAsync(item.Key);
-                }
-
-                foreach(var item in TopTenWinners)
-                {
-                    await _thumbs.EnsureThumbnailAsync(item.Key);
-                }
             }
         }
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RetroVault.Shared;
 using RetroVault.Shared.Models;
+using RetroVaultWebApp.Services;
 
 namespace RetroVaultWebApp.Pages
 {
@@ -10,10 +11,12 @@ namespace RetroVaultWebApp.Pages
     public class DetailsModel : PageModel
     {
         private readonly VaultApiClient _api;
+        private readonly ThumbnailService _thumbs;
 
-        public DetailsModel(VaultApiClient api)
+        public DetailsModel(VaultApiClient api, ThumbnailService thumbs)
         {
             _api = api;
+            _thumbs = thumbs;
         }
 
         public VaultItem? Item { get; set; }
@@ -40,6 +43,8 @@ namespace RetroVaultWebApp.Pages
 
             if (Item == null)
                 return NotFound();
+
+            await _thumbs.EnsureThumbnailAsync(id);
 
             return Page();
         }
