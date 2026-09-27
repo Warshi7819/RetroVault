@@ -3,15 +3,17 @@ using Microsoft.Extensions.Options;
 using RetroVault.Shared;
 using RetroVault.Shared.Models;
 using RetroVaultWebApp.Config;
+using System.Threading.Channels;
 
 namespace RetroVaultWebApp.Services
 {
-    public class PriceChartingUpdateService
+    public class PriceChartingUpdateService : BackgroundService
     {
         public const string ApiClientName = "PriceChartingApi";
 
         private readonly IHttpClientFactory _httpFactory;
         private readonly IOptions<VaultOptions> _options;
+        private readonly Channel<int> _triggerChannel = Channel.CreateUnbounded<int>();
 
         public bool IsRunning { get; private set; }
         public int TotalItems { get; private set; }
@@ -25,6 +27,11 @@ namespace RetroVaultWebApp.Services
         {
             _httpFactory = httpFactory;
             _options = options;
+        }
+
+        public void TriggerUpdate()
+        {
+            _triggerChannel.Writer.TryWrite(1);
         }
 
         public async Task<(string? LoosePrice, string? CompletePrice)> ScrapePriceChartingUrlAsync(string url)
@@ -59,21 +66,21 @@ namespace RetroVaultWebApp.Services
             return (loosePrice, completePrice);
         }
 
-        public async Task StartUpdateAsync()
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (IsRunning)
-                return;
-
-            IsRunning = true;
-            CompletedAt = null;
-            ErrorMessage = null;
-            StatusMessage = "Starting...";
-            ProcessedCount = 0;
-            TotalItems = 0;
-            CurrentItemName = string.Empty;
-
-            _ = Task.Run(async () =>
+            while (!stoppingToken.IsCancellationRequested)
             {
+                await _triggerChannel.Reader.WaitToReadAsync(stoppingToken);
+                await _triggerChannel.Reader.ReadAsync(stoppingToken);
+
+                IsRunning = true;
+                CompletedAt = null;
+                ErrorMessage = null;
+                StatusMessage = "Starting...";
+                ProcessedCount = 0;
+                TotalItems = 0;
+                CurrentItemName = string.Empty;
+
                 try
                 {
                     using var apiHttp = _httpFactory.CreateClient(ApiClientName);
@@ -101,6 +108,8 @@ namespace RetroVaultWebApp.Services
 
                     foreach (var item in toUpdate)
                     {
+                        stoppingToken.ThrowIfCancellationRequested();
+
                         CurrentItemName = $"{item.Name} ({item.System})";
                         StatusMessage = $"Processing {ProcessedCount + 1} of {TotalItems}...";
 
@@ -124,10 +133,15 @@ namespace RetroVaultWebApp.Services
                         ProcessedCount++;
 
                         if (ProcessedCount < TotalItems)
-                            await Task.Delay(TimeSpan.FromSeconds(_options.Value.PriceChartingUpdateSeconds));
+                            await Task.Delay(TimeSpan.FromSeconds(_options.Value.PriceChartingUpdateSeconds), stoppingToken);
                     }
 
                     StatusMessage = $"Completed {ProcessedCount} items.";
+                    CompletedAt = DateTime.UtcNow;
+                }
+                catch (OperationCanceledException)
+                {
+                    StatusMessage = "Cancelled (app shutting down).";
                     CompletedAt = DateTime.UtcNow;
                 }
                 catch (Exception ex)
@@ -138,7 +152,7 @@ namespace RetroVaultWebApp.Services
                 {
                     IsRunning = false;
                 }
-            });
+            }
         }
 
         private static int? ParsePrice(string price)

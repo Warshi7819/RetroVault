@@ -85,6 +85,7 @@ builder.Services.AddHttpClient("PriceChartingScrape", client =>
 });
 
 builder.Services.AddSingleton<PriceChartingUpdateService>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<PriceChartingUpdateService>());
 
 var app = builder.Build();
 

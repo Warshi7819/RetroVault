@@ -41,7 +41,7 @@ namespace RetroVaultWebApp.Pages.Setup
 
         public async Task<IActionResult> OnPostTriggerUpdateAsync()
         {
-            await _updateService.StartUpdateAsync();
+            _updateService.TriggerUpdate();
             return RedirectToPage();
         }
 
