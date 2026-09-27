@@ -33,6 +33,10 @@ namespace RetroVaultWebApp.Pages.Setup
         public int UpdateIntervalSeconds => _updateSeconds;
         public string PreferredCurrency { get; set; } = "NOK";
         public List<VaultItem> MissingItems { get; set; } = new();
+        public List<string> Categories { get; set; } = new();
+
+        [BindProperty(SupportsGet = true)]
+        public string? CategoryFilter { get; set; }
 
         [BindProperty]
         public string TestUrl { get; set; } = "https://www.pricecharting.com/game/nes/super-mario-bros";
@@ -48,6 +52,9 @@ namespace RetroVaultWebApp.Pages.Setup
 
         public async Task OnGetAsync()
         {
+            Categories = await _api.GetCategoriesAsync();
+            CategoryFilter ??= "Games";
+
             await LoadUserDataAsync();
             await LoadMissingItemsAsync();
         }
@@ -61,6 +68,9 @@ namespace RetroVaultWebApp.Pages.Setup
 
         public async Task<IActionResult> OnPostTestUrlAsync()
         {
+            Categories = await _api.GetCategoriesAsync();
+            CategoryFilter ??= "Games";
+
             await LoadUserDataAsync();
             await LoadMissingItemsAsync();
 
@@ -135,6 +145,7 @@ namespace RetroVaultWebApp.Pages.Setup
             var res = await _api.SearchVaultItemsAsync("", "", "", 1, 1000);
             MissingItems = res.Items
                 .Where(i => string.IsNullOrWhiteSpace(i.PriceChartingURL))
+                .Where(i => CategoryFilter == "All" || i.Category == CategoryFilter)
                 .ToList();
         }
     }

@@ -93,6 +93,18 @@
             These items do not have a PriceCharting URL assigned.
         </p>
 
+        <form method="get" class="row g-2 mb-3">
+            <div class="col-auto">
+                <select name="CategoryFilter" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="All" selected="@(Model.CategoryFilter == "All")">All</option>
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <option value="@cat" selected="@(cat == Model.CategoryFilter)">@cat</option>
+                    }
+                </select>
+            </div>
+        </form>
+
         @if (Model.MissingItems.Count == 0)
         {
             <div class="text-muted">All items have a PriceCharting URL.</div>
