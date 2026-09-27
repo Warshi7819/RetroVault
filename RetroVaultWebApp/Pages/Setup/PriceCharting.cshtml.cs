@@ -71,6 +71,10 @@ namespace RetroVaultWebApp.Pages.Setup
 
         public IActionResult OnGetProgress()
         {
+            var options = new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+            };
             return Content(System.Text.Json.JsonSerializer.Serialize(new
             {
                 _updateService.IsRunning,
@@ -79,8 +83,8 @@ namespace RetroVaultWebApp.Pages.Setup
                 _updateService.CurrentItemName,
                 _updateService.StatusMessage,
                 _updateService.ErrorMessage,
-                CompletedAt = _updateService.CompletedAt?.ToString("HH:mm:ss")
-            }), "application/json");
+                CompletedAt = _updateService.CompletedAt?.ToString("yyyy-MM-dd HH:mm:ss")
+            }, options), "application/json");
         }
 
         private async Task LoadMissingItemsAsync()
