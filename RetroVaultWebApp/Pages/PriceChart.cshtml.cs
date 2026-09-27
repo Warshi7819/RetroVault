@@ -40,6 +40,12 @@ namespace RetroVaultWebApp.Pages
             DiffCIB = 0;
             DiffLoose = 0;
 
+            CostData = new Dictionary<string, int>();
+            CostData["PriceChart: CIB"] = 0;
+            CostData["My Collection: CIB"] = 0;
+            CostData["PriceChart: Loose"] = 0;
+            CostData["My Collection: Loose"] = 0;
+
             
             for (int pageNum = 1; pageNum <= totalPages; pageNum++)
             {
@@ -49,13 +55,6 @@ namespace RetroVaultWebApp.Pages
                     // to fetch the new items.
                     res = await _api.SearchVaultItemsAsync("", "", "", pageNum);
                 }
-
-
-                CostData = new Dictionary<string, int>();
-                CostData["PriceChart: CIB"] = 0;
-                CostData["My Collection: CIB"] = 0;
-                CostData["PriceChart: Loose"] = 0;
-                CostData["My Collection: Loose"] = 0;
 
                 foreach (var item in res.Items)
                 {
