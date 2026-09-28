@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using RetroVault.Shared;
 using RetroVaultWebApp.Config;
@@ -13,6 +14,16 @@ builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AuthorizeFolder("/");
     options.Conventions.AllowAnonymousToPage("/Login");
+});
+
+// Large uploads (media library holds big PDFs, images and software)
+var maxUploadBytes = 4L * 1024 * 1024 * 1024;
+builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = maxUploadBytes);
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = maxUploadBytes;
+    options.ValueLengthLimit = int.MaxValue;
+    options.MultipartHeadersLengthLimit = int.MaxValue;
 });
 
 builder.Services.AddDbContext<RetroVaultWebDbContext>(options =>
@@ -71,6 +82,8 @@ builder.Services.AddHttpClient<ThumbnailService>(client =>
 {
     client.BaseAddress = new Uri(vaultOptions.BaseServerUrl);
 });
+
+builder.Services.AddTransient<LibraryProxyService>();
 
 builder.Services.AddHttpClient(PriceChartingUpdateService.ApiClientName, client =>
 {
@@ -146,4 +159,11 @@ app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
+
+// Media library downloads, proxied from the API so the API is never exposed publicly
+app.MapGet("/Files/Download/{id:int}/{category}/{*path}", async (HttpContext context, int id, string category, string path, LibraryProxyService proxy) =>
+{
+    await proxy.ProxyFileAsync(context, id, category, path);
+}).RequireAuthorization();
+
 app.Run();

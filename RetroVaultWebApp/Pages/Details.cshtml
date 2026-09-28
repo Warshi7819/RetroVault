@@ -1,4 +1,5 @@
 ﻿@page
+@using RetroVault.Shared.Models
 @model RetroVaultWebApp.Pages.DetailsModel
 @{
     ViewData["Title"] = "Details";
@@ -12,6 +13,15 @@
 else
 {
     <div class="container mt-3">
+
+        @if (TempData["Error"] is string tempError)
+        {
+            <div class="alert alert-warning">@tempError</div>
+        }
+        @if (TempData["Success"] is string tempSuccess)
+        {
+            <div class="alert alert-success">@tempSuccess</div>
+        }
 
         <div class="row">
             <div class="col-12 text-center mb-3">
@@ -65,6 +75,177 @@ else
             </div>
         </div>
 
+        <div class="card shadow-sm mt-3">
+            <div class="card-body">
+
+                <h5 class="card-title mb-3">
+                    <i class="bi bi-folder2-open me-1"></i>Files
+                    @if (!Model.IsRoot)
+                    {
+                        <small class="text-muted fw-normal ms-2">@Model.CurrentFolder</small>
+                    }
+                </h5>
+
+                @if (Model.IsRoot)
+                {
+                    <div class="row g-3">
+                        @foreach (var category in VaultFile.Categories)
+                        {
+                            <div class="col">
+                                <a asp-page="Details" asp-route-id="@Model.Item.Id" asp-route-folder="@category"
+                                   asp-route-name="@Model.Name" asp-route-system="@Model.System"
+                                   asp-route-category="@Model.Category" asp-route-pageNumber="@Model.PageNumber"
+                                   asp-route-search="true" class="text-decoration-none">
+                                    <div class="card h-100 text-center folder-tile">
+                                        <div class="card-body py-4">
+                                            <i class="bi bi-folder2 d-block mb-2" style="font-size: 2.5rem;"></i>
+                                            <h6 class="card-title mb-2">@category</h6>
+                                            <span class="badge bg-secondary">@DetailsModel.FormatCount(Model.FileCountUnder(category), "file", "files")</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <nav aria-label="breadcrumb" class="mb-3">
+                        <ol class="breadcrumb mb-0">
+                            @foreach (var crumb in Model.Crumbs)
+                            {
+                                @if (crumb.IsCurrent)
+                                {
+                                    <li class="breadcrumb-item active" aria-current="page">@crumb.Name</li>
+                                }
+                                else
+                                {
+                                    <li class="breadcrumb-item">
+                                        <a asp-page="Details" asp-route-id="@Model.Item.Id" asp-route-folder="@crumb.Folder"
+                                           asp-route-name="@Model.Name" asp-route-system="@Model.System"
+                                           asp-route-category="@Model.Category" asp-route-pageNumber="@Model.PageNumber"
+                                           asp-route-search="true">@crumb.Name</a>
+                                    </li>
+                                }
+                            }
+                        </ol>
+                    </nav>
+
+                    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+                        <form method="post" asp-page-handler="CreateFolder" asp-route-id="@Model.Item.Id"
+                              asp-route-folder="@Model.CurrentFolder"
+                              asp-route-name="@Model.Name" asp-route-system="@Model.System"
+                              asp-route-category="@Model.Category" asp-route-pageNumber="@Model.PageNumber"
+                              asp-route-search="true" class="d-flex gap-2">
+                            <input type="text" name="folderName" class="form-control form-control-sm" placeholder="New folder name" required maxlength="100" />
+                            <button type="submit" class="btn btn-outline-secondary btn-sm text-nowrap">
+                                <i class="bi bi-folder-plus me-1"></i>New folder
+                            </button>
+                        </form>
+
+                        <button type="button" id="upload-browse" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-upload me-1"></i>Upload files
+                        </button>
+                    </div>
+
+                    <form id="upload-form" method="post" asp-page-handler="UploadFiles" asp-route-id="@Model.Item.Id"
+                          asp-route-folder="@Model.CurrentFolder"
+                          asp-route-name="@Model.Name" asp-route-system="@Model.System"
+                          asp-route-category="@Model.Category" asp-route-pageNumber="@Model.PageNumber"
+                          asp-route-search="true" enctype="multipart/form-data">
+                        <input type="file" id="upload-input" name="UploadFiles" multiple class="d-none" />
+                    </form>
+
+                    <div id="upload-dropzone" class="dropzone mb-3" tabindex="0" role="button"
+                         aria-label="Drag and drop files here or click to browse">
+                        <div id="upload-dropzone-placeholder" class="dropzone-placeholder">
+                            <i class="bi bi-cloud-arrow-up d-block mb-2" style="font-size: 2rem;"></i>
+                            <p class="mb-0">Drag &amp; drop files here or <strong>click to browse</strong></p>
+                            <small class="text-muted">Files are uploaded into this folder</small>
+                        </div>
+                    </div>
+
+                    @if (Model.Subfolders.Count > 0 || Model.Files.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th style="width: 110px;">Size</th>
+                                        <th style="width: 120px;">Modified</th>
+                                        <th style="width: 60px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var folder in Model.Subfolders)
+                                    {
+                                        var folderFull = $"{folder.Category}/{folder.Path}";
+                                        <tr>
+                                            <td class="text-break">
+                                                <a asp-page="Details" asp-route-id="@Model.Item.Id" asp-route-folder="@folderFull"
+                                                   asp-route-name="@Model.Name" asp-route-system="@Model.System"
+                                                   asp-route-category="@Model.Category" asp-route-pageNumber="@Model.PageNumber"
+                                                   asp-route-search="true" class="text-decoration-none">
+                                                    <i class="bi bi-folder2 me-1"></i>@folder.Name
+                                                </a>
+                                            </td>
+                                            <td class="text-muted">@DetailsModel.FormatCount(Model.FileCountUnder(folderFull), "file", "files")</td>
+                                            <td></td>
+                                            <td class="text-end">
+                                                <form method="post" asp-page-handler="DeleteFolder" asp-route-id="@Model.Item.Id"
+                                                      asp-route-folder="@Model.CurrentFolder"
+                                                      asp-route-name="@Model.Name" asp-route-system="@Model.System"
+                                                      asp-route-category="@Model.Category" asp-route-pageNumber="@Model.PageNumber"
+                                                      asp-route-search="true" class="d-inline delete-confirm"
+                                                      data-confirm-msg="Are you sure you want to delete folder @folder.Name and all files inside it?">
+                                                    <input type="hidden" name="folderPath" value="@folder.Path" />
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete folder">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                    @foreach (var file in Model.Files)
+                                    {
+                                        <tr>
+                                            <td class="text-break">
+                                                <a href="@Model.GetFileUrl(file)" target="_blank" rel="noopener">
+                                                    <i class="bi bi-download me-1"></i>@file.Name
+                                                </a>
+                                            </td>
+                                            <td>@DetailsModel.FormatSize(file.SizeBytes)</td>
+                                            <td>@file.LastModifiedUtc.ToLocalTime().ToString("yyyy-MM-dd")</td>
+                                            <td class="text-end">
+                                                <form method="post" asp-page-handler="DeleteFile" asp-route-id="@Model.Item.Id"
+                                                      asp-route-folder="@Model.CurrentFolder"
+                                                      asp-route-name="@Model.Name" asp-route-system="@Model.System"
+                                                      asp-route-category="@Model.Category" asp-route-pageNumber="@Model.PageNumber"
+                                                      asp-route-search="true" class="d-inline delete-confirm"
+                                                      data-confirm-msg="Are you sure you want to delete @file.Name?">
+                                                    <input type="hidden" name="fileCategory" value="@file.Category" />
+                                                    <input type="hidden" name="filePath" value="@file.Path" />
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">This folder is empty.</p>
+                    }
+                }
+
+            </div>
+        </div>
+
         <div class="mt-3">
             <a asp-page="CreateEdit"
                asp-route-id="@Model.Item.Id"
@@ -95,4 +276,85 @@ else
         </div>
 
     </div>
+}
+
+@section Scripts {
+    <script nonce="@(HttpContext.Items["CSP-Nonce"])">
+        (function () {
+            'use strict';
+
+            var dropzone = document.getElementById('upload-dropzone');
+            var input = document.getElementById('upload-input');
+            var form = document.getElementById('upload-form');
+            var browse = document.getElementById('upload-browse');
+            var placeholder = document.getElementById('upload-dropzone-placeholder');
+
+            if (!dropzone || !input || !form || !placeholder) {
+                return;
+            }
+
+            var busy = false;
+            var busyHtml = '<div class="spinner-border text-primary mb-2" role="status"></div>' +
+                '<p class="mb-0">Uploading...</p>';
+
+            function openPicker() {
+                if (!busy) {
+                    input.click();
+                }
+            }
+
+            function startUpload() {
+                if (busy || !input.files || input.files.length === 0) {
+                    return;
+                }
+                busy = true;
+                placeholder.innerHTML = busyHtml;
+                form.requestSubmit();
+            }
+
+            dropzone.addEventListener('click', openPicker);
+
+            dropzone.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openPicker();
+                }
+            });
+
+            if (browse) {
+                browse.addEventListener('click', openPicker);
+            }
+
+            dropzone.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                dropzone.classList.add('dropzone-hover');
+            });
+
+            dropzone.addEventListener('dragleave', function () {
+                dropzone.classList.remove('dropzone-hover');
+            });
+
+            dropzone.addEventListener('drop', function (e) {
+                e.preventDefault();
+                dropzone.classList.remove('dropzone-hover');
+                if (busy) {
+                    return;
+                }
+                if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    input.files = e.dataTransfer.files;
+                    startUpload();
+                }
+            });
+
+            input.addEventListener('change', startUpload);
+
+            form.addEventListener('submit', function () {
+                if (busy) {
+                    return;
+                }
+                busy = true;
+                placeholder.innerHTML = busyHtml;
+            });
+        })();
+    </script>
 }

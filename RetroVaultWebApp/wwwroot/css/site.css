@@ -75,3 +75,14 @@ body {
   object-fit: contain;
   border-radius: 4px;
 }
+
+.folder-tile {
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+a:hover .folder-tile,
+a:focus .folder-tile {
+  border-color: var(--bs-primary);
+  background-color: rgba(var(--bs-primary-rgb), 0.05);
+}

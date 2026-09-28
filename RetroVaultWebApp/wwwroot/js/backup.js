@@ -144,6 +144,15 @@
         }
     }
 
+    async function getDirPath(rootHandle, path) {
+        let dir = rootHandle;
+        const parts = path.split('/').filter(function (p) { return p.length > 0; });
+        for (const part of parts) {
+            dir = await dir.getDirectoryHandle(part, { create: true });
+        }
+        return dir;
+    }
+
     async function fileExists(dirHandle, filename) {
         try {
             await dirHandle.getFileHandle(filename);
@@ -158,6 +167,17 @@
         const writable = await fileHandle.createWritable();
         await writable.write(data);
         await writable.close();
+    }
+
+    async function writeFromResponse(dirHandle, filename, response) {
+        const fileHandle = await dirHandle.getFileHandle(filename, { create: true });
+        const writable = await fileHandle.createWritable();
+        if (response.body && typeof response.body.pipeTo === 'function') {
+            await response.body.pipeTo(writable);
+        } else {
+            await writable.write(await response.blob());
+            await writable.close();
+        }
     }
 
     async function generateFilename(dateStr, dirHandle) {
@@ -221,7 +241,7 @@
             for (let i = 0; i < total; i++) {
                 const id = thumbnailIds[i];
                 const filename = id + '.png';
-                const percent = 20 + Math.round((i / total) * 80);
+                const percent = 20 + Math.round((i / Math.max(total, 1)) * 35);
                 showProgress(percent, 'Processing thumbnails (' + (i + 1) + '/' + total + ')...');
 
                 if (await fileExists(thumbnailsDir, filename)) {
@@ -234,14 +254,81 @@
                     failedCount++;
                     continue;
                 }
-                const blob = await imgResponse.blob();
-                await writeFile(thumbnailsDir, filename, blob);
-                newCount++;
+                try {
+                    await writeFromResponse(thumbnailsDir, filename, imgResponse);
+                    newCount++;
+                } catch {
+                    failedCount++;
+                }
+            }
+
+            showProgress(55, 'Fetching library file list...');
+            const filesResponse = await fetch('?handler=Files');
+            if (!filesResponse.ok) {
+                throw new Error('Failed to fetch library file list: ' + filesResponse.status);
+            }
+            const libraryFiles = await filesResponse.json();
+
+            let fileNewCount = 0;
+            let fileSkippedCount = 0;
+            let fileFailedCount = 0;
+            const fileTotal = libraryFiles.length;
+
+            for (let i = 0; i < fileTotal; i++) {
+                const entry = libraryFiles[i];
+                const percent = 55 + Math.round((i / Math.max(fileTotal, 1)) * 45);
+                showProgress(percent, 'Processing library files (' + (i + 1) + '/' + fileTotal + ')...');
+
+                const parts = entry.path.split('/');
+                const filename = parts.pop();
+
+                let targetDir;
+                try {
+                    targetDir = await getDirPath(currentDirHandle, 'library/' + entry.itemId + '/' + entry.category);
+                    if (parts.length > 0) {
+                        targetDir = await getDirPath(targetDir, parts.join('/'));
+                    }
+                } catch {
+                    fileFailedCount++;
+                    continue;
+                }
+
+                if (await fileExists(targetDir, filename)) {
+                    fileSkippedCount++;
+                    continue;
+                }
+
+                const fileUrl = '?handler=File&id=' + encodeURIComponent(entry.itemId) +
+                    '&category=' + encodeURIComponent(entry.category) +
+                    '&path=' + encodeURIComponent(entry.path);
+                const fileResponse = await fetch(fileUrl);
+                if (!fileResponse.ok) {
+                    fileFailedCount++;
+                    continue;
+                }
+
+                try {
+                    await writeFromResponse(targetDir, filename, fileResponse);
+                    fileNewCount++;
+                } catch {
+                    // Remove the partial file so the next backup retries it
+                    try {
+                        const partial = await targetDir.getFileHandle(filename);
+                        await partial.remove();
+                    } catch {
+                        // nothing to clean up
+                    }
+                    fileFailedCount++;
+                }
             }
 
             showProgress(100, 'Done!');
             hideProgress();
-            const msg = 'Backup completed: ' + itemCount + ' items saved! ' + newCount + ' new thumbnail(s) saved, ' + skippedCount + ' already existed' + (failedCount > 0 ? ', ' + failedCount + ' failed.' : '.');
+            const failedTotal = failedCount + fileFailedCount;
+            const msg = 'Backup completed: ' + itemCount + ' items saved! ' +
+                newCount + ' new thumbnail(s), ' + skippedCount + ' existing. ' +
+                fileNewCount + ' new file(s), ' + fileSkippedCount + ' existing.' +
+                (failedTotal > 0 ? ' ' + failedTotal + ' failed.' : '');
             showResult(msg, false);
         } catch (err) {
             hideProgress();

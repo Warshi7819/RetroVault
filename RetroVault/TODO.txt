@@ -10,3 +10,20 @@
    Could sort it in code but there's something nice with the fact that stuff
    is displayed in the order it is configured. Thus the user may do whatever 
    he/she wants wrt. ordering...
+
+4) Media library now lives on the API server (Library/{id}/{Audio,Documents,Images,Software,Videos}).
+   The WinForms client needs to catch up with the API + WebApp (shared VaultApiClient
+   already has the methods: GetFilesAsync, UploadFileAsync, DeleteFileAsync, GetFileAsync,
+   plus folder methods used by the web app: GetFoldersAsync, CreateFolderAsync, DeleteFolderAsync):
+   - NewEditItemForm: replace the local "Media Folder" button with a file manager:
+     folder tiles for Audio/Documents/Images/Software/Videos with file counts, click into
+     folders/subfolders (the web app Details page has the pattern to copy), create/delete
+     folders, list item files (name, size) + Upload... (multi-select + drag & drop),
+     Delete, Refresh and open-in-browser (API download URL / WebApp details page).
+   - Ctrl+V paste handler (ProcessCmdKey): upload the clipboard image to the server as
+     Images/Front.png via UploadFileAsync instead of writing to <MediaLibraryPath>\{Id}\Images\Front.png.
+   - Retire local media folder code: createMediaFolders, button1_Click ("open media folder"),
+     AutoOpenImgFolderOnSave (+ its row in ConfigForm/config.json). MediaLibraryPath stays
+     as the local staging tree the user copies to the server from.
+   - Form1.cs delete flow: the API now cascades deletion of Library/{id}, so drop the
+     media folder TODO comment (lines ~144-145) - nothing to delete locally.

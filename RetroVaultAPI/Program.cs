@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using RetroVaultAPI.Data;
+using RetroVaultAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,19 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<RetroVaultContext>(options => 
 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Media library files (Library/{id}/{Audio,Documents,Images,Software,Videos})
+builder.Services.AddSingleton(new LibraryFileService());
+
+// Large uploads (media library holds big PDFs, images and software)
+var maxUploadBytes = 4L * 1024 * 1024 * 1024;
+builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = maxUploadBytes);
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = maxUploadBytes;
+    options.ValueLengthLimit = int.MaxValue;
+    options.MultipartHeadersLengthLimit = int.MaxValue;
+});
 
 var app = builder.Build();
 

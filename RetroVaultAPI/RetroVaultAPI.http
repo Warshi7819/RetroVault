@@ -48,4 +48,33 @@ Accept: application/json
 ### SEARCH
 GET {{rootURL}}/api/VaultItem/search?name=upDated
 Accept: application/json
+
+### LIST ITEM FILES (recursive, per category)
+GET {{rootURL}}/api/VaultItem/11/files
+Accept: application/json
+
+### DOWNLOAD ITEM FILE (range requests supported for large PDFs)
+GET {{rootURL}}/api/VaultItem/11/files/Documents/TRS80-M100-User-Guide.pdf
+
+### DOWNLOAD ITEM FILE (nested subfolder, spaces in name)
+GET {{rootURL}}/api/VaultItem/11/files/Images/Orig. Box images/Box_Front.png
+
+### UPLOAD ITEM FILES (optional subfolder form field)
+POST {{rootURL}}/api/VaultItem/11/files/Documents
+Content-Type: multipart/form-data; boundary=----RetroVaultBoundary
+
+------RetroVaultBoundary
+Content-Disposition: form-data; name="files"; filename="New Manual.pdf"
+Content-Type: application/pdf
+
+< ./Library/11/Documents/TRS-80 Model 100 Quick Reference Guide.pdf
+------RetroVaultBoundary
+Content-Disposition: form-data; name="subfolder"
+
+Scans
+------RetroVaultBoundary--
+
+### DELETE ITEM FILE (query params handle spaces and subfolders)
+DELETE {{rootURL}}/api/VaultItem/11/files?category=Documents&path=Scans/New Manual.pdf
+Accept: application/json
 ###

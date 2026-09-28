@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using RetroVaultAPI.Data;
+using RetroVaultAPI.Services;
 using RetroVault.Shared;
 using RetroVault.Shared.Models;
 
@@ -13,9 +15,14 @@ namespace RetroVaultAPI.Controllers
     public class VaultItemController : ControllerBase
     {
         private readonly RetroVaultContext _context;
-        public VaultItemController(RetroVaultContext context)
+        private readonly LibraryFileService _library;
+
+        private static readonly FileExtensionContentTypeProvider ContentTypes = new FileExtensionContentTypeProvider();
+
+        public VaultItemController(RetroVaultContext context, LibraryFileService library)
         {
             _context = context;
+            _library = library;
         }
 
         [HttpGet]
@@ -172,6 +179,9 @@ namespace RetroVaultAPI.Controllers
                 System.IO.File.Delete(thumbnailsPath);
             }
 
+            // Delete the item's library folder (Audio, Documents, Images, Software, Videos) as well
+            _library.DeleteItemDirectory(id);
+
             // Delete item from DB
             _context.VaultItems.Remove(item);
             await _context.SaveChangesAsync();
@@ -210,6 +220,150 @@ namespace RetroVaultAPI.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Thumbnail uploaded successfully.", fileName });
+        }
+
+        [HttpGet("{id}/files")]
+        public async Task<ActionResult<List<VaultFile>>> GetVaultItemFiles(int id)
+        {
+            var item = await _context.VaultItems.FindAsync(id);
+            if (item == null)
+                return NotFound($"Vault item with ID {id} not found.");
+
+            return Ok(_library.GetFiles(id));
+        }
+
+        [HttpGet("{id}/folders")]
+        public async Task<ActionResult<List<VaultFolder>>> GetVaultItemFolders(int id)
+        {
+            var item = await _context.VaultItems.FindAsync(id);
+            if (item == null)
+                return NotFound($"Vault item with ID {id} not found.");
+
+            return Ok(_library.GetFolders(id));
+        }
+
+        [HttpPost("{id}/files/{category}/folder")]
+        public async Task<ActionResult<VaultFolder>> CreateVaultItemFolder(int id, string category, [FromForm] string path)
+        {
+            var item = await _context.VaultItems.FindAsync(id);
+            if (item == null)
+                return NotFound($"Vault item with ID {id} not found.");
+
+            if (!LibraryFileService.IsValidCategory(category))
+                return BadRequest($"Invalid category '{category}'. Expected one of: {string.Join(", ", LibraryFileService.Categories)}.");
+
+            if (string.IsNullOrWhiteSpace(path))
+                return BadRequest("No folder name provided.");
+
+            if (!_library.TryGetFolderDirectory(id, category, path, out _))
+                return BadRequest($"Invalid folder name '{path}'.");
+
+            if (_library.FolderExists(id, category, path))
+                return BadRequest("Folder already exists.");
+
+            _library.CreateFolder(id, category, path);
+
+            return Ok(new VaultFolder
+            {
+                Category = LibraryFileService.GetCategoryName(category),
+                Path = path.Replace('\\', '/').Trim('/'),
+                Name = path.Replace('\\', '/').Trim('/').Split('/').Last()
+            });
+        }
+
+        [HttpDelete("{id}/files/{category}/folder")]
+        public async Task<ActionResult> DeleteVaultItemFolder(int id, string category, [FromQuery] string path)
+        {
+            var item = await _context.VaultItems.FindAsync(id);
+            if (item == null)
+                return NotFound($"Vault item with ID {id} not found.");
+
+            if (!_library.TryGetFolderDirectory(id, category, path, out var directory))
+                return BadRequest("Invalid folder path.");
+
+            if (!Directory.Exists(directory))
+                return NotFound($"Folder '{path}' not found.");
+
+            _library.DeleteFolder(id, category, path);
+            return NoContent();
+        }
+
+        [HttpGet("{id}/files/{category}/{*filePath}")]
+        public async Task<IActionResult> DownloadVaultItemFile(int id, string category, string filePath)
+        {
+            var item = await _context.VaultItems.FindAsync(id);
+            if (item == null)
+                return NotFound($"Vault item with ID {id} not found.");
+
+            if (!_library.TryGetFilePath(id, category, filePath, out var fullPath))
+                return BadRequest("Invalid file path.");
+
+            if (!System.IO.File.Exists(fullPath))
+                return NotFound($"File '{filePath}' not found.");
+
+            if (!ContentTypes.TryGetContentType(fullPath, out var contentType))
+                contentType = "application/octet-stream";
+
+            var fileName = Path.GetFileName(fullPath);
+
+            if (!LibraryFileService.IsInlineType(fullPath))
+            {
+                Response.Headers["Content-Disposition"] = $"attachment; filename=\"{fileName}\"";
+            }
+
+            return PhysicalFile(fullPath, contentType, enableRangeProcessing: true);
+        }
+
+        [HttpPost("{id}/files/{category}")]
+        public async Task<ActionResult<List<VaultFile>>> UploadVaultItemFiles(int id, string category, [FromForm] List<IFormFile>? files, [FromForm] string? subfolder)
+        {
+            var item = await _context.VaultItems.FindAsync(id);
+            if (item == null)
+                return NotFound($"Vault item with ID {id} not found.");
+
+            if (!LibraryFileService.IsValidCategory(category))
+                return BadRequest($"Invalid category '{category}'. Expected one of: {string.Join(", ", LibraryFileService.Categories)}.");
+
+            if (files == null || files.Count == 0)
+                return BadRequest("No file uploaded.");
+
+            var saved = new List<VaultFile>();
+
+            foreach (var file in files)
+            {
+                if (file == null || file.Length == 0)
+                    continue;
+
+                if (!_library.TryGetUploadPath(id, category, subfolder, file.FileName, out _))
+                    return BadRequest($"Invalid file name '{file.FileName}'.");
+
+                using (var stream = file.OpenReadStream())
+                {
+                    saved.Add(await _library.SaveFileAsync(id, category, subfolder, file.FileName, stream, file.Length));
+                }
+            }
+
+            if (saved.Count == 0)
+                return BadRequest("No file uploaded.");
+
+            return Ok(saved);
+        }
+
+        [HttpDelete("{id}/files")]
+        public async Task<ActionResult> DeleteVaultItemFile(int id, [FromQuery] string category, [FromQuery] string path)
+        {
+            var item = await _context.VaultItems.FindAsync(id);
+            if (item == null)
+                return NotFound($"Vault item with ID {id} not found.");
+
+            if (!_library.TryGetFilePath(id, category, path, out var fullPath))
+                return BadRequest("Invalid file path.");
+
+            if (!System.IO.File.Exists(fullPath))
+                return NotFound($"File '{path}' not found.");
+
+            System.IO.File.Delete(fullPath);
+            return NoContent();
         }
     }
 }

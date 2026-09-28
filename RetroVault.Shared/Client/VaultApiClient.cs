@@ -136,5 +136,85 @@ namespace RetroVault.Shared
             var response = await _http.PostAsync($"VaultItem/{id}/thumbnail", form);
             return response.IsSuccessStatusCode;
         }
+
+        // GET ITEM FILES
+        public async Task<List<VaultFile>> GetFilesAsync(int id)
+        {
+            var response = await _http.GetAsync($"VaultItem/{id}/files");
+            if (!response.IsSuccessStatusCode)
+                return new List<VaultFile>();
+            return await response.Content.ReadFromJsonAsync<List<VaultFile>>() ?? new List<VaultFile>();
+        }
+
+        // GET ITEM FILE (caller disposes the response and its stream)
+        public async Task<HttpResponseMessage> GetFileAsync(int id, string category, string path, string? range = null, string? ifNoneMatch = null)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"VaultItem/{id}/files/{Uri.EscapeDataString(category)}/{EscapePath(path)}");
+
+            if (!string.IsNullOrEmpty(range))
+                request.Headers.TryAddWithoutValidation("Range", range);
+            if (!string.IsNullOrEmpty(ifNoneMatch))
+                request.Headers.TryAddWithoutValidation("If-None-Match", ifNoneMatch);
+
+            return await _http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+        }
+
+        // UPLOAD ITEM FILE (overwrites an existing file with the same name)
+        public async Task<List<VaultFile>?> UploadFileAsync(int id, string category, Stream stream, string fileName, string? subfolder = null)
+        {
+            var form = new MultipartFormDataContent();
+            form.Add(new StreamContent(stream), "files", fileName);
+            if (!string.IsNullOrWhiteSpace(subfolder))
+                form.Add(new StringContent(subfolder), "subfolder");
+
+            var response = await _http.PostAsync($"VaultItem/{id}/files/{Uri.EscapeDataString(category)}", form);
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            return await response.Content.ReadFromJsonAsync<List<VaultFile>>();
+        }
+
+        // GET ITEM FOLDERS
+        public async Task<List<VaultFolder>> GetFoldersAsync(int id)
+        {
+            var response = await _http.GetAsync($"VaultItem/{id}/folders");
+            if (!response.IsSuccessStatusCode)
+                return new List<VaultFolder>();
+            return await response.Content.ReadFromJsonAsync<List<VaultFolder>>() ?? new List<VaultFolder>();
+        }
+
+        // CREATE ITEM FOLDER (path relative to the category, nested allowed)
+        public async Task<VaultFolder?> CreateFolderAsync(int id, string category, string path)
+        {
+            var form = new MultipartFormDataContent();
+            form.Add(new StringContent(path), "path");
+
+            var response = await _http.PostAsync($"VaultItem/{id}/files/{Uri.EscapeDataString(category)}/folder", form);
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            return await response.Content.ReadFromJsonAsync<VaultFolder>();
+        }
+
+        // DELETE ITEM FOLDER (recursive)
+        public async Task<bool> DeleteFolderAsync(int id, string category, string path)
+        {
+            var url = $"VaultItem/{id}/files/{Uri.EscapeDataString(category)}/folder?path={Uri.EscapeDataString(path)}";
+            var response = await _http.DeleteAsync(url);
+            return response.IsSuccessStatusCode;
+        }
+
+        // DELETE ITEM FILE
+        public async Task<bool> DeleteFileAsync(int id, string category, string path)
+        {
+            var url = $"VaultItem/{id}/files?category={Uri.EscapeDataString(category)}&path={Uri.EscapeDataString(path)}";
+            var response = await _http.DeleteAsync(url);
+            return response.IsSuccessStatusCode;
+        }
+
+        private static string EscapePath(string path)
+        {
+            return string.Join("/", path.Split('/', '\\').Select(Uri.EscapeDataString));
+        }
     }
 }

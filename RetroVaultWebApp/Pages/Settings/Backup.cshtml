@@ -11,7 +11,7 @@
     <div class="card-body">
         <h5 class="card-title"><i class="bi bi-folder"></i> Backup Folder</h5>
         <p class="text-muted small mb-3">
-            Select a local folder to backup your vault items and thumbnails.
+            Select a local folder to backup your vault items, thumbnails and media library files.
             Works best with Chromium browsers (Chrome, Edge).
             Point this to your OneDrive or any synced folder.
         </p>
@@ -53,6 +53,7 @@
             <li>Click <strong>Select Backup Folder</strong> and choose a directory</li>
             <li>On each backup, a <code>vault.json</code> file is created with all your vault data</li>
             <li>Thumbnails are stored in a <code>thumbnails/</code> subfolder — only new thumbnails are downloaded on subsequent backups</li>
+            <li>Library files are stored in a <code>library/{id}/{category}/</code> subfolder (Audio, Documents, Images, Software, Videos) — only new files are downloaded on subsequent backups</li>
             <li>The backup folder can point to OneDrive, Dropbox, or any synced directory</li>
         </ul>
     </div>
