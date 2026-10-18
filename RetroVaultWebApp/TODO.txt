@@ -1,1 +1,1 @@
-﻿1) Dynamically load catetories and systems from the DB instead of configuration file.
+﻿all done? 
